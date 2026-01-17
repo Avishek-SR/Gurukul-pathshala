@@ -1,0 +1,114 @@
+.admin-settings {
+  padding: 24px;
+  background: #f7f9fc;
+  min-height: 100%;
+}
+
+.settings-header {
+  margin-bottom: 20px;
+}
+
+.settings-header h1 {
+  font-size: 26px;
+  font-weight: 600;
+  color: #1f2933;
+}
+
+.settings-header p {
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.settings-container {
+  display: flex;
+  gap: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.settings-sidebar {
+  width: 220px;
+  background: #f1f5f9;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.settings-sidebar button {
+  border: none;
+  background: transparent;
+  padding: 12px 14px;
+  text-align: left;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.settings-sidebar button:hover {
+  background: #e5e7eb;
+}
+
+.settings-sidebar button.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.settings-content {
+  flex: 1;
+  padding: 24px;
+}
+
+.settings-panel h2 {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #111827;
+}
+
+.form-group {
+  margin-bottom: 16px;
+  max-width: 420px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="color"],
+.form-group input[type="file"] {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.primary-btn {
+  margin-top: 12px;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: #1d4ed8;
+}

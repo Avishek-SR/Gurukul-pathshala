@@ -1,0 +1,215 @@
+/* PerformanceChart.css */
+.performance-chart {
+  background: white;
+  border-radius: 16px;
+  padding: 1.8rem;
+  box-shadow: 0 8px 25px rgba(0, 119, 182, 0.1);
+  border: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-medium);
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.gpa-color {
+  background: var(--primary-medium);
+}
+
+.attendance-color {
+  background: var(--primary-accent);
+}
+
+.chart-container {
+  display: flex;
+  margin: 2rem 0;
+  height: 250px;
+}
+
+.chart-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-medium);
+  font-weight: 600;
+}
+
+.chart-content {
+  flex: 1;
+  position: relative;
+  padding-left: 1rem;
+  border-left: 1px solid #e0f7fa;
+  border-bottom: 1px solid #e0f7fa;
+}
+
+.chart-grid {
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+.grid-line {
+  width: 1px;
+  background: #f0f4f8;
+  height: 100%;
+}
+
+.chart-bars {
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding: 0 1rem;
+}
+
+.chart-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60px;
+  height: 100%;
+  position: relative;
+}
+
+.bar-gpa, .bar-attendance {
+  width: 20px;
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  transition: height 0.5s ease;
+  margin-bottom: 4px;
+}
+
+.bar-gpa {
+  background: var(--primary-medium);
+}
+
+.bar-attendance {
+  background: var(--primary-accent);
+}
+
+.bar-value {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text-dark);
+  background: white;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.bar-gpa:hover .bar-value,
+.bar-attendance:hover .bar-value {
+  opacity: 1;
+}
+
+.month-label {
+  position: absolute;
+  bottom: -30px;
+  font-size: 0.8rem;
+  color: var(--text-medium);
+  font-weight: 600;
+}
+
+.performance-insights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.insight-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  background: #f8fdff;
+  border: 1px solid var(--border-color);
+}
+
+.insight-card.positive {
+  border-left: 4px solid #4CAF50;
+}
+
+.insight-card.neutral {
+  border-left: 4px solid #FF9800;
+}
+
+.insight-card i {
+  font-size: 1.5rem;
+  color: var(--primary-medium);
+}
+
+.insight-card.positive i {
+  color: #4CAF50;
+}
+
+.insight-card.neutral i {
+  color: #FF9800;
+}
+
+.insight-card h4 {
+  margin: 0 0 4px 0;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+}
+
+.insight-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-medium);
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    height: 200px;
+  }
+  
+  .chart-bars {
+    padding: 0 0.5rem;
+  }
+  
+  .chart-column {
+    width: 40px;
+  }
+  
+  .bar-gpa, .bar-attendance {
+    width: 15px;
+  }
+  
+  .performance-insights {
+    grid-template-columns: 1fr;
+  }
+}

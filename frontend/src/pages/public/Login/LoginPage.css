@@ -1,0 +1,626 @@
+/* App.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  background: #e0f2f1;
+  overflow-x: hidden;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+/* Modern EdTech Palette */
+:root {
+  --primary-dark: #141e30;
+  --primary-medium: #20b2aa;    /* Single button color */
+  --primary-accent: #48cae4;
+  --secondary-accent: #caf0f8;
+  --card-bg: #FFFFFF;
+  --text-dark: #03045e;
+  --text-medium: #0077b6;
+  --text-light: #90e0ef;
+  --border-color: #ade8f4;
+  --white: #FFFFFF;
+}
+
+/* Left Side Layout - Desktop Only */
+.visual-cards {
+  flex: 1.2;
+  background: linear-gradient(135deg, #f0f7ff 0%, #fcfdfe 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 2rem;
+  height: 100vh;
+}
+
+/* Geometry Overlay */
+.geometry-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%2320b2aa' stroke-width='0.5' stroke-opacity='0.2'%3E%3Cpath d='M40 0 L80 20 L80 60 L40 80 L0 60 L0 20 Z'/%3E%3Ccircle cx='40' cy='40' r='40'/%3E%3Cpath d='M40 0 L40 80 M0 20 L80 60 M0 60 L80 20'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.6;
+  animation: rotatePattern 120s linear infinite;
+  z-index: 1;
+  transform: scale(2.5);
+}
+
+@keyframes rotatePattern {
+  from { transform: scale(2.5) rotate(0deg); }
+  to { transform: scale(2.5) rotate(360deg); }
+}
+
+.main-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--primary-medium);
+  margin-bottom: 4rem;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.5px;
+}
+
+.main-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: var(--primary-medium);
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(248, 251, 251, 0.5);
+}
+
+/* User Type Grid */
+.user-type-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 800px;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.grid-row-middle {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.user-type-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(72, 202, 228, 0.5);
+  width: 320px;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.user-type-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  border-color: var(--primary-medium);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.25);
+}
+
+.user-type-card h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+}
+
+.user-svg-container {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Right Side - Login Section */
+.login-section {
+  flex: 1;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.login-form-container {
+  width: 100%;
+  max-width: 500px;
+  background: var(--card-bg);
+  border: 3px solid var(--border-color); /* Thicker border */
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 20px 50px rgba(0, 119, 182, 0.1);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Increased from auto */
+  max-height: 95vh; /* Maximum height */
+  justify-content: space-between; /* Distribute content */
+  align-self: center; /* Center vertically */
+  margin: auto 0; /* Vertical centering */
+}
+
+.gurukul-brand {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 2rem;
+}
+
+.gurukul-logo {
+  width: 65px;
+  height: 65px;
+  background: var(--primary-medium);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 8px 15px rgba(32, 178, 170, 0.3);
+}
+
+.gurukul-text h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary-medium);
+  line-height: 1;
+}
+
+.gurukul-text p {
+  color: var(--primary-dark);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 3px;
+}
+
+label {
+  display: block;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.form-input {
+  width: 100%;
+  height: 52px;
+  border: 2px solid #f1f3f5;
+  border-radius: 10px;
+  padding: 0 1.2rem;
+  margin-bottom: 1.2rem;
+  font-size: 1rem;
+  background: #f8fbff;
+  transition: all 0.3s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-medium);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(32, 178, 170, 0.1);
+}
+
+/* Login Button */
+.login-btn {
+  width: 100%;
+  height: 55px;
+  background: var(--primary-medium);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(32, 178, 170, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-btn:hover {
+  background: #1a9c95;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(32, 178, 170, 0.5);
+}
+
+.captcha-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 1.2rem;
+}
+
+.captcha-display {
+  flex: 1;
+  background: linear-gradient(135deg, var(--secondary-accent), #e0f7fa);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: 8px;
+  border-radius: 10px;
+  color: var(--text-dark);
+  border: 2px solid var(--primary-accent);
+  font-family: 'Courier New', monospace;
+}
+
+.refresh-btn {
+  width: 52px;
+  background: white;
+  border: 2px solid var(--secondary-accent);
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--primary-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+  background: var(--primary-medium);
+  color: white;
+  transform: rotate(180deg);
+  border-color: var(--primary-medium);
+}
+
+.form-links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.5rem;
+}
+
+.form-links a {
+  color: var(--primary-medium);
+  text-decoration: none;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.form-links a:hover {
+  color: var(--primary-dark);
+  background: rgba(32, 178, 170, 0.1);
+}
+
+
+
+/* =========================================== */
+/* MOBILE VIEW (768px and below) */
+/* =========================================== */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--white);
+  }
+  
+  /* Hide left side completely on mobile */
+  .visual-cards {
+    display: none !important;
+  }
+  
+  /* Make login section full viewport on mobile */
+  .login-section {
+    flex: 1;
+    width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+    padding: 0;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+  }
+  
+  /* Login form container - Stick to top and bottom with border */
+  .login-form-container {
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+    border: 2px solid var(--border-color);
+    border-top: none;
+    border-bottom: none;
+    box-shadow: none;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--white);
+  }
+  
+  /* Reduce logo and title size for mobile (same style as desktop) */
+  .gurukul-brand {
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+  
+  .gurukul-logo {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .gurukul-text h1 {
+    font-size: 2rem;
+  }
+  
+  .gurukul-text p {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+  
+  /* Adjust form inputs for mobile */
+  .form-input {
+    font-size: 1rem;
+    height: 48px;
+    padding: 0 1rem;
+  }
+  
+  .captcha-display {
+    font-size: 1.2rem;
+    letter-spacing: 6px;
+    height: 48px;
+  }
+  
+  .login-btn {
+    font-size: 1rem;
+    height: 50px;
+  }
+  
+  .form-links {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+  }
+  
+  /* Portal adjustments for mobile */
+  .portal-header {
+    padding: 1rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .portal-brand {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .user-profile {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .portal-content {
+    padding: 1.5rem;
+  }
+  
+  .welcome-section {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .welcome-section h1 {
+    font-size: 1.8rem;
+  }
+  
+  .portal-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .portal-card {
+    padding: 1.5rem;
+  }
+  
+  .quick-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .calendar-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================== */
+/* TABLET VIEW (769px to 1024px) */
+/* =========================================== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .app-container {
+    flex-direction: row;
+  }
+  
+  .visual-cards {
+    flex: 1;
+    padding: 2rem 1rem;
+  }
+  
+  .main-title {
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .user-type-card {
+    max-width: 280px;
+  }
+  
+  .user-svg-container {
+    height: 120px;
+  }
+  
+  .login-section {
+    padding: 1.5rem;
+  }
+  
+  .login-form-container {
+    padding: 2rem;
+    max-height: 90vh;
+  }
+}
+
+/* =========================================== */
+/* DESKTOP VIEW (1025px and above) - Default styles apply */
+/* =========================================== */
+@media (min-width: 1025px) {
+  .login-form-container {
+    max-height: 85vh;
+  }
+}
+
+/* Error Message */
+.error-message {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  color: #c00;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.error-message i {
+  color: #c00;
+}
+
+/* Loading spinner */
+.fa-spinner {
+  margin-right: 8px;
+}
+
+/* Test credentials for development */
+.test-credentials {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+}
+
+.test-credentials h3 {
+  margin-bottom: 10px;
+  color: white;
+}
+
+.test-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.test-btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.test-btn.admin {
+  background: #ff6b6b;
+  color: white;
+}
+
+.test-btn.faculty {
+  background: #4ecdc4;
+  color: white;
+}
+
+.test-btn.student {
+  background: #45b7d1;
+  color: white;
+}
+
+.test-btn:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+/* Dev hint for mobile */
+.dev-hint {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  margin-top: 10px;
+  font-style: italic;
+}
+
+/* Disabled state */
+.form-input:disabled,
+.login-btn:disabled,
+.refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Password field with eye toggle */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper .password-input {
+  padding-right: 44px; /* space for eye icon */
+}
+
+.eye-toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.eye-toggle:hover {
+  color: var(--primary-medium);
+}

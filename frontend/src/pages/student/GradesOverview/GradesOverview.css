@@ -1,0 +1,142 @@
+/* GradesOverview.css */
+.grades-overview {
+  background: white;
+  border-radius: 16px;
+  padding: 1.8rem;
+  box-shadow: 0 8px 25px rgba(0, 119, 182, 0.1);
+  border: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+}
+
+.gpa-display {
+  background: var(--primary-medium);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.grades-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 1rem;
+  background: #f8fdff;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-medium);
+  margin-bottom: 0.3rem;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-medium);
+}
+
+.grades-table {
+  overflow-x: auto;
+}
+
+.grades-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.grades-table th {
+  text-align: left;
+  padding: 0.8rem;
+  background: #f0f9ff;
+  color: var(--text-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.grades-table td {
+  padding: 1rem 0.8rem;
+  border-bottom: 1px solid #f0f4f8;
+  color: var(--text-medium);
+}
+
+.subject-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.subject-icon {
+  width: 30px;
+  height: 30px;
+  background: var(--primary-medium);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+}
+
+.grade-badge {
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.score-cell, .credit-cell {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.score-cell {
+  color: var(--primary-medium);
+}
+
+.credit-cell {
+  color: var(--text-dark);
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.grades-table tbody tr:hover {
+  background: #f8fdff;
+}
+
+@media (max-width: 768px) {
+  .grades-table {
+    font-size: 0.85rem;
+  }
+  
+  .stat-item {
+    padding: 0.8rem;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+  }
+}
