@@ -16,7 +16,7 @@ import {
   MessageSquare,
   Loader2
 } from 'lucide-react';
-import './FacultyDashboard.css';
+import './facultyDashboard.css';
 
 const FacultyDashboard = () => {
   // Fetch dashboard data
