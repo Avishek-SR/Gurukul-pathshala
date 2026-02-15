@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./AdmissionsPage.css";
+import "./Admissionspage.css";
 
 export default function AdmissionsPage() {
   const [formData, setFormData] = useState({
