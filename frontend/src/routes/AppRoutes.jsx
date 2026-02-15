@@ -11,8 +11,8 @@ import FacultyLayout from '../layouts/FacultyLayout';
 // Public pages
 import LoginPage from '../pages/public/Login/LoginPage';
 import HomePage from '../pages/public/home/HomePage';
-import AdmissionsPage from "../pages/public/Admissions/Admissionspage";
-import AcademicPage from '../pages/public/Academics/AcademicPage';
+import AdmissionsPage from "../pages/public/Admissions/AdmissionsPage";
+import AcademicPage from '../pages/public/academics/AcademicPage';
 import AboutPage from '../pages/public/About/AboutPage';
 
 // Admin pages
