@@ -77,6 +77,7 @@ public class SecurityConfig {
                         // require authentication
                         .requestMatchers("/uploads/**").permitAll() // Serve static files
                         .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("/health").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/error").permitAll()
 
