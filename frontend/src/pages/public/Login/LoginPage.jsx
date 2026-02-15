@@ -1,19 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from '../../../contexts/AuthContext';
+import axios from '../../../api/axiosConfig'; // Import configured axios instance for Captcha
 import './LoginPage.css';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { login, isAuthenticated, user } = useAuth(); // Use global auth context
+
+  // Redirect logic if already logged in (Synced with AuthContext)
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      redirectUser(user.role);
+    }
+  }, [isAuthenticated, user]);
+
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [captchaInput, setCaptchaInput] = useState('');
   const [captcha, setCaptcha] = useState('');
   const [captchaId, setCaptchaId] = useState('');
-  const [isMobile, setIsMobile] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -26,22 +38,6 @@ const LoginPage = () => {
     return () => {
       window.removeEventListener('resize', checkMobile);
     };
-  }, []);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
-
-    if (token && user) {
-      try {
-        const u = JSON.parse(user);
-        redirectUser(u.role);
-      } catch {
-        // Corrupt storage, clear safely
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-      }
-    }
   }, []);
 
   const redirectUser = (role) => {
@@ -62,12 +58,13 @@ const LoginPage = () => {
 
   const refreshCaptcha = async () => {
     try {
-      const res = await fetch('http://localhost:8080/api/public/captcha');
-      const data = await res.json();
+      const res = await axios.get('/public/captcha');
+      const data = res.data;
       setCaptcha(data.code);
       setCaptchaId(data.id);
       setCaptchaInput('');
     } catch (e) {
+      console.error("Captcha load error:", e);
       setError('Unable to load CAPTCHA');
     }
   };
@@ -83,71 +80,35 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId,
-          password,
-          captchaId,
-          captchaValue: captchaInput
-        })
+      // Use AuthContext login to ensure Global State is synced with LocalStorage
+      const result = await login({
+        userId,
+        password,
+        captchaId,
+        captchaValue: captchaInput
       });
 
-      const data = await response.json();
+      if (result.success) {
+        // Clear sensitive data
+        setUserId('');
+        setPassword('');
+        setCaptchaInput('');
+        refreshCaptcha();
 
-      if (!response.ok) {
-        setError(data.message || 'Login failed');
+        console.log('Login successful, User:', result.user);
+
+        // Redirect based on the FRESH user object from Context
+        setLoading(false);
+        redirectUser(result.user.role);
+      } else {
+        setError(result.error);
         refreshCaptcha();
         setLoading(false);
-        return;
       }
-
-      // DEBUG: Log what we receive from server
-      console.log('Login response data:', data);
-      
-      // FIX 1: Check if accessToken exists or if it's named differently
-      const token = data.accessToken || data.token || data.jwt;
-      
-      if (!token) {
-        setError('No authentication token received from server');
-        console.error('Token not found in response:', data);
-        refreshCaptcha();
-        setLoading(false);
-        return;
-      }
-
-      // FIX 2: Save token to localStorage
-      localStorage.setItem('token', token);
-      
-      // FIX 3: Ensure user object has all required fields
-      const userData = {
-        userId: data.userId || data.id || userId,
-        name: data.name || 'User',
-        role: data.role || 'STUDENT'
-      };
-      
-      localStorage.setItem('user', JSON.stringify(userData));
-      
-      // DEBUG: Verify storage
-      console.log('Token saved:', localStorage.getItem('token'));
-      console.log('User saved:', localStorage.getItem('user'));
-
-      setLoading(false);
-
-      // Redirect immediately (no need for setTimeout)
-      redirectUser(userData.role);
-
-      // Clear form fields
-      setUserId('');
-      setPassword('');
-      setCaptchaInput('');
-      refreshCaptcha();
 
     } catch (e) {
-      setError('Server unreachable. Please try again.');
-      console.error('Login error:', e);
+      console.error("Login Exception:", e);
+      setError('An unexpected error occurred during login.');
       refreshCaptcha();
       setLoading(false);
     }
@@ -157,18 +118,14 @@ const LoginPage = () => {
     refreshCaptcha();
   }, []);
 
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (e.key === 'Enter' && !loading) {
-        handleLogin();
-      }
-    };
+  /* REMOVED GLOBAL KEYPRESS LISTENER causing double submission */
 
-    document.addEventListener('keypress', handleKeyPress);
-    return () => {
-      document.removeEventListener('keypress', handleKeyPress);
-    };
-  }, [userId, password, captchaInput, loading]);
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (!loading) {
+      handleLogin();
+    }
+  };
 
   return (
     <div className="app-container">
@@ -210,7 +167,7 @@ const LoginPage = () => {
             </div>
           </div>
 
-          <div className="login-form">
+          <form className="login-form" onSubmit={onSubmit}>
             {error && (
               <div className="error-message">
                 <i className="fas fa-exclamation-circle"></i> {error}
@@ -268,9 +225,8 @@ const LoginPage = () => {
             />
 
             <button
-              type="button"
+              type="submit"
               className="login-btn"
-              onClick={handleLogin}
               disabled={loading}
             >
               {loading ? (
@@ -286,7 +242,7 @@ const LoginPage = () => {
               <a href="#">Forgot Password?</a>
               <a href="#">Tech Support</a>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

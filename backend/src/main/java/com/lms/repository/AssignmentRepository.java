@@ -25,4 +25,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
 
     // Count assignments by faculty
     long countByFacultyAndActiveTrue(User faculty);
+
+    // All assignments for a list of courses
+    List<Assignment> findByCourseInAndActiveTrue(List<Course> courses);
 }

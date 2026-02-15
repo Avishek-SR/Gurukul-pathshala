@@ -9,6 +9,7 @@ import com.lms.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
 
 import java.util.List;
 
@@ -21,8 +22,8 @@ public class EnrollmentService {
     private final CourseRepository courseRepository;
 
     public EnrollmentService(EnrollmentRepository enrollmentRepository,
-                             UserRepository userRepository,
-                             CourseRepository courseRepository) {
+            UserRepository userRepository,
+            CourseRepository courseRepository) {
         this.enrollmentRepository = enrollmentRepository;
         this.userRepository = userRepository;
         this.courseRepository = courseRepository;
@@ -33,6 +34,7 @@ public class EnrollmentService {
      * - Resolves student and course from DB
      * - Prevents duplicate enrollment
      */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Enrollment enroll(String studentUserId, Long courseId) {
 
         if (studentUserId == null || studentUserId.isBlank()) {
@@ -62,6 +64,14 @@ public class EnrollmentService {
     }
 
     /**
+     * Check if a student is already enrolled in a course.
+     */
+    @Transactional(readOnly = true)
+    public boolean isEnrolled(User student, Course course) {
+        return enrollmentRepository.findByStudentAndCourse(student, course).isPresent();
+    }
+
+    /**
      * Get all enrollments for the currently logged-in student.
      */
     @Transactional(readOnly = true)
@@ -75,5 +85,17 @@ public class EnrollmentService {
                 .orElseThrow(() -> new IllegalStateException("Authenticated student not found"));
 
         return enrollmentRepository.findByStudent(student);
+    }
+
+    /**
+     * Get all students enrolled in a specific course.
+     */
+    @Transactional(readOnly = true)
+    public List<User> getStudentsByCourse(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("Course not found: " + courseId));
+
+        List<Enrollment> enrollments = enrollmentRepository.findByCourse(course);
+        return enrollments.stream().map(Enrollment::getStudent).toList();
     }
 }

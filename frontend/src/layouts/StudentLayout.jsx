@@ -1,18 +1,55 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, Outlet, useNavigate, useLocation, NavLink } from 'react-router-dom';
 import './StudentLayout.css';
 
-const StudentLayout = ({ onLogout }) => {
+const StudentLayout = ({ onLogout }) => { // onLogout prop kept for compatibility
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
-  // Fetch student data from backend on component mount
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setProfileMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Responsive Check
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 1024) {
+        setSidebarOpen(false);
+      } else {
+        setSidebarOpen(true);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Fetch Student Data
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+          navigate('/login');
+          return;
+        }
 
-        const res = await fetch('http://localhost:8080/api/student/profile', {
+        const res = await fetch('/api/student/profile', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -24,228 +61,180 @@ const StudentLayout = ({ onLogout }) => {
         }
 
         const data = await res.json();
-
         setStudent(data);
       } catch (error) {
         console.error('Error fetching student data:', error);
+        // navigate('/login'); // Optional: redirect if fetch fails
       } finally {
         setLoading(false);
       }
     };
 
     fetchStudentData();
-  }, []);
+  }, [navigate]);
 
-  // Handle real logout (clear backend session)
   const handleLogout = () => {
-    // Clear local storage
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    
-    // Call parent logout function
     if (onLogout) onLogout();
-    
-    // You can also call backend logout endpoint here if you have one
-    // fetch('http://localhost:8080/api/auth/logout', { method: 'POST' });
+    navigate('/login');
+  };
+
+  const navItems = [
+    { path: '/student', label: 'Dashboard', icon: 'fa-home', end: true },
+    { path: '/student/courses', label: 'My Classes', icon: 'fa-book' },
+    { path: '/student/assignments', label: 'Assignments', icon: 'fa-tasks' },
+    { path: '/student/attendance', label: 'Attendance', icon: 'fa-calendar-check' },
+    { path: '/student/timetable', label: 'Time Table', icon: 'fa-calendar-alt' },
+    { path: '/student/fees', label: 'Fee Status', icon: 'fa-file-invoice-dollar' },
+  ];
+
+  const getPageTitle = () => {
+    const currentItem = navItems.find(item =>
+      item.path === location.pathname || (item.path !== '/student' && location.pathname.startsWith(item.path))
+    );
+    return currentItem?.label || 'Dashboard';
   };
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Loading student dashboard...</p>
+      <div className="student-loading">
+        <div className="student-spinner"></div>
+        <p>Loading Student Portal...</p>
       </div>
     );
   }
 
   return (
-    <div className="student-layout-container">
-      {/* Header Section */}
-      <header className="student-layout-header">
-        <div className="portal-brand-section">
-          <div className="portal-logo-container">
-            <div className="portal-logo">
-              <i className="fas fa-graduation-cap"></i>
-            </div>
-            <div className="portal-title">
-              <h2>Student Portal</h2>
-              <p>GURUKUL Pathshala</p>
-            </div>
+    <div className="student-container">
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && window.innerWidth <= 1024 && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
+
+      {/* Sidebar */}
+      <div className={`student-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
+        <div className="sidebar-header">
+          <div className="student-logo">
+            <i className="fas fa-graduation-cap"></i>
+            <h2>Student Portal</h2>
           </div>
-        </div>
-        
-        <div className="student-profile-section">
-          <div className="profile-info-container">
-            <div className="profile-avatar">
-              <i className="fas fa-user"></i>
-            </div>
-            <div className="profile-details">
-              <h4>{student?.name || 'Student'}</h4>
-              <p>{student?.id || 'S000000'} | {student?.program || 'Program'}</p>
-              <p className="profile-email">{student?.email || ''}</p>
-            </div>
-          </div>
-          <button className="logout-button" onClick={handleLogout}>
-            <i className="fas fa-sign-out-alt"></i> Logout
+          <button
+            className="sidebar-toggle"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            <i className={`fas fa-chevron-${sidebarOpen ? 'left' : 'right'}`}></i>
           </button>
         </div>
-      </header>
+
+        <div className="sidebar-menu">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              end={item.end}
+              className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
+              onClick={() => window.innerWidth <= 1024 && setSidebarOpen(false)}
+            >
+              <i className={`fas ${item.icon}`}></i>
+              <span>{item.label}</span>
+            </NavLink>
+          ))}
+        </div>
+
+        <div className="sidebar-footer">
+          <div className="student-profile-mini">
+            <div className="mini-avatar">
+              <i className="fas fa-user-graduate"></i>
+            </div>
+            <div className="mini-details">
+              <span>{student?.name?.split(' ')[0] || 'Student'}</span>
+              <small>{student?.id || 'ID: 123'}</small>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Main Content */}
-      <main className="student-portal-content">
-        {/* Welcome Banner */}
-        <section className="welcome-banner">
-          <div className="banner-content">
-            <h1>Welcome back, <span className="highlight">{student?.name?.split(' ')[0] || 'Student'}</span>!</h1>
-            <p className="banner-description">
-              You have {student?.pendingTasks || 0} pending assignments, 2 upcoming exams, and 1 scheduled meeting with your advisor. 
-              Check your dashboard for the latest updates and important notifications.
-            </p>
+      <div className="student-main">
+        {/* Header */}
+        <header className="student-header">
+          <div className="header-left">
+            <button
+              className="mobile-menu-btn"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <i className="fas fa-bars"></i>
+            </button>
+            <h1 className="page-title">{getPageTitle()}</h1>
+            <div className="breadcrumb">
+              <span>Student</span>
+              <i className="fas fa-chevron-right"></i>
+              <span>{getPageTitle()}</span>
+            </div>
           </div>
-          <div className="banner-status">
-            <span className="status-badge">Student</span>
-            <span className="status-badge">{student?.year || 'Year'}</span>
-          </div>
-        </section>
 
-        {/* Stats Dashboard */}
-        <section className="stats-dashboard">
-          <h3 className="section-title">Academic Overview</h3>
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon-box">
-                <i className="fas fa-book"></i>
+          <div className="header-right">
+            <div className="student-profile" ref={menuRef} onClick={() => setProfileMenuOpen(!profileMenuOpen)}>
+              <div className="profile-trigger">
+                <div className="profile-avatar">
+                  {student?.profilePictureUrl ? (
+                    <img
+                      src={
+                        student.profilePictureUrl?.startsWith('http')
+                          ? student.profilePictureUrl
+                          : `${student.profilePictureUrl}`
+                      }
+                      alt="Profile"
+                      style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <span>{student?.name?.charAt(0) || 'S'}</span>
+                  )}
+                </div>
+                <i className={`fas fa-chevron-${profileMenuOpen ? 'up' : 'down'}`} style={{ fontSize: '0.8rem', color: '#666' }}></i>
               </div>
-              <div className="stat-content">
-                <h4>Current GPA</h4>
-                <div className="stat-value">{student?.gpa || '0.00'}</div>
-              </div>
-            </div>
-            
-            <div className="stat-card">
-              <div className="stat-icon-box">
-                <i className="fas fa-calendar-check"></i>
-              </div>
-              <div className="stat-content">
-                <h4>Attendance</h4>
-                <div className="stat-value">{student?.attendance || 0}%</div>
-              </div>
-            </div>
-            
-            <div className="stat-card">
-              <div className="stat-icon-box">
-                <i className="fas fa-tasks"></i>
-              </div>
-              <div className="stat-content">
-                <h4>Pending Tasks</h4>
-                <div className="stat-value">{student?.pendingTasks || 0}</div>
-              </div>
-            </div>
-            
-            <div className="stat-card">
-              <div className="stat-icon-box">
-                <i className="fas fa-clock"></i>
-              </div>
-              <div className="stat-content">
-                <h4>Credit Hours</h4>
-                <div className="stat-value">{student?.creditHours || 0}</div>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* Services Grid */}
-        <section className="services-section">
-          <h3 className="section-title">Student Services</h3>
-          <div className="services-grid">
-            <div className="service-card">
-              <div className="card-header">
-                <i className="fas fa-graduation-cap"></i>
-                <h4>Academic Tools</h4>
-              </div>
-              <ul className="service-list">
-                <li><i className="fas fa-file-alt"></i> View Grades & Transcripts</li>
-                <li><i className="fas fa-calendar-alt"></i> Class Schedule & Timetable</li>
-                <li><i className="fas fa-clipboard-check"></i> Course Registration</li>
-                <li><i className="fas fa-chart-line"></i> Academic Progress Tracker</li>
-                <li><i className="fas fa-book-open"></i> Learning Resources</li>
-              </ul>
-            </div>
-            
-            <div className="service-card">
-              <div className="card-header">
-                <i className="fas fa-university"></i>
-                <h4>Campus Services</h4>
-              </div>
-              <ul className="service-list">
-                <li><i className="fas fa-book-reader"></i> Library Access & E-Resources</li>
-                <li><i className="fas fa-flask"></i> Lab Reservations</li>
-                <li><i className="fas fa-bus"></i> Campus Transport Schedule</li>
-                <li><i className="fas fa-utensils"></i> Mess & Cafeteria Booking</li>
-                <li><i className="fas fa-dumbbell"></i> Sports Facility Booking</li>
-              </ul>
-            </div>
-            
-            <div className="service-card">
-              <div className="card-header">
-                <i className="fas fa-file-invoice-dollar"></i>
-                <h4>Finance & Payments</h4>
-              </div>
-              <ul className="service-list">
-                <li><i className="fas fa-money-check-alt"></i> Fee Payment & Receipts</li>
-                <li><i className="fas fa-hand-holding-usd"></i> Scholarship Applications</li>
-                <li><i className="fas fa-receipt"></i> Transaction History</li>
-                <li><i className="fas fa-question-circle"></i> Financial Aid Information</li>
-                <li><i className="fas fa-credit-card"></i> Payment Methods Setup</li>
-              </ul>
-            </div>
-            
-            <div className="service-card">
-              <div className="card-header">
-                <i className="fas fa-users"></i>
-                <h4>Student Support</h4>
-              </div>
-              <ul className="service-list">
-                <li><i className="fas fa-user-md"></i> Health Center Appointments</li>
-                <li><i className="fas fa-briefcase"></i> Career Counseling</li>
-                <li><i className="fas fa-comments"></i> Student Forums & Discussions</li>
-                <li><i className="fas fa-calendar-check"></i> Event Registration</li>
-                <li><i className="fas fa-headset"></i> 24/7 Tech Support</li>
-              </ul>
+              {profileMenuOpen && (
+                <div className="profile-dropdown-menu">
+                  <div className="dropdown-header">
+                    <h4>{student?.name || 'Student'}</h4>
+                    <p>{student?.email || 'student@school.com'}</p>
+                  </div>
+                  <div className="dropdown-items">
+                    <Link to="/student/profile" className="dropdown-item">
+                      <i className="fas fa-user-circle"></i>
+                      <span>My Profile</span>
+                    </Link>
+                    <Link to="/student/settings" className="dropdown-item">
+                      <i className="fas fa-cog"></i>
+                      <span>Settings</span>
+                    </Link>
+                    <div style={{ height: '1px', background: '#eee', margin: '5px 0' }}></div>
+                    <button className="dropdown-item logout" onClick={(e) => { e.stopPropagation(); handleLogout(); }}>
+                      <i className="fas fa-sign-out-alt"></i>
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        </section>
+        </header>
 
-        {/* Calendar Section */}
-        <section className="calendar-section">
-          <div className="calendar-header">
-            <i className="fas fa-calendar-day"></i>
-            <h3>Upcoming Events & Deadlines</h3>
-          </div>
-          <div className="events-grid">
-            <div className="event-card">
-              <div className="event-date">Tomorrow, 10:00 AM</div>
-              <div className="event-title">Data Structures Midterm</div>
-              <div className="event-location">Room 304, Block B</div>
-            </div>
-            <div className="event-card">
-              <div className="event-date">Dec 15, 2:00 PM</div>
-              <div className="event-title">Project Submission Deadline</div>
-              <div className="event-desc">Software Engineering Project</div>
-            </div>
-            <div className="event-card">
-              <div className="event-date">Dec 18, 11:00 AM</div>
-              <div className="event-title">Career Fair 2023</div>
-              <div className="event-location">Main Auditorium</div>
-            </div>
-            <div className="event-card">
-              <div className="event-date">Dec 20, 3:00 PM</div>
-              <div className="event-title">Faculty Advisor Meeting</div>
-              <div className="event-desc">Dr. Smith's Office</div>
-            </div>
-          </div>
-        </section>
-      </main>
+        {/* Content Outlet */}
+        <main className="student-content">
+          <Outlet context={{ student }} />
+        </main>
+
+        {/* Footer */}
+        <footer className="student-footer">
+          <p>© {new Date().getFullYear()} Gurukul Pathshala Student Portal</p>
+        </footer>
+      </div>
     </div>
   );
 };

@@ -44,6 +44,12 @@ public class Course {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "program")
+    private String program; // Class (e.g., "Nursery", "10")
+
+    @Column(name = "year")
+    private String section; // Section (e.g., "A", "B")
+
     // Getters and Setters
 
     public Long getId() {
@@ -125,5 +131,21 @@ public class Course {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public String getProgram() {
+        return program;
+    }
+
+    public void setProgram(String program) {
+        this.program = program;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
     }
 }

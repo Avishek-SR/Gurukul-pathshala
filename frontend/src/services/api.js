@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -12,7 +12,7 @@ const api = axios.create({
 // Add token to every request
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -26,11 +26,25 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-
-      // Notify app to redirect using router (no hard reload)
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('user');
       window.dispatchEvent(new CustomEvent('auth:logout'));
+    } else if (error.response?.status === 403) {
+      console.error("Access Forbidden (403):", error.response.config.url);
+
+      // Dispatch event for UI components to show a proper notification
+      window.dispatchEvent(new CustomEvent('auth:forbidden', {
+        detail: {
+          url: error.response.config.url,
+          message: "You do not have permission to access this resource."
+        }
+      }));
+
+      // Also reject with a specific message for catch blocks
+      return Promise.reject({
+        ...error,
+        message: "Access Forbidden: You do not have permission."
+      });
     }
     return Promise.reject(error);
   }

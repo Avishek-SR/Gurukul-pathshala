@@ -1,53 +1,145 @@
+/* CSS for Class Cards */
+.class-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.class-card-item {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid #eef2f7;
+}
+
+.class-card-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  border-color: #3498db;
+}
+
+.class-card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: #3498db;
+}
+
+.class-card-item h3 {
+  color: #03045e;
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+}
+
+.class-card-item p {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Back Button */
+.back-btn {
+  background: none;
+  border: none;
+  font-weight: 600;
+  color: #03045e;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 15px;
+  padding: 0;
+  font-size: 1rem;
+}
+
+.back-btn:hover {
+  color: #3498db;
+}
+
+
+/* Existing Styles Integration */
 .course-page {
-  padding: 24px;
-  background: #f7f9fc;
-  min-height: 100%;
+  padding: 20px;
+  background-color: #f4f6f9;
+  min-height: 100vh;
+}
+
+.course-header {
+  margin-bottom: 25px;
 }
 
 .course-header h1 {
-  font-size: 24px;
-  font-weight: 600;
-  color: #111827;
+  font-size: 1.8rem;
+  color: #03045e;
+  margin-bottom: 5px;
 }
 
 .course-header p {
-  color: #6b7280;
-  margin-top: 4px;
+  color: #7f8c8d;
 }
 
 .course-card {
-  margin-top: 16px;
-  background: #ffffff;
+  background: white;
   border-radius: 10px;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+
+.course-form-container {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.course-form-container h3 {
+  margin-bottom: 20px;
+  color: #03045e;
 }
 
 .course-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr 2fr auto;
-  gap: 10px;
-  margin-bottom: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
-.course-form input {
-  padding: 10px 12px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
-  font-size: 14px;
+.course-form input,
+.course-form select {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  flex: 1;
+  min-width: 200px;
 }
 
 .course-form button {
-  background: #2563eb;
-  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 5px;
   border: none;
-  padding: 10px 14px;
-  border-radius: 6px;
   cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
 }
 
-.course-form button:hover {
-  background: #1d4ed8;
+.full-width {
+  flex-basis: 100%;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
+.btn-secondary {
+  background-color: #95a5a6;
+  color: white;
 }
 
 .course-table {
@@ -55,36 +147,177 @@
   border-collapse: collapse;
 }
 
-.course-table th,
-.course-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid #e5e7eb;
-  font-size: 14px;
-}
-
 .course-table th {
   text-align: left;
-  color: #374151;
-  background: #f9fafb;
+  padding: 15px;
+  background-color: #f8f9fa;
+  color: #2c3e50;
+  border-bottom: 2px solid #eef2f7;
 }
 
-.muted {
-  color: #6b7280;
+.course-table td {
+  padding: 15px;
+  border-bottom: 1px solid #eef2f7;
+  vertical-align: middle;
 }
 
-.error {
-  color: #dc2626;
+.badge-code {
+  background: #e1f5fe;
+  color: #0288d1;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
-button.danger {
-  background: #fee2e2;
-  color: #991b1b;
+.faculty-badge {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  background: none;
   border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
+  cursor: pointer;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  padding: 5px;
+  transition: color 0.2s;
+}
+
+.btn-icon:hover {
+  color: #3498db;
+}
+
+.btn-delete:hover {
+  color: #e74c3c;
+}
+
+.btn-assign {
+  background: #e3f2fd;
+  color: #1976d2;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+
+}
+
+.btn-assign:hover {
+  background: #bbdefb;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 20px;
+  color: #3498db;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h3 {
+  margin-top: 0;
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-cancel {
+  background: #f1f1f1;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-button.danger:hover {
-  background: #fecaca;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .course-page {
+    padding: 10px;
+  }
+
+  .course-header h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Form Stacking */
+  .course-form {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .course-form input,
+  .course-form select {
+    width: 90% !important;
+    /* Force fit */
+    min-width: unset;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+
+/* Ensure table scrolls on mobile */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 15px;
+  display: block;
+  /* Ensure block display for scrolling */
 }

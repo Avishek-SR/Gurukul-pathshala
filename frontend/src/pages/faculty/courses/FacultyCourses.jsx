@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import axios from '../../../api/axiosConfig';
 import toast from 'react-hot-toast';
 import {
   BookOpen,
@@ -21,30 +21,32 @@ import './FacultyCourses.css';
 // API service
 const facultyCoursesAPI = {
   getCourses: async () => {
-    const response = await axios.get('/api/faculty/courses');
+    // configured axios instance already has baseURL (likely /api)
+    // if baseURL is http://localhost:8080/api, then we just need /faculty/courses
+    const response = await axios.get('/faculty/courses');
     return response.data;
   },
-  
+
   getCourseById: async (courseId) => {
     const response = await axios.get(`/api/faculty/courses/${courseId}`);
     return response.data;
   },
-  
+
   createCourse: async (courseData) => {
     const response = await axios.post('/api/faculty/courses', courseData);
     return response.data;
   },
-  
+
   updateCourse: async (courseId, courseData) => {
     const response = await axios.put(`/api/faculty/courses/${courseId}`, courseData);
     return response.data;
   },
-  
+
   deleteCourse: async (courseId) => {
     const response = await axios.delete(`/api/faculty/courses/${courseId}`);
     return response.data;
   },
-  
+
   getCourseAnalytics: async (courseId) => {
     const response = await axios.get(`/api/faculty/courses/${courseId}/analytics`);
     return response.data;
@@ -72,12 +74,12 @@ const FacultyCourses = () => {
   });
 
   // Fetch courses with React Query
-  const { 
-    data: coursesData, 
-    isLoading, 
-    isError, 
+  const {
+    data: coursesData,
+    isLoading,
+    isError,
     error,
-    refetch 
+    refetch
   } = useQuery({
     queryKey: ['facultyCourses'],
     queryFn: facultyCoursesAPI.getCourses,
@@ -190,10 +192,10 @@ const FacultyCourses = () => {
   // Filter courses based on search and filters
   const filteredCourses = coursesData?.courses?.filter(course => {
     const matchesSearch = course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         course.code.toLowerCase().includes(searchTerm.toLowerCase());
+      course.code.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesSemester = selectedSemester === 'all' || course.semester === selectedSemester;
     const matchesStatus = selectedStatus === 'all' || course.status === selectedStatus;
-    
+
     return matchesSearch && matchesSemester && matchesStatus;
   }) || [];
 
@@ -251,13 +253,7 @@ const FacultyCourses = () => {
           <h1 className="page-title">My Courses</h1>
           <p className="page-subtitle">Manage and monitor your courses</p>
         </div>
-        <button 
-          className="create-course-btn"
-          onClick={() => setShowCreateModal(true)}
-        >
-          <Plus size={20} />
-          Create New Course
-        </button>
+
       </div>
 
       {/* Statistics Cards */}
@@ -319,7 +315,7 @@ const FacultyCourses = () => {
         <div className="filters-row">
           <div className="filter-group">
             <Filter size={18} />
-            <select 
+            <select
               value={selectedSemester}
               onChange={(e) => setSelectedSemester(e.target.value)}
               className="filter-select"
@@ -333,7 +329,7 @@ const FacultyCourses = () => {
           </div>
 
           <div className="filter-group">
-            <select 
+            <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
               className="filter-select"
@@ -365,10 +361,10 @@ const FacultyCourses = () => {
                   {course.status.charAt(0).toUpperCase() + course.status.slice(1)}
                 </span>
               </div>
-              
+
               <h3 className="course-title">{course.name}</h3>
               <p className="course-description">{course.description}</p>
-              
+
               <div className="course-meta">
                 <div className="meta-item">
                   <Users size={16} />
@@ -385,23 +381,23 @@ const FacultyCourses = () => {
               </div>
 
               <div className="course-card-footer">
-                <button 
+                <button
                   className="view-details-btn"
                   onClick={() => window.location.href = `/faculty/courses/${course.id}`}
                 >
                   View Details
                   <ChevronRight size={16} />
                 </button>
-                
+
                 <div className="action-buttons">
-                  <button 
+                  <button
                     className="edit-btn"
                     onClick={() => openEditModal(course)}
                     title="Edit course"
                   >
                     <Edit2 size={16} />
                   </button>
-                  <button 
+                  <button
                     className="delete-btn"
                     onClick={() => handleDeleteCourse(course.id)}
                     title="Delete course"
@@ -422,7 +418,7 @@ const FacultyCourses = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h2 className="modal-title">Create New Course</h2>
-              <button 
+              <button
                 onClick={() => {
                   setShowCreateModal(false);
                   resetForm();
@@ -432,7 +428,7 @@ const FacultyCourses = () => {
                 &times;
               </button>
             </div>
-            
+
             <form onSubmit={handleCreateCourse}>
               <div className="modal-body">
                 <div className="form-grid">
@@ -447,7 +443,7 @@ const FacultyCourses = () => {
                       placeholder="e.g., CS101"
                     />
                   </div>
-                  
+
                   <div className="form-group">
                     <label>Course Name *</label>
                     <input
@@ -459,7 +455,7 @@ const FacultyCourses = () => {
                       placeholder="e.g., Introduction to Programming"
                     />
                   </div>
-                  
+
                   <div className="form-group col-span-2">
                     <label>Description</label>
                     <textarea
@@ -470,7 +466,7 @@ const FacultyCourses = () => {
                       placeholder="Course description..."
                     />
                   </div>
-                  
+
                   <div className="form-group">
                     <label>Semester *</label>
                     <select
@@ -484,7 +480,7 @@ const FacultyCourses = () => {
                       <option value="summer_2023">Summer 2023</option>
                     </select>
                   </div>
-                  
+
                   <div className="form-group">
                     <label>Credits *</label>
                     <input
@@ -497,7 +493,7 @@ const FacultyCourses = () => {
                       required
                     />
                   </div>
-                  
+
                   <div className="form-group">
                     <label>Max Students *</label>
                     <input
@@ -510,7 +506,7 @@ const FacultyCourses = () => {
                       required
                     />
                   </div>
-                  
+
                   <div className="form-group">
                     <label>Department</label>
                     <input
@@ -523,7 +519,7 @@ const FacultyCourses = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="modal-footer">
                 <button
                   type="button"
@@ -554,7 +550,7 @@ const FacultyCourses = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h2 className="modal-title">Edit Course: {selectedCourse.code}</h2>
-              <button 
+              <button
                 onClick={() => {
                   setShowEditModal(false);
                   resetForm();
@@ -564,7 +560,7 @@ const FacultyCourses = () => {
                 &times;
               </button>
             </div>
-            
+
             <form onSubmit={handleEditCourse}>
               <div className="modal-body">
                 <div className="form-grid">
@@ -578,7 +574,7 @@ const FacultyCourses = () => {
                       required
                     />
                   </div>
-                  
+
                   <div className="form-group">
                     <label>Course Name *</label>
                     <input
@@ -589,7 +585,7 @@ const FacultyCourses = () => {
                       required
                     />
                   </div>
-                  
+
                   <div className="form-group col-span-2">
                     <label>Description</label>
                     <textarea
@@ -599,7 +595,7 @@ const FacultyCourses = () => {
                       rows="3"
                     />
                   </div>
-                  
+
                   <div className="form-group">
                     <label>Semester *</label>
                     <select
@@ -613,7 +609,7 @@ const FacultyCourses = () => {
                       <option value="summer_2023">Summer 2023</option>
                     </select>
                   </div>
-                  
+
                   <div className="form-group">
                     <label>Credits *</label>
                     <input
@@ -626,7 +622,7 @@ const FacultyCourses = () => {
                       required
                     />
                   </div>
-                  
+
                   <div className="form-group">
                     <label>Max Students *</label>
                     <input
@@ -639,7 +635,7 @@ const FacultyCourses = () => {
                       required
                     />
                   </div>
-                  
+
                   <div className="form-group">
                     <label>Department</label>
                     <input
@@ -651,7 +647,7 @@ const FacultyCourses = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="modal-footer">
                 <button
                   type="button"

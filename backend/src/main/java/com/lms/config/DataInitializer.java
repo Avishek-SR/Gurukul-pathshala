@@ -29,7 +29,7 @@ public class DataInitializer implements CommandLineRunner {
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setRole(Role.ADMIN);
             admin.setActive(true);
-            
+
             userRepository.save(admin);
             System.out.println("Admin user created: admin001");
         }
@@ -45,7 +45,7 @@ public class DataInitializer implements CommandLineRunner {
             faculty.setActive(true);
             faculty.setDepartment("Computer Science");
             faculty.setDesignation("Professor");
-            
+
             userRepository.save(faculty);
             System.out.println("Faculty user created: faculty001");
         }
@@ -60,8 +60,8 @@ public class DataInitializer implements CommandLineRunner {
             student.setRole(Role.STUDENT);
             student.setActive(true);
             student.setProgram("B.Tech");
-            student.setYear("Third Year");
-            
+            student.setSection("Section A");
+
             userRepository.save(student);
             System.out.println("Student user created: student001");
         }

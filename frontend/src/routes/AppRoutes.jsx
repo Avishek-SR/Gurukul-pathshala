@@ -14,40 +14,51 @@ import HomePage from '../pages/public/home/HomePage';
 import AdmissionsPage from "../pages/public/Admissions/Admissionspage";
 import AcademicPage from '../pages/public/Academics/AcademicPage';
 import AboutPage from '../pages/public/About/AboutPage';
+
 // Admin pages
 import AdminDashboard from '../pages/admin/dashboard/AdminDashboard';
 import Admins from '../pages/admin/users/Admins';
+import TimetableManagement from '../pages/admin/timetable/TimetableManagement';
 
 // Faculty pages
 import FacultyDashboard from '../pages/faculty/dashboard/FacultyDashboard';
 import FacultyCourses from '../pages/faculty/courses/FacultyCourses';
+import FacultyProfile from '../pages/faculty/profile/FacultyProfile';
+import FacultyAssignments from '../pages/faculty/assignments/FacultyAssignments';
+import FacultyAnnouncements from '../pages/faculty/announcements/FacultyAnnouncements';
+import MarkAttendance from '../pages/faculty/attendance/MarkAttendance';
+import UploadGrades from '../pages/faculty/grading/UploadGrades';
+import FacultyTimetable from '../pages/faculty/timetable/FacultyTimetable';
 
 // Student pages
 import StudentDashboard from '../pages/student/dashboard/StudentDashboard';
 import StudentProfile from '../pages/student/profile/StudentProfile';
-
-
+import MyClasses from '../pages/student/courses/MyClasses';
+import StudentAssignments from '../pages/student/assignments/StudentAssignments';
+import StudentAttendance from '../pages/student/attendance/StudentAttendance';
+import StudentFees from '../pages/student/payments/StudentFees';
+import StudentTimetable from '../pages/student/timetable/StudentTimetable';
 
 // Shared pages
 import Notices from '../pages/shared/Notices';
 import Settings from '../pages/shared/Settings';
 
+import { useAuth } from '../contexts/AuthContext'; // Import useAuth
+
 const RequireAuth = ({ role, children }) => {
-  const raw = localStorage.getItem('user');
-  const token = localStorage.getItem('token');
+  const { user, isAuthenticated, loading } = useAuth();
 
-  if (!raw || !token) {
+  if (loading) {
+    return <div className="loading-spinner">Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    console.log("RequireAuth: Not authenticated, redirecting to login");
     return <Navigate to="/login" replace />;
   }
 
-  let parsed;
-  try {
-    parsed = JSON.parse(raw);
-  } catch {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (role && parsed.role !== role) {
+  if (role && user?.role !== role) {
+    console.log(`RequireAuth: Role mismatch. Required: ${role}, Current: ${user?.role}. User:`, user);
     return <Navigate to="/login" replace />;
   }
 
@@ -58,8 +69,8 @@ const AppRoutes = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('token');
     navigate('/login');
   };
 
@@ -96,7 +107,7 @@ const AppRoutes = () => {
       {/* Login Page */}
       <Route path="/login" element={<LoginPage />} />
 
-      
+
       {/* Admin Layout + Routes */}
       <Route
         path="/admin"
@@ -108,6 +119,7 @@ const AppRoutes = () => {
       >
         <Route index element={<AdminDashboard />} />
         <Route path="users" element={<Admins />} />
+        <Route path="timetable" element={<TimetableManagement />} />
         <Route path="notices" element={<Notices />} />
         <Route path="settings" element={<Settings />} />
       </Route>
@@ -122,18 +134,13 @@ const AppRoutes = () => {
         }
       >
         <Route index element={<FacultyDashboard />} />
-        <Route path="courses" element={<FacultyCourses />} />
-        {/* 
-        <Route path="assignments" element={<FacultyAssignments />} />
-        <Route path="students" element={<FacultyStudents />} />
-        <Route path="grades" element={<FacultyGrades />} />
-        <Route path="attendance" element={<FacultyAttendance />} />
-        <Route path="analytics" element={<FacultyAnalytics />} />
-        <Route path="announcements" element={<FacultyAnnouncements />} />
-        <Route path="calendar" element={<FacultyCalendar />} />
         <Route path="profile" element={<FacultyProfile />} />
-        <Route path="settings" element={<FacultySettings />} />
-        */}
+        <Route path="courses" element={<FacultyCourses />} />
+        <Route path="assignments" element={<FacultyAssignments />} />
+        <Route path="announcements" element={<FacultyAnnouncements />} />
+        <Route path="attendance" element={<MarkAttendance />} />
+        <Route path="grades" element={<UploadGrades />} />
+        <Route path="timetable" element={<FacultyTimetable />} />
       </Route>
 
       {/* Student Layout + Routes */}
@@ -147,6 +154,11 @@ const AppRoutes = () => {
       >
         <Route index element={<StudentDashboard />} />
         <Route path="profile" element={<StudentProfile />} />
+        <Route path="courses" element={<MyClasses />} />
+        <Route path="assignments" element={<StudentAssignments />} />
+        <Route path="attendance" element={<StudentAttendance />} />
+        <Route path="timetable" element={<StudentTimetable />} />
+        <Route path="fees" element={<StudentFees />} />
         <Route path="notices" element={<Notices />} />
         <Route path="settings" element={<Settings />} />
       </Route>

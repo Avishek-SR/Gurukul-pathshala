@@ -5,6 +5,8 @@ public class AttendanceDTO {
     private Long id;
     private Long studentId;
     private Long courseId;
+    private String studentUserId; // Added for display
+    private String facultyUserId; // Added for display
     private java.time.LocalDate date;
     private boolean present;
 
@@ -22,6 +24,22 @@ public class AttendanceDTO {
 
     public void setStudentId(Long studentId) {
         this.studentId = studentId;
+    }
+
+    public String getStudentUserId() {
+        return studentUserId;
+    }
+
+    public void setStudentUserId(String studentUserId) {
+        this.studentUserId = studentUserId;
+    }
+
+    public String getFacultyUserId() {
+        return facultyUserId;
+    }
+
+    public void setFacultyUserId(String facultyUserId) {
+        this.facultyUserId = facultyUserId;
     }
 
     public Long getCourseId() {

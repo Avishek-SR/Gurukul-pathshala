@@ -1,47 +1,86 @@
-/* AdminDashboard.css */
+/* AdminDashboard.css - Full Layout */
 
-/* Make charts responsive */
-.recharts-wrapper {
-  width: 100% !important;
-  height: auto !important;
+.admin-dashboard {
+  padding: 24px 32px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
 }
 
-.recharts-surface {
-  width: 100% !important;
+.dashboard-header {
+  margin-bottom: 24px;
 }
 
-/* Smooth card hover */
-.dashboard-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.dashboard-header h1 {
+  font-size: 1.8rem;
+  color: #1e293b;
+  margin-bottom: 4px;
+  font-weight: 700;
 }
 
-.dashboard-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+.dashboard-header p {
+  color: #64748b;
+  font-size: 0.95rem;
+  padding-bottom: 15px;
+  border-bottom: 3px solid #1eb2aa;
 }
 
-/* Empty state text */
-.dashboard-empty {
-  font-size: 0.9rem;
-  color: #6b7280; /* gray-500 */
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboard-bottom-grid {
+  display: flex;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.bottom-widget {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  height: 500px;
+  overflow: hidden;
+  /* Padding is handled inside the components usually, but if not: */
+  /* padding: 20px; box-shadow... handled by child components like UpcomingEvents-card */
+}
+
+/* Specific sizing */
+.events-widget {
+  flex: 0.35;
+  /* 35% width */
+}
+
+.activity-widget {
+  flex: 0.65;
+  /* 65% width */
+}
+
+/* Loading State */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+.error {
+  color: #ef4444;
   text-align: center;
+  margin-top: 40px;
 }
 
-/* Scroll behavior for long lists */
-.dashboard-scroll {
-  max-height: 260px;
-  overflow-y: auto;
-}
+/* Responsive */
+@media (max-width: 1024px) {
+  .dashboard-bottom-grid {
+    flex-direction: column;
+  }
 
-.dashboard-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.dashboard-scroll::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-}
-
-.dashboard-scroll::-webkit-scrollbar-track {
-  background: transparent;
+  .events-widget,
+  .activity-widget {
+    flex: 1;
+  }
 }

@@ -1,0 +1,26 @@
+# Common
+.DS_Store
+*.log
+logs/
+temp/
+node_modules/
+
+# Backend
+backend/target/
+backend/backend_debug.log
+backend/uploads/
+*.class
+
+# Frontend
+frontend/dist/
+frontend/node_modules/
+frontend/.env
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo

@@ -30,4 +30,13 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     // All attendance records for a course
     List<Attendance> findByCourse(Course course);
+
+    // Count total present records for a specific date
+    long countByDateAndPresentTrue(LocalDate date);
+
+    // Filter by Class (Program)
+    List<Attendance> findByStudentProgram(String program);
+
+    // Filter by Class (Program) and Section
+    List<Attendance> findByStudentProgramAndStudentSection(String program, String section);
 }

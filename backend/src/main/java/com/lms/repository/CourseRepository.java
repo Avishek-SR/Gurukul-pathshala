@@ -1,5 +1,4 @@
 
-
 package com.lms.repository;
 
 import com.lms.model.Course;
@@ -20,4 +19,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findByFaculty(User faculty);
 
     boolean existsByCode(String code);
+
+    long countByActiveTrue();
+
+    List<Course> findByProgram(String program);
 }

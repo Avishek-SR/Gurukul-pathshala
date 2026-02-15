@@ -13,12 +13,15 @@ import java.util.List;
 @Transactional
 public class CourseService {
 
+    private final EnrollmentService enrollmentService;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
 
-    public CourseService(CourseRepository courseRepository, UserRepository userRepository) {
+    public CourseService(CourseRepository courseRepository, UserRepository userRepository,
+            EnrollmentService enrollmentService) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
+        this.enrollmentService = enrollmentService;
     }
 
     /**
@@ -102,6 +105,9 @@ public class CourseService {
         existing.setDuration(course.getDuration());
         existing.setFee(course.getFee());
         existing.setActive(course.isActive());
+        // Update Class/Section mapping
+        existing.setProgram(course.getProgram());
+        existing.setSection(course.getSection());
 
         // If faculty is provided with only userId, resolve it from DB
         if (course.getFaculty() != null && course.getFaculty().getUserId() != null) {
@@ -121,5 +127,60 @@ public class CourseService {
         Course course = getById(id);
         course.setActive(false);
         courseRepository.save(course);
+    }
+
+    /**
+     * Assigns the course to all students matching the course's Program (Class) and
+     * Section (Section).
+     * 
+     * @param courseId The ID of the course to assign.
+     * @return count of students enrolled.
+     */
+    public int assignCourseToClass(Long courseId) {
+        Course course = getById(courseId);
+        String targetClass = course.getProgram(); // Mapped to 'program'
+        String targetSection = course.getSection(); // Mapped to 'year' (DB col) -> 'section' (Code)
+
+        if (targetClass == null || targetClass.isBlank()) {
+            throw new IllegalArgumentException("Course does not have a Class (program) defined for auto-assignment.");
+        }
+
+        // Logic:
+        // 1. Fetch ALL students (Role = STUDENT).
+        // 2. Filter by program == targetClass.
+        // 3. If targetSection is present, filter by section == targetSection.
+        // 4. Enroll each.
+
+        // FIX: Added null check for getRole() to prevent NPE
+        List<User> students = userRepository.findAll().stream()
+                .filter(u -> u.getRole() != null && "STUDENT".equals(u.getRole().name()))
+                .filter(u -> targetClass.equalsIgnoreCase(u.getProgram()))
+                .filter(u -> targetSection == null || targetSection.isBlank()
+                        || targetSection.equalsIgnoreCase(u.getSection()))
+                .toList();
+
+        int count = 0;
+        for (User student : students) {
+            // FIX: Check if already enrolled to prevent IllegalStateException and
+            // transaction rollback
+            if (!enrollmentService.isEnrolled(student, course)) {
+                try {
+                    enrollmentService.enroll(student.getUserId(), course.getId());
+                    count++;
+                } catch (Exception e) {
+                    // Ignore failures for individual students (e.g. race conditions)
+                    // Since enroll() is REQUIRES_NEW, this won't rollback the main transaction
+                    System.err.println("Failed to enroll student " + student.getUserId() + ": " + e.getMessage());
+                }
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Get all students enrolled in a course.
+     */
+    public List<User> getStudentsForCourse(Long courseId) {
+        return enrollmentService.getStudentsByCourse(courseId);
     }
 }

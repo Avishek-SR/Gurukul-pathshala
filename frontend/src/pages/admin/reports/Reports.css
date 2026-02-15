@@ -4,57 +4,99 @@
   min-height: 100%;
 }
 
+.reports-header {
+  margin-bottom: 30px;
+}
+
 .reports-header h1 {
   font-size: 24px;
   font-weight: 600;
   color: #111827;
+  margin-bottom: 5px;
 }
 
 .reports-header p {
   color: #6b7280;
-  margin-top: 4px;
 }
 
-.reports-card {
-  margin-top: 16px;
-  background: #ffffff;
+.reports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.report-card-item {
+  background: white;
   border-radius: 10px;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.reports-table {
-  width: 100%;
-  border-collapse: collapse;
+.report-card-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.reports-table th,
-.reports-table td {
-  padding: 10px 12px;
-  border-bottom: 1px solid #e5e7eb;
-  font-size: 14px;
+.report-icon {
+  font-size: 1.8rem;
+  width: 50px;
+  height: 50px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.reports-table th {
-  text-align: left;
-  color: #374151;
-  background: #f9fafb;
+.report-info {
+  flex: 1;
 }
 
-.muted {
-  color: #6b7280;
+.report-info h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+  color: #2c3e50;
 }
 
-.error {
-  color: #dc2626;
+.report-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  line-height: 1.4;
 }
 
-.download-link {
-  color: #2563eb;
-  text-decoration: none;
-  font-size: 14px;
+.report-arrow {
+  color: #bdc3c7;
 }
 
-.download-link:hover {
+/* Wrapper for active report view */
+.reports-page-wrapper {
+  padding: 20px;
+  /* height: 100%; removed to allow content sizing */
+  display: flex;
+  flex-direction: column;
+}
+
+.back-to-reports-btn {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: #3498db;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px 0;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-to-reports-btn:hover {
   text-decoration: underline;
 }

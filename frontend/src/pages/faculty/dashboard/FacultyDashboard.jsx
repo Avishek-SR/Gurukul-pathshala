@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import facultyService from '../../../services/faculty.service';
 import {
   BookOpen,
   Users,
@@ -18,54 +18,42 @@ import {
 } from 'lucide-react';
 import './FacultyDashboard.css';
 
-// API service
-const facultyDashboardAPI = {
-  getDashboardStats: async () => {
-    const response = await axios.get('/api/faculty/dashboard/stats');
-    return response.data;
-  },
-  
-  getRecentCourses: async () => {
-    const response = await axios.get('/api/faculty/courses/recent');
-    return response.data;
-  },
-  
-  getUpcomingDeadlines: async () => {
-    const response = await axios.get('/api/faculty/deadlines/upcoming');
-    return response.data;
-  },
-  
-  getRecentAnnouncements: async () => {
-    const response = await axios.get('/api/announcements/faculty/recent');
-    return response.data;
-  }
-};
-
 const FacultyDashboard = () => {
   // Fetch dashboard data
   const { data: statsData, isLoading: statsLoading, isError: statsError } = useQuery({
     queryKey: ['facultyDashboardStats'],
-    queryFn: facultyDashboardAPI.getDashboardStats,
+    queryFn: facultyService.getDashboardStats,
     staleTime: 5 * 60 * 1000,
     retry: 2
   });
 
   const { data: coursesData } = useQuery({
     queryKey: ['facultyRecentCourses'],
-    queryFn: facultyDashboardAPI.getRecentCourses,
+    queryFn: facultyService.getRecentCourses,
     enabled: !!statsData
   });
 
   const { data: deadlinesData } = useQuery({
     queryKey: ['facultyUpcomingDeadlines'],
-    queryFn: facultyDashboardAPI.getUpcomingDeadlines,
+    queryFn: facultyService.getUpcomingDeadlines,
     enabled: !!statsData
   });
 
   const { data: announcementsData } = useQuery({
     queryKey: ['facultyRecentAnnouncements'],
-    queryFn: facultyDashboardAPI.getRecentAnnouncements,
+    queryFn: facultyService.getRecentAnnouncements,
     enabled: !!statsData
+  });
+  const { data: timetableData } = useQuery({
+    queryKey: ['facultyTimetable'],
+    queryFn: async () => {
+      // Direct call or service call
+      const response = await fetch('http://localhost:8080/api/faculty/timetable', {
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
+      });
+      if (!response.ok) throw new Error('Failed to fetch timetable');
+      return response.json();
+    }
   });
 
   // Loading state
@@ -94,37 +82,11 @@ const FacultyDashboard = () => {
 
   return (
     <div className="faculty-dashboard">
-      {/* Welcome Banner */}
-      <div className="welcome-banner">
-        <div className="welcome-content">
-          <h2>Good Morning, Professor!</h2>
-          <p>You have {deadlinesData?.count || 0} pending deadlines today.</p>
-        </div>
-        <div className="welcome-actions">
-          <Link to="/faculty/courses/new" className="primary-btn">
-            Create New Course
-          </Link>
-          <Link to="/faculty/calendar" className="secondary-btn">
-            View Calendar
-          </Link>
-        </div>
-      </div>
+
 
       {/* Stats Grid */}
       <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon">
-            <BookOpen size={24} />
-          </div>
-          <div className="stat-content">
-            <h3>Active Courses</h3>
-            <p className="stat-value">{statsData?.activeCourses || 0}</p>
-            <span className="stat-trend positive">
-              <TrendingUp size={16} />
-              {statsData?.newCourses || 0} new this semester
-            </span>
-          </div>
-        </div>
+
 
         <div className="stat-card">
           <div className="stat-icon">
@@ -169,39 +131,59 @@ const FacultyDashboard = () => {
 
       {/* Main Content Grid */}
       <div className="dashboard-grid">
-        {/* Recent Courses */}
+        {/* Your Schedule (New Card) */}
         <div className="dashboard-card">
           <div className="card-header">
-            <h3>Recent Courses</h3>
+            <h3>Your Schedule (Today)</h3>
+            <Link to="/faculty/timetable" className="view-all">
+              View Full <ChevronRight size={16} />
+            </Link>
+          </div>
+          <div className="card-content">
+            {timetableData?.length > 0 ? (
+              timetableData.filter(t => t.dayOfWeek === new Date().toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase())
+                .sort((a, b) => a.startTime.localeCompare(b.startTime))
+                .map((slot) => (
+                  <div key={slot.id} className="course-item">
+                    <div className="course-icon" style={{ background: '#e0f2fe' }}>
+                      <Clock size={20} className="text-blue-600" />
+                    </div>
+                    <div className="course-info">
+                      <h4>{slot.startTime.substring(0, 5)} - {slot.courseName}</h4>
+                      <p className="course-code">{slot.program} {slot.year} • Room {slot.roomNumber || 'N/A'}</p>
+                    </div>
+                  </div>
+                ))
+            ) : <div className="empty-state-text">No classes scheduled for today.</div>}
+            {timetableData?.filter(t => t.dayOfWeek === new Date().toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase()).length === 0 && timetableData?.length > 0 && (
+              <div className="empty-state-text">No classes scheduled for today.</div>
+            )}
+          </div>
+        </div>
+
+        {/* My Subjects */}
+        <div className="dashboard-card">
+          <div className="card-header">
+            <h3>My Subjects</h3>
             <Link to="/faculty/courses" className="view-all">
               View All <ChevronRight size={16} />
             </Link>
           </div>
           <div className="card-content">
-            {coursesData?.courses?.slice(0, 3).map((course) => (
+            {coursesData?.courses?.length > 0 ? coursesData.courses.slice(0, 4).map((course) => (
               <div key={course.id} className="course-item">
                 <div className="course-icon">
                   <BookOpen size={20} />
                 </div>
                 <div className="course-info">
                   <h4>{course.name}</h4>
-                  <p className="course-code">{course.code} • {course.semester}</p>
-                  <div className="course-meta">
-                    <span className="meta-item">
-                      <Users size={14} />
-                      {course.studentCount} students
-                    </span>
-                    <span className="meta-item">
-                      <FileText size={14} />
-                      {course.assignmentCount} assignments
-                    </span>
-                  </div>
+                  <p className="course-code">{course.code} • {course.program} {course.year}</p>
                 </div>
                 <Link to={`/faculty/courses/${course.id}`} className="course-link">
                   <ChevronRight size={20} />
                 </Link>
               </div>
-            ))}
+            )) : <div className="empty-state-text">No subjects assigned.</div>}
           </div>
         </div>
 

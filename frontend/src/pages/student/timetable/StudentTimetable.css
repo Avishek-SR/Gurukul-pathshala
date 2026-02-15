@@ -1,0 +1,228 @@
+.student-timetable-container {
+    padding: 24px;
+    max-width: 100%;
+    margin: 0 auto;
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+.timetable-header {
+    margin-bottom: 24px;
+}
+
+.timetable-grid-container {
+    overflow-x: auto;
+    background: white;
+    border: 1px solid #e5e7eb;
+    /* Outer border */
+    border-radius: 8px;
+}
+
+.timetable-grid {
+    width: 100%;
+    min-width: 1000px;
+    border-collapse: collapse;
+    /* Ensure shared borders */
+}
+
+/* Header Cells */
+.timetable-grid th {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #d1d5db;
+    border-right: 1px solid #d1d5db;
+    background: #a7f3d0;
+    /* Light Green/Teal from screenshot */
+    color: #064e3b;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* First Column Header Specifics */
+.timetable-grid th:first-child {
+    background: #a7f3d0;
+    /* Ensure matches header */
+    width: 120px;
+}
+
+/* Body Cells */
+.timetable-grid td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    border-right: 1px solid #e5e7eb;
+    color: #374151;
+    font-size: 14px;
+    height: 60px;
+    /* Fixed height for uniform look */
+    vertical-align: middle;
+}
+
+/* First Column (Weekdays) */
+.timetable-grid td.time-slot-header {
+    background: #ffffff;
+    font-weight: 500;
+    color: #111827;
+}
+
+/* Last child border fix */
+.timetable-grid th:last-child,
+.timetable-grid td:last-child {
+    border-right: none;
+}
+
+/* Cell hover */
+.timetable-grid tbody tr:hover td {
+    background-color: #f9fafb;
+}
+
+/* Content Styling */
+.class-card-simple {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.slot-course {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 14px;
+}
+}
+
+.slot-faculty {
+    color: #4b5563;
+}
+
+/* ===== MOBILE VIEW STYLES ===== */
+.timetable-mobile-view {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .timetable-desktop-view {
+        display: none;
+    }
+
+    .timetable-mobile-view {
+        display: block;
+    }
+
+    .student-timetable-container {
+        padding: 16px;
+    }
+}
+
+/* Day Tabs */
+.day-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.day-tab {
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.day-tab.active {
+    background: #60a5fa;
+    color: white;
+    border-color: #60a5fa;
+    box-shadow: 0 2px 8px rgba(96, 165, 250, 0.4);
+}
+
+/* Mobile Schedule List */
+.mobile-schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.mobile-class-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mobile-card-time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #1e40af;
+    font-weight: 600;
+    font-size: 14px;
+    background: #eff6ff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    width: fit-content;
+}
+
+.mobile-card-content h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.mobile-card-details {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #64748b;
+    font-size: 14px;
+    flex-wrap: wrap;
+}
+
+.mobile-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mobile-card-location {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 500;
+    padding-top: 8px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.mobile-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    color: #94a3b8;
+    background: white;
+    border-radius: 12px;
+    border: 1px dashed #e2e8f0;
+}
+
+.mobile-empty-state p {
+    margin-top: 12px;
+    font-size: 15px;
+}

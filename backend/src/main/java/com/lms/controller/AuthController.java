@@ -3,14 +3,13 @@ package com.lms.controller;
 import com.lms.dto.LoginRequest;
 import com.lms.dto.LoginResponse;
 import com.lms.service.AuthService;
-import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/auth") // context-path already /api
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class AuthController {
 
     private final AuthService authService;
@@ -25,9 +24,37 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        LoginResponse response = authService.login(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) { // Use wildcard or specific error DTO
+        System.out.println("Login attempt for user: " + request.getUserId());
+        try {
+            LoginResponse response = authService.login(request);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException | SecurityException e) {
+            System.err.println("Login error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse("Login failed: " + e.getMessage()));
+        } catch (Exception e) {
+            System.err.println("Unexpected login error: " + e.getMessage());
+            e.printStackTrace();
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(new ErrorResponse("Internal Error: " + e.toString()));
+        }
+    }
+
+    // Simple inner class for error response
+    public static class ErrorResponse {
+        private String message;
+
+        public ErrorResponse(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
     }
 
     @GetMapping("/profile")

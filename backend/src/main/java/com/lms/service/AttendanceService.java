@@ -19,167 +19,212 @@ import java.util.stream.Collectors;
 @Transactional
 public class AttendanceService {
 
-    private final AttendanceRepository attendanceRepository;
-    private final CourseRepository courseRepository;
-    private final UserRepository userRepository;
+        private final AttendanceRepository attendanceRepository;
+        private final CourseRepository courseRepository;
+        private final UserRepository userRepository;
 
-    public AttendanceService(AttendanceRepository attendanceRepository,
-                             CourseRepository courseRepository,
-                             UserRepository userRepository) {
-        this.attendanceRepository = attendanceRepository;
-        this.courseRepository = courseRepository;
-        this.userRepository = userRepository;
-    }
-
-    /**
-     * Faculty marks attendance for a student in a course for today.
-     * - Uses authenticated faculty
-     * - Resolves student and course from DB
-     * - Prevents duplicate marking for the same day
-     */
-    public Attendance markAttendance(String studentUserId, Long courseId, boolean present) {
-
-        // Resolve authenticated faculty (ensures endpoint is protected)
-        String facultyUserId = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getName();
-
-        userRepository.findByUserId(facultyUserId)
-                .orElseThrow(() -> new IllegalStateException("Authenticated faculty not found"));
-
-        // Resolve student
-        User student = userRepository.findByUserId(studentUserId)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found: " + studentUserId));
-
-        // Resolve course
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + courseId));
-
-        LocalDate today = LocalDate.now();
-
-        // Prevent duplicate attendance for same day
-        Attendance existing = attendanceRepository
-                .findByStudentAndCourseAndDate(student, course, today)
-                .orElse(null);
-
-        if (existing != null) {
-            existing.setPresent(present);
-            return attendanceRepository.save(existing);
+        public AttendanceService(AttendanceRepository attendanceRepository,
+                        CourseRepository courseRepository,
+                        UserRepository userRepository) {
+                this.attendanceRepository = attendanceRepository;
+                this.courseRepository = courseRepository;
+                this.userRepository = userRepository;
         }
 
-        Attendance attendance = new Attendance();
-        attendance.setStudent(student);
-        attendance.setCourse(course);
-        attendance.setDate(today);
-        attendance.setPresent(present);
+        /**
+         * Faculty marks attendance for a student in a course for today.
+         */
+        public Attendance markAttendance(Long studentId, Long courseId, boolean present) {
 
-        return attendanceRepository.save(attendance);
-    }
+                // Resolve authenticated faculty
+                String facultyUserId = SecurityContextHolder.getContext()
+                                .getAuthentication()
+                                .getName();
 
-    /**
-     * Get all attendance records for the logged-in student.
-     */
-    @Transactional(readOnly = true)
-    public List<Attendance> getMyAttendance() {
-        String studentUserId = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getName();
+                userRepository.findByUserId(facultyUserId)
+                                .orElseThrow(() -> new IllegalStateException("Authenticated faculty not found"));
 
-        User student = userRepository.findByUserId(studentUserId)
-                .orElseThrow(() -> new IllegalStateException("Authenticated student not found"));
+                // Resolve student
+                User student = userRepository.findById(studentId)
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Student not found with id: " + studentId));
 
-        return attendanceRepository.findByStudent(student);
-    }
+                // Resolve course
+                Course course = courseRepository.findById(courseId)
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Course not found with id: " + courseId));
 
-    /**
-     * Calculate attendance percentage for a student in a course.
-     */
-    @Transactional(readOnly = true)
-    public int calculatePercentage(String studentUserId, Long courseId) {
+                LocalDate today = LocalDate.now();
 
-        User student = userRepository.findByUserId(studentUserId)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found: " + studentUserId));
+                // Prevent duplicate attendance for same day
+                Attendance existing = attendanceRepository
+                                .findByStudentAndCourseAndDate(student, course, today)
+                                .orElse(null);
 
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + courseId));
+                if (existing != null) {
+                        existing.setPresent(present);
+                        return attendanceRepository.save(existing);
+                }
 
-        long total = attendanceRepository.countByStudentAndCourse(student, course);
-        if (total == 0) {
-            return 0;
+                Attendance attendance = new Attendance();
+                attendance.setStudent(student);
+                attendance.setCourse(course);
+                attendance.setDate(today);
+                attendance.setPresent(present);
+
+                return attendanceRepository.save(attendance);
         }
 
-        long present = attendanceRepository.countByStudentAndCourseAndPresentTrue(student, course);
-        return (int) ((present * 100) / total);
-    }
+        /**
+         * Get all attendance records for the logged-in student.
+         */
+        @Transactional(readOnly = true)
+        public List<Attendance> getMyAttendance() {
+                String studentUserId = SecurityContextHolder.getContext()
+                                .getAuthentication()
+                                .getName();
 
-    /**
-     * Admin: get all attendance records
-     */
-    @Transactional(readOnly = true)
-    public List<AttendanceDTO> getAllAttendance() {
-        return attendanceRepository.findAll()
-                .stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-    }
+                User student = userRepository.findByUserId(studentUserId)
+                                .orElseThrow(() -> new IllegalStateException("Authenticated student not found"));
 
-    /**
-     * Admin: get attendance for a specific student
-     */
-    @Transactional(readOnly = true)
-    public List<AttendanceDTO> getAttendanceForStudent(Long studentId) {
-        User student = userRepository.findById(studentId)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found with id: " + studentId));
+                return attendanceRepository.findByStudent(student);
+        }
 
-        return attendanceRepository.findByStudent(student)
-                .stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-    }
+        /**
+         * Calculate attendance percentage for a student in a course.
+         */
+        @Transactional(readOnly = true)
+        public int calculatePercentage(String studentUserId, Long courseId) {
 
-    /**
-     * Admin: get attendance for a specific course
-     */
-    @Transactional(readOnly = true)
-    public List<AttendanceDTO> getAttendanceForCourse(Long courseId) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + courseId));
+                User student = userRepository.findByUserId(studentUserId)
+                                .orElseThrow(() -> new IllegalArgumentException("Student not found: " + studentUserId));
 
-        return attendanceRepository.findByCourse(course)
-                .stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-    }
+                Course course = courseRepository.findById(courseId)
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Course not found with id: " + courseId));
 
-    /**
-     * Admin: save or update attendance from DTO
-     */
-    public void saveAttendance(AttendanceDTO dto) {
-        User student = userRepository.findById(dto.getStudentId())
-                .orElseThrow(() -> new IllegalArgumentException("Student not found: " + dto.getStudentId()));
+                long total = attendanceRepository.countByStudentAndCourse(student, course);
+                if (total == 0) {
+                        return 0;
+                }
 
-        Course course = courseRepository.findById(dto.getCourseId())
-                .orElseThrow(() -> new IllegalArgumentException("Course not found: " + dto.getCourseId()));
+                long present = attendanceRepository.countByStudentAndCourseAndPresentTrue(student, course);
+                return (int) ((present * 100) / total);
+        }
 
-        Attendance attendance = new Attendance();
-        attendance.setStudent(student);
-        attendance.setCourse(course);
-        attendance.setDate(dto.getDate());
-        attendance.setPresent(dto.isPresent());
+        /**
+         * Admin: get all attendance records
+         */
+        @Transactional(readOnly = true)
+        public List<AttendanceDTO> getAllAttendance(Long courseId, Long studentId, String program, String section) {
+                List<Attendance> records;
 
-        attendanceRepository.save(attendance);
-    }
+                if (studentId != null) {
+                        User student = userRepository.findById(studentId)
+                                        .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+                        records = attendanceRepository.findByStudent(student);
+                } else if (courseId != null) {
+                        Course course = courseRepository.findById(courseId)
+                                        .orElseThrow(() -> new IllegalArgumentException("Course not found"));
+                        records = attendanceRepository.findByCourse(course);
+                } else if (program != null && !program.isBlank()) {
+                        if (section != null && !section.isBlank()) {
+                                records = attendanceRepository.findByStudentProgramAndStudentSection(program, section);
+                        } else {
+                                records = attendanceRepository.findByStudentProgram(program);
+                        }
+                } else {
+                        records = attendanceRepository.findAll();
+                }
 
-    /**
-     * Mapper: Attendance -> AttendanceDTO
-     */
-    private AttendanceDTO toDTO(Attendance a) {
-        AttendanceDTO dto = new AttendanceDTO();
-        dto.setId(a.getId());
-        dto.setStudentId(a.getStudent().getId());
-        dto.setCourseId(a.getCourse().getId());
-        dto.setDate(a.getDate());
-        dto.setPresent(a.isPresent());
-        return dto;
-    }
+                return records.stream()
+                                .map(this::toDTO)
+                                .collect(Collectors.toList());
+        }
+
+        /**
+         * Admin: get all attendance records (Legacy/No-Args)
+         */
+        @Transactional(readOnly = true)
+        public List<AttendanceDTO> getAllAttendance() {
+                return getAllAttendance(null, null, null, null);
+        }
+
+        /**
+         * Admin: get attendance for a specific student
+         */
+        @Transactional(readOnly = true)
+        public List<AttendanceDTO> getAttendanceForStudent(Long studentId) {
+                User student = userRepository.findById(studentId)
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Student not found with id: " + studentId));
+
+                return attendanceRepository.findByStudent(student)
+                                .stream()
+                                .map(this::toDTO)
+                                .collect(Collectors.toList());
+        }
+
+        /**
+         * Admin: get attendance for a specific course
+         */
+        @Transactional(readOnly = true)
+        public List<AttendanceDTO> getAttendanceForCourse(Long courseId) {
+                Course course = courseRepository.findById(courseId)
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Course not found with id: " + courseId));
+
+                return attendanceRepository.findByCourse(course)
+                                .stream()
+                                .map(this::toDTO)
+                                .collect(Collectors.toList());
+        }
+
+        /**
+         * Mapper: Attendance -> AttendanceDTO
+         */
+        private AttendanceDTO toDTO(Attendance a) {
+                AttendanceDTO dto = new AttendanceDTO();
+                dto.setId(a.getId());
+                dto.setStudentId(a.getStudent().getId());
+                dto.setStudentUserId(a.getStudent().getUserId()); // Set the string ID
+                if (a.getCourse().getFaculty() != null) {
+                        dto.setFacultyUserId(a.getCourse().getFaculty().getUserId());
+                }
+                dto.setCourseId(a.getCourse().getId());
+                dto.setDate(a.getDate());
+                dto.setPresent(a.isPresent());
+                return dto;
+        }
+
+        /**
+         * Mark attendance for a batch of students.
+         */
+        public void markBatchAttendance(com.lms.dto.BatchAttendanceDTO batchDTO) {
+                Course course = courseRepository.findById(batchDTO.getCourseId())
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Course not found: " + batchDTO.getCourseId()));
+
+                LocalDate date = batchDTO.getDate();
+
+                for (com.lms.dto.BatchAttendanceDTO.StudentAttendanceDTO sDTO : batchDTO.getStudents()) {
+                        User student = userRepository.findByUserId(sDTO.getStudentId())
+                                        .orElseThrow(() -> new IllegalArgumentException(
+                                                        "Student not found: " + sDTO.getStudentId()));
+
+                        // Find existing or create new
+                        Attendance attendance = attendanceRepository
+                                        .findByStudentAndCourseAndDate(student, course, date)
+                                        .orElseGet(() -> {
+                                                Attendance newAtt = new Attendance();
+                                                newAtt.setStudent(student);
+                                                newAtt.setCourse(course);
+                                                newAtt.setDate(date);
+                                                return newAtt;
+                                        });
+
+                        attendance.setPresent(sDTO.isPresent());
+                        attendanceRepository.save(attendance);
+                }
+        }
 }

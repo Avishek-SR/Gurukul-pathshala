@@ -41,4 +41,10 @@ public class CourseController {
         courseService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    // Get students enrolled in a course
+    @GetMapping("/{id}/students")
+    public ResponseEntity<List<com.lms.model.User>> getStudents(@PathVariable Long id) {
+        return ResponseEntity.ok(courseService.getStudentsForCourse(id));
+    }
 }

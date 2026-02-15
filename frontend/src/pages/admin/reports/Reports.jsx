@@ -1,77 +1,59 @@
-import React, { useEffect, useState } from 'react';
-import { apiGet } from '../../../services/api';
+import React, { useState } from 'react';
+import GlobalActivityLog from '../dashboard/components/GlobalActivityLog';
 import './Reports.css';
 
 const Reports = () => {
-  const [reports, setReports] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [activeReport, setActiveReport] = useState(null);
 
-  useEffect(() => {
-    const loadReports = async () => {
-      setLoading(true);
-      setError('');
-      try {
-        const data = await apiGet('/admin/reports');
-        if (Array.isArray(data)) {
-          setReports(data);
-        } else {
-          setReports([]);
-        }
-      } catch (e) {
-        setError('Failed to load reports');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const reportCards = [
+    {
+      id: 'global-activity',
+      title: 'Global Activity Log',
+      description: 'View real-time system-wide activity logs for all users.',
+      icon: 'fas fa-history',
+      color: '#3498db'
+    },
+    // Future reports can be added here, e.g., 'attendance-report', 'performance-report'
+  ];
 
-    loadReports();
-  }, []);
+  if (activeReport === 'global-activity') {
+    return (
+      <div className="reports-page-wrapper">
+        <button className="back-to-reports-btn" onClick={() => setActiveReport(null)}>
+          <i className="fas fa-arrow-left"></i> Back to Reports
+        </button>
+        <GlobalActivityLog />
+      </div>
+    );
+  }
 
   return (
     <div className="reports-page">
       <div className="reports-header">
         <h1>System Reports</h1>
-        <p>View and export system-generated reports</p>
+        <p>Access detailed reports and system logs</p>
       </div>
 
-      <div className="reports-card">
-        {loading && <p className="muted">Loading...</p>}
-        {error && <p className="error">{error}</p>}
-
-        {!loading && !error && reports.length === 0 && (
-          <p className="muted">No reports available.</p>
-        )}
-
-        {!loading && !error && reports.length > 0 && (
-          <table className="reports-table">
-            <thead>
-              <tr>
-                <th>Report Name</th>
-                <th>Type</th>
-                <th>Generated At</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {reports.map((r) => (
-                <tr key={r.id}>
-                  <td>{r.name}</td>
-                  <td>{r.type}</td>
-                  <td>{r.generatedAt}</td>
-                  <td>
-                    <a
-                      href={`http://localhost:8080/api/admin/reports/${r.id}/download`}
-                      className="download-link"
-                    >
-                      Download
-                    </a>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+      <div className="reports-grid">
+        {reportCards.map(report => (
+          <div
+            key={report.id}
+            className="report-card-item"
+            onClick={() => setActiveReport(report.id)}
+            style={{ borderLeft: `4px solid ${report.color}` }}
+          >
+            <div className="report-icon" style={{ color: report.color }}>
+              <i className={report.icon}></i>
+            </div>
+            <div className="report-info">
+              <h3>{report.title}</h3>
+              <p>{report.description}</p>
+            </div>
+            <div className="report-arrow">
+              <i className="fas fa-chevron-right"></i>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

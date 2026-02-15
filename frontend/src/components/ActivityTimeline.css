@@ -1,0 +1,55 @@
+.activity-timeline {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.activity-timeline h3 {
+    margin-bottom: 15px;
+    color: #34495e;
+}
+
+.activity-timeline ul {
+    list-style: none;
+    padding: 0;
+}
+
+.activity-item {
+    display: flex;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    margin-right: 15px;
+    color: #3498db;
+    font-size: 1.2em;
+    padding-top: 5px;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-action {
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.activity-desc {
+    margin: 5px 0;
+    color: #7f8c8d;
+    font-size: 0.95em;
+}
+
+.activity-time {
+    font-size: 0.85em;
+    color: #bdc3c7;
+}

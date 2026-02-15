@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/admin/reports")
+@RequestMapping("/admin/reports")
 public class AdminReportController {
 
     @GetMapping

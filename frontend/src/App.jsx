@@ -17,12 +17,48 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  // Handle global auth events
+  React.useEffect(() => {
+    const handleLogout = () => {
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('user');
+      window.location.href = '/login';
+    };
+
+    const handleForbidden = (event) => {
+      console.warn("Forbidden access detected:", event.detail);
+      // Optional: Redirect to home/dashboard if stuck in wrong section
+    };
+
+    const handleStorageChange = (event) => {
+      if (event.key === 'token' || event.key === 'user') {
+        // If token/user changes in another tab, reload this tab to sync state
+        window.location.reload();
+      }
+    };
+
+    window.addEventListener('auth:logout', handleLogout);
+    window.addEventListener('auth:forbidden', handleForbidden);
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('auth:logout', handleLogout);
+      window.removeEventListener('auth:forbidden', handleForbidden);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <AuthProvider>
           <AppRoutes />
-          <Toaster 
+          <Toaster
             position="top-right"
             toastOptions={{
               duration: 4000,

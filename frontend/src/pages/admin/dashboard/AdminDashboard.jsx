@@ -1,27 +1,40 @@
-// src/pages/admin/dashboard/AdminDashboard.jsx
 import React, { useEffect, useState } from 'react';
+import axios from '../../../api/axiosConfig'; // Configured axios instance
 import './AdminDashboard.css';
-import { apiGet } from '../../../services/api';
-import {
-  FaUsers,
-  FaChalkboardTeacher,
-  FaGraduationCap,
-  FaMoneyBillWave,
-  FaExclamationTriangle,
-} from 'react-icons/fa';
+import DashboardStats from './components/DashboardStats';
+import DashboardCharts from './components/DashboardCharts';
+import UpcomingEvents from './components/UpcomingEvents';
+import GlobalActivityLog from './components/GlobalActivityLog';
 
-const AdminDashboard = () => {
+const AdminDashboard = ({ onNavigate }) => {
   const [stats, setStats] = useState(null);
+  const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     const load = async () => {
       try {
-        const data = await apiGet('/admin/dashboard');
-        setStats(data);
+        // Parallel fetch for stats and analytics using axios
+        const [statsRes, analyticsRes] = await Promise.all([
+          axios.get('/admin/dashboard'),
+          axios.get('/admin/dashboard/analytics')
+        ]);
+
+        if (statsRes.data && analyticsRes.data) {
+          setStats(statsRes.data);
+          setAnalytics(analyticsRes.data);
+        } else {
+          throw new Error('Failed to fetch dashboard data');
+        }
       } catch (e) {
-        setError('Failed to load dashboard data');
+        console.error(e);
+        if (e.response?.status === 401) {
+          // Handled by interceptor usually, but good to know
+          setError('Unauthorized. Please login again.');
+        } else {
+          setError('Failed to load dashboard data');
+        }
       } finally {
         setLoading(false);
       }
@@ -31,69 +44,36 @@ const AdminDashboard = () => {
   }, []);
 
   if (loading) {
-    return <div className="admin-dashboard"><p className="muted">Loading dashboard...</p></div>;
+    return <div className="admin-dashboard"><div className="loading-spinner">Loading dashboard...</div></div>;
   }
 
   if (error) {
     return <div className="admin-dashboard"><p className="error">{error}</p></div>;
   }
 
-  if (!stats) {
-    return <div className="admin-dashboard"><p className="muted">No data available.</p></div>;
-  }
-
-  const cards = [
-    {
-      title: 'Total Students',
-      value: stats.totalStudents,
-      icon: <FaUsers />,
-    },
-    {
-      title: 'Total Faculty',
-      value: stats.totalFaculty,
-      icon: <FaChalkboardTeacher />,
-    },
-    {
-      title: 'Active Courses',
-      value: stats.activeCourses,
-      icon: <FaGraduationCap />,
-    },
-    {
-      title: 'Revenue',
-      value: `₹${stats.revenue}`,
-      icon: <FaMoneyBillWave />,
-    },
-    {
-      title: 'Pending Requests',
-      value: stats.pendingRequests,
-      icon: <FaExclamationTriangle />,
-    },
-  ];
-
   return (
     <div className="admin-dashboard">
       <div className="dashboard-header">
         <h1>Admin Dashboard</h1>
-        <p>System overview based on live data</p>
+        <p>Overview of school performance and activities</p>
       </div>
 
-      <div className="stats-grid">
-        {cards.map((c, i) => (
-          <div key={i} className="stat-card">
-            <div className="stat-icon">{c.icon}</div>
-            <div className="stat-info">
-              <h3>{c.value}</h3>
-              <span>{c.title}</span>
-            </div>
+      <div className="dashboard-content">
+        {/* Top: Key Statistics */}
+        <DashboardStats stats={stats} onNavigate={onNavigate} />
+
+        {/* Middle: Visual Analytics */}
+        <DashboardCharts analytics={analytics} />
+
+        {/* Bottom: Activity & Events */}
+        <div className="dashboard-bottom-grid">
+          <div className="bottom-widget events-widget">
+            <UpcomingEvents />
           </div>
-        ))}
-      </div>
-
-      <div className="dashboard-note">
-        <p>
-          Charts and activity feeds will appear automatically once their backend
-          modules (attendance, revenue, activities) are implemented.
-        </p>
+          <div className="bottom-widget activity-widget">
+            <GlobalActivityLog />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -21,9 +21,20 @@ public class AdminAttendanceController {
      * Get all attendance records (admin view)
      * GET /api/admin/attendance
      */
+    @PostMapping("/batch")
+    public ResponseEntity<Void> markBatchAttendance(@RequestBody com.lms.dto.BatchAttendanceDTO batchDTO) {
+        attendanceService.markBatchAttendance(batchDTO);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping
-    public ResponseEntity<List<AttendanceDTO>> getAllAttendance() {
-        return ResponseEntity.ok(attendanceService.getAllAttendance());
+    public ResponseEntity<List<AttendanceDTO>> getAllAttendance(
+            @RequestParam(required = false) Long courseId,
+            @RequestParam(required = false) Long studentId,
+            @RequestParam(required = false) String program,
+            @RequestParam(required = false) String section) {
+
+        return ResponseEntity.ok(attendanceService.getAllAttendance(courseId, studentId, program, section));
     }
 
     /**
@@ -32,8 +43,7 @@ public class AdminAttendanceController {
      */
     @GetMapping("/student/{studentId}")
     public ResponseEntity<List<AttendanceDTO>> getStudentAttendance(
-            @PathVariable Long studentId
-    ) {
+            @PathVariable Long studentId) {
         return ResponseEntity.ok(attendanceService.getAttendanceForStudent(studentId));
     }
 
@@ -43,8 +53,7 @@ public class AdminAttendanceController {
      */
     @GetMapping("/course/{courseId}")
     public ResponseEntity<List<AttendanceDTO>> getCourseAttendance(
-            @PathVariable Long courseId
-    ) {
+            @PathVariable Long courseId) {
         return ResponseEntity.ok(attendanceService.getAttendanceForCourse(courseId));
     }
 
@@ -54,7 +63,7 @@ public class AdminAttendanceController {
      */
     @PostMapping
     public ResponseEntity<Void> saveAttendance(@RequestBody AttendanceDTO dto) {
-        attendanceService.saveAttendance(dto);
+        attendanceService.markAttendance(dto.getStudentId(), dto.getCourseId(), dto.isPresent());
         return ResponseEntity.ok().build();
     }
 }
