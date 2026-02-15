@@ -19,5 +19,18 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:" + uploadPath.toString() + "/");
+
+        // Serve static files from the resources/static folder
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/");
+    }
+
+    @Override
+    public void addViewControllers(
+            @org.springframework.lang.NonNull org.springframework.web.servlet.config.annotation.ViewControllerRegistry registry) {
+        // Redirect any non-API, non-static file request to index.html for React Router
+        // to handle
+        registry.addViewController("/{path:[^\\.]*}")
+                .setViewName("forward:/index.html");
     }
 }
