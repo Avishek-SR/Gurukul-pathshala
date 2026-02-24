@@ -58,6 +58,23 @@ public class UserService { // REMOVE "implements UserDetailsService"
                 userRepository.save(user);
                 System.out.println("SUPER ADMIN FORCED BY ID: " + user.getUserId());
             }
+        } else {
+            // DATABASE IS EMPTY OR MISSING SUPER ADMIN - CREATE IT
+            System.out.println("SUPER ADMIN NOT FOUND - CREATING INITIAL SUPER ADMIN...");
+            User initialAdmin = new User();
+            initialAdmin.setUserId("avishek070504");
+            initialAdmin.setName("Avishek Yadav");
+            initialAdmin.setEmail("avishek@gurukul.com");
+            initialAdmin.setPassword(passwordEncoder.encode("Avishek@0705")); // Default password
+            initialAdmin.setRole(Role.ADMIN);
+            initialAdmin.setSuperAdmin(true);
+            initialAdmin.setActive(true);
+            initialAdmin.setDob(java.time.LocalDate.of(2004, 5, 7)); // Required field
+            initialAdmin.setPermissions(new java.util.HashSet<>(java.util.Arrays.asList(
+                    "MANAGE_STUDENTS", "MANAGE_FACULTY", "MANAGE_ADMINS", "BULK_UPLOAD", "DELETE_USERS")));
+
+            userRepository.save(initialAdmin);
+            System.out.println("INITIAL SUPER ADMIN CREATED SUCCESSFULLY!");
         }
 
         // 2. Legacy check by Name for existing admins
