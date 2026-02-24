@@ -2680,3 +2680,24 @@
 2026-02-24 23:30:36 - Securing HEAD /public/settings
 2026-02-24 23:30:36 - Set SecurityContextHolder to anonymous SecurityContext
 2026-02-24 23:30:36 - Secured HEAD /public/settings
+2026-02-24 23:55:24 - Securing GET /public/faculty
+2026-02-24 23:55:24 - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-24 23:55:24 - Secured GET /public/faculty
+2026-02-24 23:55:24 - Securing GET /uploads/f11afb05-7fc9-4fd4-be7e-78888e02853d.png
+2026-02-24 23:55:24 - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-24 23:55:24 - Secured GET /uploads/f11afb05-7fc9-4fd4-be7e-78888e02853d.png
+2026-02-24 23:55:26 - Securing GET /public/landing-slides
+2026-02-24 23:55:26 - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-24 23:55:26 - Secured GET /public/landing-slides
+2026-02-24 23:55:27 - Securing GET /public/faculty
+2026-02-24 23:55:27 - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-24 23:55:27 - Secured GET /public/faculty
+2026-02-24 23:55:27 - Securing GET /uploads/f11afb05-7fc9-4fd4-be7e-78888e02853d.png
+2026-02-24 23:55:27 - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-24 23:55:27 - Secured GET /uploads/f11afb05-7fc9-4fd4-be7e-78888e02853d.png
+2026-02-24 23:55:33 - Securing GET /public/captcha
+2026-02-24 23:55:33 - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-24 23:55:33 - Secured GET /public/captcha
+2026-02-24 23:55:41 - Securing GET /public/captcha
+2026-02-24 23:55:41 - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-24 23:55:41 - Secured GET /public/captcha
