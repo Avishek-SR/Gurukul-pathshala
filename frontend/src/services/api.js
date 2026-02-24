@@ -57,7 +57,43 @@ export const apiPut = (url, data) => api.put(url, data).then(res => res.data);
 export const apiDelete = (url) => api.delete(url).then(res => res.data);
 
 export const authAPI = {
-  login: (credentials) => api.post('/auth/login', credentials).then(res => res.data),
+  login: (credentials) => api.post('auth/login', credentials).then(res => res.data),
+};
+
+export const noticeAPI = {
+  getAll: () => apiGet('/admin/notices'),
+  getActive: () => apiGet('/public/notices'),
+  create: (notice) => apiPost('/admin/notices', notice),
+  update: (id, notice) => apiPut(`/admin/notices/${id}`, notice),
+  delete: (id) => apiDelete(`/admin/notices/${id}`),
+};
+
+export const settingsAPI = {
+  getPublic: () => apiGet('/public/settings'),
+  getAllAdmin: () => apiGet('/admin/settings'),
+  update: (setting) => apiPost('/admin/settings', setting),
+  uploadImage: (key, file) => {
+    const formData = new FormData();
+    formData.append('key', key);
+    formData.append('file', file);
+    return api.post('/admin/settings/upload-image', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }).then(res => res.data);
+  },
+  delete: (key) => apiDelete(`/admin/settings/${key}`),
+};
+
+export const landingSlidesAPI = {
+  getPublic: () => apiGet('/public/landing-slides'),
+  getAllAdmin: () => apiGet('/admin/landing-slides'),
+  create: (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post('/admin/landing-slides', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }).then(res => res.data);
+  },
+  delete: (id) => apiDelete(`/admin/landing-slides/${id}`),
 };
 
 export default api;

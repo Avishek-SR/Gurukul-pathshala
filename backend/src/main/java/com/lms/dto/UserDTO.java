@@ -25,6 +25,7 @@ public class UserDTO {
     private java.util.Set<String> permissions;
     private String personalEmail;
     private String faceDescriptor;
+    private String bio;
 
     public UserDTO() {
     }
@@ -195,5 +196,13 @@ public class UserDTO {
 
     public void setFaceDescriptor(String faceDescriptor) {
         this.faceDescriptor = faceDescriptor;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 }

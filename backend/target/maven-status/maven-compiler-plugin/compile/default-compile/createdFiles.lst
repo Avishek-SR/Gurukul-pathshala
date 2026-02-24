@@ -90,9 +90,9 @@ com/lms/service/CustomUserDetailsService.class
 com/lms/model/Enrollment.class
 com/lms/service/StatsService.class
 com/lms/service/NotificationService.class
+com/lms/model/SystemSetting.class
 com/lms/service/TimetableGeneratorService.class
 com/lms/service/ExcelExportService.class
-com/lms/controller/PublicController.class
 com/lms/service/StaffService.class
 com/lms/controller/PublicAdmissionController.class
 com/lms/controller/AssignmentController.class

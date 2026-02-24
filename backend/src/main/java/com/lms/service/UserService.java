@@ -458,6 +458,16 @@ public class UserService { // REMOVE "implements UserDetailsService"
         if (request.getPersonalEmail() != null)
             user.setPersonalEmail(request.getPersonalEmail());
 
+        // Faculty / Extended fields
+        if (request.getEmail() != null && !request.getEmail().isBlank())
+            user.setEmail(request.getEmail().trim());
+        if (request.getDepartment() != null)
+            user.setDepartment(request.getDepartment());
+        if (request.getDesignation() != null)
+            user.setDesignation(request.getDesignation());
+        if (request.getBio() != null)
+            user.setBio(request.getBio());
+
         // Update active status if needed, though usually handled by separate endpoint
         // user.setActive(request.isActive());
 

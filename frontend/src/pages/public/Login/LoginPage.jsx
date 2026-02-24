@@ -58,7 +58,7 @@ const LoginPage = () => {
 
   const refreshCaptcha = async () => {
     try {
-      const res = await axios.get('/public/captcha');
+      const res = await axios.get('public/captcha');
       const data = res.data;
       setCaptcha(data.code);
       setCaptchaId(data.id);

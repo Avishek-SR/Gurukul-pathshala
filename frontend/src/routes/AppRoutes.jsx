@@ -14,11 +14,16 @@ import HomePage from '../pages/public/home/HomePage';
 import AdmissionsPage from "../pages/public/Admissions/AdmissionsPage";
 import AcademicPage from '../pages/public/academics/AcademicPage';
 import AboutPage from '../pages/public/About/AboutPage';
+import FacultyPage from '../pages/public/Faculty/FacultyPage';
+import ContactPage from '../pages/public/Contacts/ContactPage';
+import GalleryPage from '../pages/public/Gallery/GalleryPage';
 
 // Admin pages
 import AdminDashboard from '../pages/admin/dashboard/AdminDashboard';
 import Admins from '../pages/admin/users/Admins';
 import TimetableManagement from '../pages/admin/timetable/TimetableManagement';
+import NoticeManagement from '../pages/admin/notices/NoticeManagement';
+import AdminSettings from '../pages/admin/settings/AdminSettings';
 
 // Faculty pages
 import FacultyDashboard from '../pages/faculty/dashboard/FacultyDashboard';
@@ -104,6 +109,27 @@ const AppRoutes = () => {
         </MainLayout>
       } />
 
+      {/* Faculty Page */}
+      <Route path="/our-faculty" element={
+        <MainLayout>
+          <FacultyPage />
+        </MainLayout>
+      } />
+
+      {/* Gallery Page */}
+      <Route path="/gallery" element={
+        <MainLayout>
+          <GalleryPage />
+        </MainLayout>
+      } />
+
+      {/* Contact Page */}
+      <Route path="/contact" element={
+        <MainLayout>
+          <ContactPage />
+        </MainLayout>
+      } />
+
       {/* Login Page */}
       <Route path="/login" element={<LoginPage />} />
 
@@ -120,8 +146,8 @@ const AppRoutes = () => {
         <Route index element={<AdminDashboard />} />
         <Route path="users" element={<Admins />} />
         <Route path="timetable" element={<TimetableManagement />} />
-        <Route path="notices" element={<Notices />} />
-        <Route path="settings" element={<Settings />} />
+        <Route path="notices" element={<NoticeManagement />} />
+        <Route path="settings" element={<AdminSettings />} />
       </Route>
 
       {/* Faculty Layout + Routes */}

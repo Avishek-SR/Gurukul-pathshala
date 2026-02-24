@@ -12,6 +12,8 @@ import com.lms.service.BulkUploadService;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Map;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -138,5 +140,109 @@ public class AdminController {
         dto.setPermissions(user.getPermissions());
         dto.setFaceDescriptor(user.getFaceDescriptor());
         return dto;
+    }
+
+    // --- Notice Management ---
+
+    @Autowired
+    private com.lms.service.impl.NoticeServiceImpl noticeService;
+
+    @Autowired
+    private com.lms.service.impl.SystemSettingServiceImpl systemSettingService;
+
+    @GetMapping("/notices")
+    public ResponseEntity<List<com.lms.model.Notice>> getAllNotices() {
+        return ResponseEntity.ok(noticeService.getAllNotices());
+    }
+
+    @PostMapping("/notices")
+    public ResponseEntity<com.lms.model.Notice> createNotice(@RequestBody com.lms.model.Notice notice) {
+        return ResponseEntity.ok(noticeService.saveNotice(notice));
+    }
+
+    @PutMapping("/notices/{id}")
+    public ResponseEntity<com.lms.model.Notice> updateNotice(@PathVariable Long id,
+            @RequestBody com.lms.model.Notice notice) {
+        com.lms.model.Notice existing = noticeService.getNoticeById(id);
+        if (existing == null) {
+            return ResponseEntity.notFound().build();
+        }
+        notice.setId(id);
+        return ResponseEntity.ok(noticeService.saveNotice(notice));
+    }
+
+    @DeleteMapping("/notices/{id}")
+    public ResponseEntity<Void> deleteNotice(@PathVariable Long id) {
+        noticeService.deleteNotice(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // --- System Settings Management ---
+
+    @Autowired
+    private com.lms.service.FileStorageService fileStorageService;
+
+    @GetMapping("/settings")
+    public ResponseEntity<List<com.lms.model.SystemSetting>> getAllSettings() {
+        return ResponseEntity.ok(systemSettingService.getAllSettingsForAdmin());
+    }
+
+    @PostMapping("/settings")
+    public ResponseEntity<com.lms.model.SystemSetting> updateSetting(@RequestBody Map<String, String> payload) {
+        String key = payload.get("key");
+        String value = payload.get("value");
+        String description = payload.get("description");
+        String group = payload.get("group");
+        return ResponseEntity.ok(systemSettingService.updateSetting(key, value, description, group));
+    }
+
+    @PostMapping("/settings/upload-image")
+    public ResponseEntity<com.lms.model.SystemSetting> uploadSettingImage(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("key") String key) {
+        String filePath = fileStorageService.storeFile(file);
+        // Default group to "Landing Page" if not set, or we could pass it.
+        // For simplicity, we'll assume these are landing page images.
+        return ResponseEntity
+                .ok(systemSettingService.updateSetting(key, filePath, "Landing Page Slide Image", "landing_page"));
+    }
+
+    @DeleteMapping("/settings/{key}")
+    public ResponseEntity<Void> deleteSetting(@PathVariable String key) {
+        systemSettingService.deleteSetting(key);
+        return ResponseEntity.noContent().build();
+    }
+
+    // --- Landing Page Slide Management ---
+
+    @Autowired
+    private com.lms.service.LandingPageSlideService landingPageSlideService;
+
+    @GetMapping("/landing-slides")
+    public ResponseEntity<List<com.lms.model.LandingPageSlide>> getAllLandingSlides() {
+        return ResponseEntity.ok(landingPageSlideService.getAllSlidesForAdmin());
+    }
+
+    @PostMapping("/landing-slides")
+    public ResponseEntity<com.lms.model.LandingPageSlide> addLandingSlide(
+            @RequestParam("file") MultipartFile file) {
+        String filePath = fileStorageService.storeFile(file);
+
+        // Determine type based on extension or mime type
+        String fileType = "IMAGE";
+        String contentType = file.getContentType();
+        if (contentType != null && contentType.startsWith("video")) {
+            fileType = "VIDEO";
+        } else if (filePath.endsWith(".mp4") || filePath.endsWith(".webm")) { // Fallback check
+            fileType = "VIDEO";
+        }
+
+        return ResponseEntity.ok(landingPageSlideService.addSlide(filePath, fileType));
+    }
+
+    @DeleteMapping("/landing-slides/{id}")
+    public ResponseEntity<Void> deleteLandingSlide(@PathVariable Long id) {
+        landingPageSlideService.deleteSlide(id);
+        return ResponseEntity.noContent().build();
     }
 }

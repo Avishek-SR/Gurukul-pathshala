@@ -37,7 +37,13 @@ public class FileStorageServiceImpl implements FileStorageService {
             throw new RuntimeException("Original filename is null");
         }
         String originalFileName = StringUtils.cleanPath(rawFileName);
+
+        // Extract file extension
         String fileExtension = "";
+        int lastDotIndex = originalFileName.lastIndexOf('.');
+        if (lastDotIndex > 0) {
+            fileExtension = originalFileName.substring(lastDotIndex);
+        }
 
         try {
             // Check if the file's name contains invalid characters
@@ -45,13 +51,14 @@ public class FileStorageServiceImpl implements FileStorageService {
                 throw new RuntimeException("Sorry! Filename contains invalid path sequence " + originalFileName);
             }
 
-            // Generate unique file name
+            // Generate unique file name with original extension
             String newFileName = UUID.randomUUID().toString() + fileExtension;
 
             // Copy file to the target location (Replacing existing file with the same name)
             Path targetLocation = this.fileStorageLocation.resolve(newFileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
+            // Return relative path for API access
             return "/api/uploads/" + newFileName;
         } catch (IOException ex) {
             throw new RuntimeException("Could not store file " + originalFileName + ". Please try again!", ex);

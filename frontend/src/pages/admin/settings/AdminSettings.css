@@ -112,3 +112,104 @@
 .primary-btn:hover {
   background: #1d4ed8;
 }
+
+/* Landing Page Image Styles */
+.landing-images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.image-upload-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  padding: 10px 15px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+}
+
+.image-preview-area {
+  height: 160px;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.image-preview-area img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder-text {
+  color: #9ca3af;
+  text-align: center;
+  font-size: 13px;
+}
+
+.placeholder-text i {
+  font-size: 24px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.upload-controls {
+  padding: 12px;
+}
+
+.btn-upload {
+  width: 100%;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.2s;
+}
+
+.btn-upload:hover {
+  background-color: #2563eb;
+}
+
+.hidden-input {
+  display: none;
+}
+
+.status-message {
+  font-size: 12px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.status-message.success {
+  color: #10b981;
+}
+
+.status-message.error {
+  color: #ef4444;
+}
+
+.status-message.info {
+  color: #3b82f6;
+}

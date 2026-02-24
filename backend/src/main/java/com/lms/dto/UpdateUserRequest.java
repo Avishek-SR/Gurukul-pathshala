@@ -19,6 +19,12 @@ public class UpdateUserRequest {
     private String profilePictureUrl;
     private String personalEmail;
 
+    // Faculty / Extended fields
+    private String email;
+    private String department;
+    private String designation;
+    private String bio;
+
     public UpdateUserRequest() {
     }
 
@@ -116,5 +122,37 @@ public class UpdateUserRequest {
 
     public void setPersonalEmail(String personalEmail) {
         this.personalEmail = personalEmail;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 }

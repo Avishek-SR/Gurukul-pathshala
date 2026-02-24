@@ -13,9 +13,11 @@ import Reports from '../pages/admin/reports/Reports';
 import AdminProfile from '../pages/admin/profile/AdminProfile';
 import AdminManagement from '../pages/admin/users/ManageUsers/admin/AdminManagement';
 import AllUsersManagement from '../pages/admin/users/ManageUsers/AllUsersManagement';
+import PublicFacultyManagement from '../pages/admin/users/ManageUsers/faculty/PublicFacultyManagement';
 import GlobalActivityLog from '../pages/admin/dashboard/components/GlobalActivityLog';
 import AdminActivities from '../pages/admin/activities/AdminActivities';
 import TimetableManagement from '../pages/admin/timetable/TimetableManagement';
+import NoticeManagement from '../pages/admin/notices/NoticeManagement';
 
 
 const AdminLayout = ({ onLogout }) => {
@@ -142,13 +144,22 @@ const AdminLayout = ({ onLogout }) => {
           )}
 
           {(admin?.superAdmin || admin?.permissions?.includes('MANAGE_FACULTY')) && (
-            <div
-              className={`menu-item ${activeTab === 'faculty' ? 'active' : ''}`}
-              onClick={() => handleMenuClick('faculty')}
-            >
-              <i className="fas fa-chalkboard-teacher"></i>
-              <span>Faculty</span>
-            </div>
+            <>
+              <div
+                className={`menu-item ${activeTab === 'faculty' ? 'active' : ''}`}
+                onClick={() => handleMenuClick('faculty')}
+              >
+                <i className="fas fa-chalkboard-teacher"></i>
+                <span>Faculty DB</span>
+              </div>
+              <div
+                className={`menu-item ${activeTab === 'public-faculty' ? 'active' : ''}`}
+                onClick={() => handleMenuClick('public-faculty')}
+              >
+                <i className="fas fa-id-card"></i>
+                <span>Public Faculty</span>
+              </div>
+            </>
           )}
 
           <div
@@ -173,6 +184,14 @@ const AdminLayout = ({ onLogout }) => {
           >
             <i className="fas fa-tasks"></i>
             <span>Classroom Activity</span>
+          </div>
+
+          <div
+            className={`menu-item ${activeTab === 'notices' ? 'active' : ''}`}
+            onClick={() => handleMenuClick('notices')}
+          >
+            <i className="fas fa-bullhorn"></i>
+            <span>Notices</span>
           </div>
 
           <div
@@ -296,6 +315,7 @@ const AdminLayout = ({ onLogout }) => {
           {activeTab === 'students' && <StudentManagement currentUser={admin} />}
           {activeTab === 'admins' && <AdminManagement currentUser={admin} />}
           {activeTab === 'faculty' && <FacultyManagement currentUser={admin} />}
+          {activeTab === 'public-faculty' && <PublicFacultyManagement currentUser={admin} />}
           {activeTab === 'courses' && <CourseManagement />}
           {activeTab === 'attendance' && <AttendanceManagement />}
           {activeTab === 'settings' && <AdminSettings />}
@@ -304,7 +324,9 @@ const AdminLayout = ({ onLogout }) => {
           {activeTab === 'all-users' && <AllUsersManagement />}
           {activeTab === 'global-activity' && <GlobalActivityLog />}
           {activeTab === 'timetable' && <TimetableManagement />}
+          {activeTab === 'timetable' && <TimetableManagement />}
           {activeTab === 'activities' && <AdminActivities />}
+          {activeTab === 'notices' && <NoticeManagement />}
         </main>
 
         {/* Footer */}

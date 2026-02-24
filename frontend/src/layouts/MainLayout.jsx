@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { settingsAPI } from "../services/api";
 import "./MainLayout.css";
 
 export default function MainLayout({ children }) {
@@ -7,6 +8,13 @@ export default function MainLayout({ children }) {
   const [showUser, setShowUser] = useState(false);
   const [showNavMenu, setShowNavMenu] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  const [settings, setSettings] = useState({
+    site_logo_text: 'Gurukul Pathshala',
+    contact_email: 'gurukulpathshala76@gmail.com',
+    contact_phone: '+977-9819782671',
+    contact_address: 'Lahan-8, Nepal'
+  });
 
   const searchRef = useRef(null);
   const userRef = useRef(null);
@@ -16,10 +24,23 @@ export default function MainLayout({ children }) {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
+
+    // Fetch settings
+    const fetchSettings = async () => {
+      try {
+        const data = await settingsAPI.getPublic();
+        if (data && Object.keys(data).length > 0) {
+          setSettings(prev => ({ ...prev, ...data }));
+        }
+      } catch (error) {
+        console.error("Failed to load settings", error);
+      }
+    };
+    fetchSettings();
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -54,16 +75,16 @@ export default function MainLayout({ children }) {
           <div className="main-layout-logo">
             <i className="fas fa-atom"></i>
           </div>
-          <span className="main-layout-title">Gurukul Pathshala</span>
+          <span className="main-layout-title">{settings.site_logo_text}</span>
         </div>
 
         {!isMobile && (
           <nav className="main-layout-desktop-nav">
             <NavLink to="/" className="main-layout-nav-link" onClick={handleHomeClick}>Home</NavLink>
-            
+
             <NavLink to="/admissions" className="main-layout-nav-link">Admissions</NavLink>
             <NavLink to="/academics" className="main-layout-nav-link">Academics</NavLink>
-            <NavLink to="/faculty" className="main-layout-nav-link">Faculty</NavLink>
+            <NavLink to="/our-faculty" className="main-layout-nav-link">Faculty</NavLink>
             <NavLink to="/gallery" className="main-layout-nav-link">Gallery</NavLink>
             <NavLink to="/about" className="main-layout-nav-link">About</NavLink>
             <NavLink to="/contact" className="main-layout-nav-link">Contact</NavLink>
@@ -126,7 +147,7 @@ export default function MainLayout({ children }) {
                   <li><NavLink to="/about" className="main-layout-dropdown-link">About</NavLink></li>
                   <li><NavLink to="/admissions" className="main-layout-dropdown-link">Admissions</NavLink></li>
                   <li><NavLink to="/academics" className="main-layout-dropdown-link">Academics</NavLink></li>
-                  <li><NavLink to="/faculty" className="main-layout-dropdown-link">Faculty</NavLink></li>
+                  <li><NavLink to="/our-faculty" className="main-layout-dropdown-link">Faculty</NavLink></li>
                   <li><NavLink to="/gallery" className="main-layout-dropdown-link">Gallery</NavLink></li>
                   <li><NavLink to="/contact" className="main-layout-dropdown-link">Contact</NavLink></li>
                 </ul>
@@ -145,28 +166,28 @@ export default function MainLayout({ children }) {
               <div className="main-layout-footer-logo">
                 <i className="fas fa-atom"></i>
               </div>
-              <h3>GURUKUL PATHSHALA</h3>
-              <p>Lahan-8, Nepal</p>
+              <h3>{settings.site_logo_text.toUpperCase()}</h3>
+              <p>{settings.contact_address}</p>
             </div>
-            
+
             <div className="main-layout-footer-links">
               <div className="main-layout-footer-column">
                 <h4>Contact Us</h4>
-                <p><i className="fas fa-map-marker-alt"></i> Gurukul Pathshala, Lahan-8, Nepal</p>
-                <p><i className="fas fa-envelope"></i> gurukulpathshala76@gmail.com</p>
-                <p><i className="fas fa-phone"></i> +977-9819782671</p>
+                <p><i className="fas fa-map-marker-alt"></i> {settings.contact_address}</p>
+                <p><i className="fas fa-envelope"></i> {settings.contact_email}</p>
+                <p><i className="fas fa-phone"></i> {settings.contact_phone}</p>
               </div>
-              
+
               <div className="main-layout-footer-column">
                 <h4>Quick Links</h4>
                 <ul>
-                  <li><a href="/AdmissionsPage">Admissions</a></li>
-                  <li><a href="/GalleryPage">Gallery</a></li>
-                  <li><a href="/FacultyPage">Faculty</a></li>
-                  <li><a href="/AcademicsPage">Academics</a></li>
+                  <li><Link to="/admissions">Admissions</Link></li>
+                  <li><Link to="/gallery">Gallery</Link></li>
+                  <li><Link to="/our-faculty">Faculty</Link></li>
+                  <li><Link to="/academics">Academics</Link></li>
                 </ul>
               </div>
-              
+
               <div className="main-layout-footer-column">
                 <h4>Follow Us</h4>
                 <div className="main-layout-social-icons">
@@ -179,9 +200,9 @@ export default function MainLayout({ children }) {
               </div>
             </div>
           </div>
-          
+
           <div className="main-layout-footer-bottom">
-            <p>© 2025 Gurukul Pathshala. All Rights Reserved.</p>
+            <p>© {new Date().getFullYear()} {settings.site_logo_text}. All Rights Reserved.</p>
             <div className="main-layout-footer-terms">
               <a href="#">Privacy Policy</a>
               <a href="#">Terms of Service</a>

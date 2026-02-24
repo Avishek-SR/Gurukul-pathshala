@@ -1,28 +1,56 @@
 import { useState, useEffect } from "react";
+import { noticeAPI, settingsAPI, landingSlidesAPI } from "../../../services/api";
 import "./HomePage.css";
 
 export default function HomePage() {
   const [notices, setNotices] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Your school images
-  const schoolImages = [
-    "Avishek.JPG",
-    "Home.jpg",
-    "know-gurukul.jpg",
-  ];
+  // Slides State
+  const [schoolImages, setSchoolImages] = useState([]);
 
-  // Sample notices
-  const sampleNotices = [
-    { id: 1, title: "Admission Open 2025-26", date: "Jan 15, 2025", type: "admission" },
-    { id: 2, title: "Winter Vacation Announcement", date: "Dec 20, 2024", type: "holiday" },
-    { id: 3, title: "Annual Sports Day", date: "Feb 10, 2025", type: "event" },
-    { id: 4, title: "Exam Schedule Released", date: "Nov 30, 2024", type: "exam" }
-  ];
-
-  // Load notices
+  // Load notices and slides
   useEffect(() => {
-    setNotices(sampleNotices);
+    const fetchData = async () => {
+      try {
+        // Fetch Notices
+        const noticesData = await noticeAPI.getActive();
+        setNotices(noticesData);
+
+        // Fetch Slides
+        const slides = await landingSlidesAPI.getPublic();
+        if (slides && slides.length > 0) {
+          setSchoolImages(slides.map(s => {
+            let url = s.fileUrl;
+            if (url && url.startsWith('/api/uploads')) {
+              const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+              const baseUrl = API_BASE_URL.replace(/\/api$/, '');
+              url = `${baseUrl}${url}`;
+            }
+            return {
+              url: url,
+              type: s.fileType
+            };
+          }));
+        } else {
+          // Fallback to defaults if no slides found
+          setSchoolImages([
+            { url: "/images/Avishek.JPG", type: "IMAGE" },
+            { url: "/images/Home.jpg", type: "IMAGE" },
+            { url: "/images/know-gurukul.jpg", type: "IMAGE" }
+          ]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch data", error);
+        // Fallback defaults
+        setSchoolImages([
+          { url: "/images/Avishek.JPG", type: "IMAGE" },
+          { url: "/images/Home.jpg", type: "IMAGE" },
+          { url: "/images/know-gurukul.jpg", type: "IMAGE" }
+        ]);
+      }
+    };
+    fetchData();
   }, []);
 
   // Auto scroll through images
@@ -51,10 +79,10 @@ export default function HomePage() {
               {notices.map((notice) => (
                 <div key={notice.id} className="notice-item">
                   <span className={`notice-type ${notice.type}`}>
-                    {notice.type.toUpperCase()}
+                    {notice.type ? notice.type.toUpperCase() : 'NOTICE'}
                   </span>
                   <span className="notice-title">{notice.title}</span>
-                  <span className="notice-date">{notice.date}</span>
+                  <span className="notice-date">{notice.publishDate}</span>
                 </div>
               ))}
             </div>
@@ -67,55 +95,72 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="hero-section">
-        <div className="slider-container">
-          <div 
-            className="slider-track"
-            style={{
-              transform: `translateX(-${currentSlide * 100}%)`,
-              transition: 'transform 1s ease-in-out'
-            }}
-          >
-            {schoolImages.map((image, index) => (
-              <div key={index} className="slide">
-                <img 
-                  src={`/images/${image}`}
-                  alt={`Gurukul Pathshala ${index + 1}`}
-                  className="slide-image"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = `https://via.placeholder.com/1600x800/20b2aa/ffffff?text=GURUKUL+Image+${index + 1}`;
-                  }}
+        {schoolImages.length > 0 ? (
+          <div className="slider-container">
+            <div
+              className="slider-track"
+              style={{
+                transform: `translateX(-${currentSlide * 100}%)`,
+                transition: 'transform 1s ease-in-out'
+              }}
+            >
+              {schoolImages.map((slide, index) => (
+                <div key={index} className="slide">
+                  {slide.type === 'VIDEO' ? (
+                    <video
+                      src={slide.url}
+                      className="slide-image object-cover"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                    />
+                  ) : (
+                    <img
+                      src={slide.url}
+                      alt={`Slide ${index + 1}`}
+                      className="slide-image"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = `https://placehold.co/1600x800/20b2aa/ffffff?text=GURUKUL+Image+${index + 1}`;
+                      }}
+                    />
+                  )}
+                  <div className="slide-overlay"></div>
+                </div>
+              ))}
+            </div>
+
+            <button className="slider-nav prev" onClick={goToPrevSlide}>
+              <i className="fas fa-chevron-left"></i>
+            </button>
+            <button className="slider-nav next" onClick={goToNextSlide}>
+              <i className="fas fa-chevron-right"></i>
+            </button>
+
+            <div className="slider-dots">
+              {schoolImages.map((_, index) => (
+                <button
+                  key={index}
+                  className={`slider-dot ${index === currentSlide ? 'active' : ''}`}
+                  onClick={() => goToSlide(index)}
+                  aria-label={`Go to slide ${index + 1}`}
                 />
-                <div className="slide-overlay"></div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-
-          <button className="slider-nav prev" onClick={goToPrevSlide}>
-            <i className="fas fa-chevron-left"></i>
-          </button>
-          <button className="slider-nav next" onClick={goToNextSlide}>
-            <i className="fas fa-chevron-right"></i>
-          </button>
-
-          <div className="slider-dots">
-            {schoolImages.map((_, index) => (
-              <button
-                key={index}
-                className={`slider-dot ${index === currentSlide ? 'active' : ''}`}
-                onClick={() => goToSlide(index)}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
+        ) : (
+          <div className="h-96 flex items-center justify-center bg-gray-200">
+            <p>No slides available</p>
           </div>
-        </div>
+        )}
 
         <div className="hero-content">
           <h1>Welcome to Gurukul Pathshala</h1>
           <p>"We believe in excellence in education, Quality Education is our Motto."</p>
           <div className="hero-buttons">
-            <a 
-              href="#admissions" 
+            <a
+              href="#admissions"
               className="btn-primary"
               onClick={(e) => {
                 e.preventDefault();
@@ -124,8 +169,8 @@ export default function HomePage() {
             >
               Admissions Open
             </a>
-            <a 
-              href="#know-gurukul" 
+            <a
+              href="#know-gurukul"
               className="btn-secondary"
               onClick={(e) => {
                 e.preventDefault();
@@ -154,7 +199,7 @@ export default function HomePage() {
               <p>Join our vibrant learning community today! Limited seats available.</p>
               <button className="btn-small">Apply Now</button>
             </div>
-            
+
             <div className="highlight-card">
               <div className="highlight-icon">
                 <i className="fas fa-laptop-house"></i>
@@ -163,7 +208,7 @@ export default function HomePage() {
               <p>Smart technology-enabled education environment with digital learning tools.</p>
               <button className="btn-small">Virtual Tour</button>
             </div>
-            
+
             <div className="highlight-card">
               <div className="highlight-icon">
                 <i className="fas fa-chalkboard-teacher"></i>
@@ -188,11 +233,11 @@ export default function HomePage() {
                 ready citizens through values, skills, and knowledge.
               </p>
               <p>
-                Our mission is to provide quality education that nurtures intellectual 
+                Our mission is to provide quality education that nurtures intellectual
                 curiosity, critical thinking, and ethical values in every student.
               </p>
-              <a 
-                href="#about" 
+              <a
+                href="#about"
                 className="btn-outline"
                 onClick={(e) => {
                   e.preventDefault();
@@ -202,7 +247,7 @@ export default function HomePage() {
                 Discover More
               </a>
             </div>
-            
+
             <div className="know-gurukul-image">
               <div className="image-placeholder">
                 <i className="fas fa-university"></i>
