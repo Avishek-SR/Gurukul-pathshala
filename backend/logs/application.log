@@ -79,3 +79,46 @@
 2026-02-25 00:02:45 - Securing GET /public/captcha
 2026-02-25 00:02:45 - Set SecurityContextHolder to anonymous SecurityContext
 2026-02-25 00:02:45 - Secured GET /public/captcha
+2026-02-25 00:17:33 - Securing GET /public/captcha
+2026-02-25 00:17:33 - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-25 00:17:33 - Secured GET /public/captcha
+2026-02-25 00:18:32 - Securing GET /public/captcha
+2026-02-25 00:18:32 - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-25 00:18:32 - Secured GET /public/captcha
+2026-02-25 00:23:50 - Securing GET /public/captcha
+2026-02-25 00:23:50 - Securing GET /public/captcha
+2026-02-25 00:23:51 - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-25 00:23:51 - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-25 00:23:51 - Secured GET /public/captcha
+2026-02-25 00:23:51 - Secured GET /public/captcha
+2026-02-25 00:23:55 - Securing GET /auth/profile
+2026-02-25 00:23:55 - Processing JWT for UserID: avishek070504
+2026-02-25 00:23:55 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-02-25 00:23:55 - Setting authentication for user: avishek070504
+2026-02-25 00:23:55 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-02-25 00:23:55 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-02-25 00:23:55 - Secured GET /auth/profile
+2026-02-25 00:23:55 - Securing GET /uploads/ffb1d981-a349-48ca-83c0-e94dec07c943.png
+2026-02-25 00:23:55 - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-25 00:23:55 - Secured GET /uploads/ffb1d981-a349-48ca-83c0-e94dec07c943.png
+2026-02-25 00:23:55 - Securing GET /admin/dashboard
+2026-02-25 00:23:55 - Securing GET /admin/dashboard/analytics
+2026-02-25 00:23:55 - Processing JWT for UserID: avishek070504
+2026-02-25 00:23:55 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-02-25 00:23:55 - Setting authentication for user: avishek070504
+2026-02-25 00:23:55 - Processing JWT for UserID: avishek070504
+2026-02-25 00:23:55 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-02-25 00:23:55 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-02-25 00:23:55 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-02-25 00:23:55 - Setting authentication for user: avishek070504
+2026-02-25 00:23:55 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-02-25 00:23:55 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-02-25 00:23:55 - Secured GET /admin/dashboard
+2026-02-25 00:23:55 - Secured GET /admin/dashboard/analytics
+2026-02-25 00:23:56 - Securing GET /admin/activity-logs
+2026-02-25 00:23:56 - Processing JWT for UserID: avishek070504
+2026-02-25 00:23:56 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-02-25 00:23:56 - Setting authentication for user: avishek070504
+2026-02-25 00:23:56 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-02-25 00:23:56 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-02-25 00:23:56 - Secured GET /admin/activity-logs
