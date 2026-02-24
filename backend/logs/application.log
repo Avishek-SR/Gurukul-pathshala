@@ -2677,3 +2677,6 @@
 2026-02-24 21:44:14 - Securing GET /uploads/f11afb05-7fc9-4fd4-be7e-78888e02853d.png
 2026-02-24 21:44:14 - Set SecurityContextHolder to anonymous SecurityContext
 2026-02-24 21:44:14 - Secured GET /uploads/f11afb05-7fc9-4fd4-be7e-78888e02853d.png
+2026-02-24 23:30:36 - Securing HEAD /public/settings
+2026-02-24 23:30:36 - Set SecurityContextHolder to anonymous SecurityContext
+2026-02-24 23:30:36 - Secured HEAD /public/settings
