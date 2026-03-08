@@ -33,37 +33,5 @@ public class DataInitializer implements CommandLineRunner {
             userRepository.save(admin);
             System.out.println("Admin user created: admin001");
         }
-
-        // Check if faculty exists
-        if (userRepository.findByUserId("faculty001").isEmpty()) {
-            User faculty = new User();
-            faculty.setUserId("faculty001");
-            faculty.setName("John Doe");
-            faculty.setEmail("faculty@school.com");
-            faculty.setPassword(passwordEncoder.encode("faculty123"));
-            faculty.setRole(Role.FACULTY);
-            faculty.setActive(true);
-            faculty.setDepartment("Computer Science");
-            faculty.setDesignation("Professor");
-
-            userRepository.save(faculty);
-            System.out.println("Faculty user created: faculty001");
-        }
-
-        // Check if student exists
-        if (userRepository.findByUserId("student001").isEmpty()) {
-            User student = new User();
-            student.setUserId("student001");
-            student.setName("Jane Smith");
-            student.setEmail("student@school.com");
-            student.setPassword(passwordEncoder.encode("student123"));
-            student.setRole(Role.STUDENT);
-            student.setActive(true);
-            student.setProgram("B.Tech");
-            student.setSection("Section A");
-
-            userRepository.save(student);
-            System.out.println("Student user created: student001");
-        }
     }
 }

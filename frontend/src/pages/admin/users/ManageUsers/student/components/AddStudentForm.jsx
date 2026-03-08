@@ -8,7 +8,7 @@ const AddStudentForm = ({ isOpen, onClose, onSave }) => {
         gender: '',
         mobileNumber: '',
         program: '',
-        year: 'A',
+        section: 'A',
         parentEmail: '',
         parentPhoneNumber: ''
     });
@@ -24,7 +24,7 @@ const AddStudentForm = ({ isOpen, onClose, onSave }) => {
             gender: '',
             mobileNumber: '',
             program: '',
-            year: 'A',
+            section: 'A',
             parentEmail: '',
             parentPhoneNumber: ''
         });
@@ -95,8 +95,8 @@ const AddStudentForm = ({ isOpen, onClose, onSave }) => {
                         <div className="student-form-group">
                             <label>Section</label>
                             <select
-                                value={formData.year}
-                                onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+                                value={formData.section}
+                                onChange={(e) => setFormData({ ...formData, section: e.target.value })}
                             >
                                 <option value="">Select Section</option>
                                 {["A", "B", "C", "D", "E"].map(s => (

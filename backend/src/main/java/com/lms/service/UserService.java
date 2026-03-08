@@ -25,11 +25,14 @@ public class UserService { // REMOVE "implements UserDetailsService"
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final EnrollmentService enrollmentService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService,
+            EnrollmentService enrollmentService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.enrollmentService = enrollmentService;
     }
 
     @jakarta.annotation.PostConstruct
@@ -336,6 +339,9 @@ public class UserService { // REMOVE "implements UserDetailsService"
                     savedUser.getEmail(), rawPassword, savedUser.getRole().toString());
         }
 
+        // Auto-enroll new students in their program's courses
+        enrollmentService.autoEnrollInProgramCourses(savedUser);
+
         return savedUser;
     }
 
@@ -428,6 +434,9 @@ public class UserService { // REMOVE "implements UserDetailsService"
                     savedUser.getEmail(), rawPassword, savedUser.getRole().toString());
         }
 
+        // Auto-enroll new students in their program's courses
+        enrollmentService.autoEnrollInProgramCourses(savedUser);
+
         return savedUser;
     }
 
@@ -488,13 +497,21 @@ public class UserService { // REMOVE "implements UserDetailsService"
         // Update active status if needed, though usually handled by separate endpoint
         // user.setActive(request.isActive());
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        // Auto-enroll updated students in their program's courses
+        enrollmentService.autoEnrollInProgramCourses(savedUser);
+
+        return savedUser;
     }
 
     // Delete user
     public void deleteUser(@NonNull Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
+
+        // Delete associated enrollments to avoid foreign-key constraint violations
+        enrollmentService.deleteEnrollmentsForUser(user);
 
         userRepository.delete(user);
     }

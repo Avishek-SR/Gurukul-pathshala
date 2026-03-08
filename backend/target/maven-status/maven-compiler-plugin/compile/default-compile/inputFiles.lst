@@ -59,6 +59,7 @@
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/model/AdmissionInfo.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/dto/LoginRequest.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/service/FacultyAttendanceService.java
+/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/controller/HealthController.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/model/LandingPageSlide.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/dto/CreateUserRequest.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/controller/common/FileUploadController.java

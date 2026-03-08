@@ -27,7 +27,7 @@ export const createFaceMatcher = (studentDescriptors) => {
         return new faceapi.LabeledFaceDescriptors(s.userId, [descArray]);
     });
 
-    return new faceapi.FaceMatcher(labeledDescriptors, 0.65); // 0.65 is slightly more lenient
+    return new faceapi.FaceMatcher(labeledDescriptors, 0.70); // 0.70 is reliable for webcams and slight variations
 };
 
 export const recognizeFaces = async (videoElement, faceMatcher) => {

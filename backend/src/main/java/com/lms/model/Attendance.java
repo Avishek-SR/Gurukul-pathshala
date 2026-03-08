@@ -2,13 +2,13 @@ package com.lms.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "attendance",
-       uniqueConstraints = @UniqueConstraint(columnNames = {"student_id", "course_id", "date"}))
+@Table(name = "attendance", uniqueConstraints = @UniqueConstraint(columnNames = { "student_id", "course_id", "date" }))
 public class Attendance {
 
     @Id
@@ -16,10 +16,12 @@ public class Attendance {
     private Long id;
 
     @ManyToOne(optional = false)
+    @OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     @JoinColumn(name = "student_id")
     private User student;
 
     @ManyToOne(optional = false)
+    @OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     @JoinColumn(name = "course_id")
     private Course course;
 
