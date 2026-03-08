@@ -4328,3 +4328,6 @@ org.postgresql.util.PSQLException: ERROR: update or delete on table "users" viol
 2026-03-08 23:08:43 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
 2026-03-08 23:08:43 - Set SecurityContextHolder to anonymous SecurityContext
 2026-03-08 23:08:43 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-08 23:12:58 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-08 23:12:58 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-08 23:12:58 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
