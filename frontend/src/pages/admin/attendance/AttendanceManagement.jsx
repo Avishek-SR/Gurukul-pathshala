@@ -45,12 +45,11 @@ const AttendanceManagement = () => {
     }
   }, [selectedClass, sectionFilter, courseFilter]);
 
-
   const fetchClassAttendance = async () => {
     setLoading(true);
     try {
       const params = {
-        program: selectedClass, // Filter by the selected class
+        program: `Class ${selectedClass}`, // Filter by the exact class string format in DB
       };
 
       if (sectionFilter) params.section = sectionFilter;

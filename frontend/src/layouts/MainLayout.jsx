@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { settingsAPI } from "../services/api";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { settingsAPI, noticeAPI } from "../services/api";
 import "./MainLayout.css";
 
 export default function MainLayout({ children }) {
@@ -8,6 +8,8 @@ export default function MainLayout({ children }) {
   const [showUser, setShowUser] = useState(false);
   const [showNavMenu, setShowNavMenu] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [notices, setNotices] = useState([]);
+  const navigate = useNavigate();
 
   const [settings, setSettings] = useState({
     site_logo_text: 'Gurukul Pathshala',
@@ -40,6 +42,17 @@ export default function MainLayout({ children }) {
       }
     };
     fetchSettings();
+
+    // Fetch Notices
+    const fetchNotices = async () => {
+      try {
+        const data = await noticeAPI.getActive();
+        setNotices(data);
+      } catch (err) {
+        console.error("Failed to fetch notices", err);
+      }
+    };
+    fetchNotices();
 
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
@@ -84,6 +97,7 @@ export default function MainLayout({ children }) {
 
             <NavLink to="/admissions" className="main-layout-nav-link">Admissions</NavLink>
             <NavLink to="/academics" className="main-layout-nav-link">Academics</NavLink>
+            <NavLink to="/notices" className="main-layout-nav-link">Notices</NavLink>
             <NavLink to="/our-faculty" className="main-layout-nav-link">Faculty</NavLink>
             <NavLink to="/gallery" className="main-layout-nav-link">Gallery</NavLink>
             <NavLink to="/about" className="main-layout-nav-link">About</NavLink>
@@ -147,6 +161,7 @@ export default function MainLayout({ children }) {
                   <li><NavLink to="/about" className="main-layout-dropdown-link">About</NavLink></li>
                   <li><NavLink to="/admissions" className="main-layout-dropdown-link">Admissions</NavLink></li>
                   <li><NavLink to="/academics" className="main-layout-dropdown-link">Academics</NavLink></li>
+                  <li><NavLink to="/notices" className="main-layout-dropdown-link">Notices</NavLink></li>
                   <li><NavLink to="/our-faculty" className="main-layout-dropdown-link">Faculty</NavLink></li>
                   <li><NavLink to="/gallery" className="main-layout-dropdown-link">Gallery</NavLink></li>
                   <li><NavLink to="/contact" className="main-layout-dropdown-link">Contact</NavLink></li>
@@ -156,6 +171,51 @@ export default function MainLayout({ children }) {
           )}
         </div>
       </header>
+
+      {/* Global Notice Bar for Public Landing Page */}
+      {notices.length > 0 && (
+        <div className="public-notice-bar" style={{
+          background: 'linear-gradient(135deg, var(--primary-medium), var(--primary-accent))',
+          color: 'white',
+          padding: '8px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '15px',
+          borderBottom: '1px solid rgba(255,255,255,0.2)',
+          position: 'sticky',
+          top: '80px', // Assuming header is around 80px high
+          zIndex: 990
+        }}>
+          <div style={{ fontWeight: '600', fontSize: '0.9rem', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <i className="fas fa-bullhorn"></i> Important:
+          </div>
+          <div style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}>
+            <div style={{ display: 'inline-block', animation: 'scrollNotice 35s linear infinite', paddingLeft: '100%' }}>
+              {notices.map((n, i) => (
+                <React.Fragment key={n.id}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 'bold', background: 'rgba(0,0,0,0.2)', padding: '2px 8px', borderRadius: '4px', marginRight: '6px', color: '#fff' }}>{n.type || 'NOTICE'}</span>
+                  <span style={{ fontSize: '0.9rem', marginRight: '6px', color: '#fff' }}>{n.title}</span>
+                  <span style={{ fontSize: '0.8rem', opacity: 0.9, color: '#fff' }}>({new Date(n.publishDate).toLocaleDateString()})</span>
+                  {i < notices.length - 1 && <span style={{ margin: '0 15px', color: 'rgba(255,255,255,0.5)' }}>|</span>}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+          <div style={{ flexShrink: 0 }}>
+            <span onClick={() => navigate('/notices')} style={{ cursor: 'pointer', color: 'white', textDecoration: 'none', fontSize: '0.8rem', fontWeight: 'bold', padding: '4px 12px', border: '1px solid white', borderRadius: '4px', transition: 'all 0.3s' }} onMouseOver={(e) => { e.currentTarget.style.background = 'white'; e.currentTarget.style.color = 'var(--primary-medium)' }} onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'white' }}>
+              View All
+            </span>
+          </div>
+          <style>
+            {`
+              @keyframes scrollNotice {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-100%); }
+              }
+            `}
+          </style>
+        </div>
+      )}
 
       <main className="main-layout-content">{children}</main>
 

@@ -1,52 +1,120 @@
-import * as faceapi from 'face-api.js';
+import axios from 'axios';
 
-const MODEL_URL = '/models';
+// URL for the new Python FastAPI microservice
+const DEEPFACE_API_URL = 'http://localhost:8000';
 
 export const loadModels = async () => {
-    await Promise.all([
-        faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
-        faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-        faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-        faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL)
-    ]);
+    try {
+        await axios.get(`${DEEPFACE_API_URL}/health`);
+        console.log("DeepFace Python API is connected.");
+    } catch (e) {
+        console.error("Warning: DeepFace API might not be running at " + DEEPFACE_API_URL, e);
+    }
+};
+
+const captureVideoFrame = (videoElement) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = videoElement.videoWidth;
+    canvas.height = videoElement.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL('image/jpeg', 0.8);
 };
 
 export const getFaceDescriptor = async (videoElement) => {
-    const detection = await faceapi
-        .detectSingleFace(videoElement)
-        .withFaceLandmarks()
-        .withFaceDescriptor();
+    const base64Image = captureVideoFrame(videoElement);
+    
+    try {
+        const response = await axios.post(`${DEEPFACE_API_URL}/extract`, {
+            image: base64Image,
+            model_name: "ArcFace"
+        });
+        
+        if (response.data.success) {
+            return response.data.embedding;
+        } else {
+            console.warn("Face detection failed:", response.data.error);
+            return null;
+        }
+    } catch (error) {
+        console.error("Error communicating with DeepFace API:", error);
+        return null;
+    }
+};
 
-    return detection ? detection.descriptor : null;
+const cosineSimilarity = (vecA, vecB) => {
+    if (!vecA || !vecB || vecA.length !== vecB.length) return 0;
+    
+    let dotProduct = 0;
+    let normA = 0;
+    let normB = 0;
+    
+    for (let i = 0; i < vecA.length; i++) {
+        dotProduct += vecA[i] * vecB[i];
+        normA += vecA[i] * vecA[i];
+        normB += vecB[i] * vecB[i];
+    }
+    
+    if (normA === 0 || normB === 0) return 0;
+    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 };
 
 export const createFaceMatcher = (studentDescriptors) => {
-    // studentDescriptors: [{ userId, name, descriptor (string) }]
-    const labeledDescriptors = studentDescriptors.map(s => {
-        const descArray = new Float32Array(JSON.parse(s.faceDescriptor));
-        return new faceapi.LabeledFaceDescriptors(s.userId, [descArray]);
-    });
+    const enrolledFaces = studentDescriptors.map(s => {
+        let descArray = [];
+        try {
+            descArray = JSON.parse(s.faceDescriptor);
+        } catch(e) {
+            console.error("Invalid face descriptor format for user", s.userId);
+        }
+        return {
+            userId: s.userId,
+            label: s.userId,
+            descriptor: descArray
+        };
+    }).filter(s => s.descriptor.length > 0);
 
-    return new faceapi.FaceMatcher(labeledDescriptors, 0.70); // 0.70 is reliable for webcams and slight variations
+    return {
+        findBestMatch: (queryDescriptor) => {
+            let bestMatch = { label: "unknown", toString: () => "unknown", distance: 1.0 };
+            
+            // Expected threshold for DeepFace + ArcFace using Cosine Distance metric.
+            const COSINE_THRESHOLD = 0.68;
+            let minDistance = 2.0;
+
+            for (const enrolled of enrolledFaces) {
+                const distance = 1 - cosineSimilarity(queryDescriptor, enrolled.descriptor);
+                
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    bestMatch = {
+                        label: enrolled.label,
+                        toString: () => `${enrolled.label} (${distance.toFixed(2)})`,
+                        distance: distance
+                    };
+                }
+            }
+
+            if (minDistance > COSINE_THRESHOLD) {
+                return {
+                    label: "unknown",
+                    toString: () => `unknown (${minDistance.toFixed(2)})`,
+                    distance: minDistance
+                };
+            }
+
+            return bestMatch;
+        }
+    };
 };
 
 export const recognizeFaces = async (videoElement, faceMatcher) => {
-    // Use SsdMobilenetv1Options with adjusted confidence/minFaceSize if needed
-    // Lower minConfidence to 0.4 to detect faces further away/smaller
-    const options = new faceapi.SsdMobilenetv1Options({ minConfidence: 0.4 });
+    const descriptor = await getFaceDescriptor(videoElement);
+    
+    if (!descriptor) {
+        return [];
+    }
 
-    const detections = await faceapi
-        .detectAllFaces(videoElement, options)
-        .withFaceLandmarks()
-        .withFaceDescriptors();
-
-    // console.log(`Detected ${detections.length} faces`); // Optional debug
-
-    const results = detections.map(d => {
-        const match = faceMatcher.findBestMatch(d.descriptor);
-        console.log("Match result:", match.toString());
-        return match;
-    });
-
-    return results;
+    const match = faceMatcher.findBestMatch(descriptor);
+    return [match]; 
 };

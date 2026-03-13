@@ -57,6 +57,7 @@ public class StudentService {
         profile.put("email", student.getEmail());
         profile.put("section", "Section " + (student.getSection() != null ? student.getSection() : "N/A"));
         profile.put("program", student.getProgram());
+        profile.put("dob", student.getDob());
         // Calculate basic stats for profile
         profile.put("attendance", calculateAttendancePercentage(student));
         return profile;

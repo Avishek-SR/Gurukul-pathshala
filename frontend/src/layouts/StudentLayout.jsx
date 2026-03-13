@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, Outlet, useNavigate, useLocation, NavLink } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import './StudentLayout.css';
 
 const StudentLayout = ({ onLogout }) => { // onLogout prop kept for compatibility
+  const { logout } = useAuth();
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -73,11 +75,9 @@ const StudentLayout = ({ onLogout }) => { // onLogout prop kept for compatibilit
     fetchStudentData();
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+  const handleLogout = async () => {
+    await logout();
     if (onLogout) onLogout();
-    navigate('/login');
   };
 
   const navItems = [

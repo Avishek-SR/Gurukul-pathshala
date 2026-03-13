@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { noticeAPI, settingsAPI, landingSlidesAPI } from "../../../services/api";
 import "./HomePage.css";
 
 export default function HomePage() {
-  const [notices, setNotices] = useState([]);
+  const navigate = useNavigate();
+  const [admissionsOpen, setAdmissionsOpen] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Slides State
@@ -13,9 +15,11 @@ export default function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch Notices
-        const noticesData = await noticeAPI.getActive();
-        setNotices(noticesData);
+        // Fetch Global Settings
+        const settings = await settingsAPI.getPublic();
+        if (settings && settings['admissions_open'] === 'false') {
+          setAdmissionsOpen(false);
+        }
 
         // Fetch Slides
         const slides = await landingSlidesAPI.getPublic();
@@ -68,31 +72,6 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      {/* Notice/Announcement Bar */}
-      {notices.length > 0 && (
-        <div className="notice-bar">
-          <div className="notice-container">
-            <div className="notice-label">
-              <i className="fas fa-bullhorn"></i> Latest Notices:
-            </div>
-            <div className="notice-scroll">
-              {notices.map((notice) => (
-                <div key={notice.id} className="notice-item">
-                  <span className={`notice-type ${notice.type}`}>
-                    {notice.type ? notice.type.toUpperCase() : 'NOTICE'}
-                  </span>
-                  <span className="notice-title">{notice.title}</span>
-                  <span className="notice-date">{notice.publishDate}</span>
-                </div>
-              ))}
-            </div>
-            <div className="notice-view-all">
-              <a href="#notices">View All</a>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Hero Section */}
       <section className="hero-section">
         {schoolImages.length > 0 ? (
@@ -164,10 +143,10 @@ export default function HomePage() {
               className="btn-primary"
               onClick={(e) => {
                 e.preventDefault();
-                document.getElementById('admissions')?.scrollIntoView({ behavior: 'smooth' });
+                navigate('/admissions');
               }}
             >
-              Admissions Open
+              {admissionsOpen ? 'Admissions Open' : 'Admissions Closed'}
             </a>
             <a
               href="#know-gurukul"
@@ -195,9 +174,19 @@ export default function HomePage() {
               <div className="highlight-icon">
                 <i className="fas fa-graduation-cap"></i>
               </div>
-              <h2>Admissions Open</h2>
-              <p>Join our vibrant learning community today! Limited seats available.</p>
-              <button className="btn-small">Apply Now</button>
+              <h2>{admissionsOpen ? 'Admissions Open' : 'Admissions Closed'}</h2>
+              <p>
+                {admissionsOpen
+                  ? 'Join our vibrant learning community today! Limited seats available.'
+                  : 'We are currently not accepting new admission applications.'}
+              </p>
+              <button
+                className="btn-small"
+                onClick={() => navigate('/admissions')}
+                style={!admissionsOpen ? { background: '#94a3b8', cursor: 'not-allowed' } : {}}
+              >
+                {admissionsOpen ? 'Apply Now' : 'Check Status'}
+              </button>
             </div>
 
             <div className="highlight-card">

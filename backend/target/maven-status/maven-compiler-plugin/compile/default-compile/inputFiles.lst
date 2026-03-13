@@ -34,9 +34,11 @@
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/model/Assignment.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/dto/UpdateUserRequest.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/model/Course.java
+/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/service/AdmissionApplicationService.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/dto/ClassroomActivityDTO.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/dto/ActivityTopicDTO.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/controller/AssignmentController.java
+/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/repository/AdmissionApplicationRepository.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/SchoolManagementApplication.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/service/UserService.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/model/FacultyAttendance.java
@@ -80,6 +82,7 @@
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/dto/StaffDashboardDTO.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/config/JwtAuthenticationEntryPoint.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/controller/admin/AdminExportController.java
+/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/model/AdmissionApplication.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/model/ActivityLog.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/service/AssignmentService.java
 /Volumes/Macbook-1/Gurukul/React/Gurukul/backend/src/main/java/com/lms/controller/StudentController.java

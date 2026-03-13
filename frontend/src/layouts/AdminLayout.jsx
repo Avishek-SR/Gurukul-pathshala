@@ -18,7 +18,7 @@ import GlobalActivityLog from '../pages/admin/dashboard/components/GlobalActivit
 import AdminActivities from '../pages/admin/activities/AdminActivities';
 import TimetableManagement from '../pages/admin/timetable/TimetableManagement';
 import NoticeManagement from '../pages/admin/notices/NoticeManagement';
-
+import AdmissionsManagement from '../pages/admin/admissions/AdmissionsManagement';
 
 const AdminLayout = ({ onLogout }) => {
   const { user: admin, loading: authLoading, logout } = useAuth(); // Use global auth context
@@ -142,6 +142,14 @@ const AdminLayout = ({ onLogout }) => {
               <span>Admins</span>
             </div>
           )}
+
+          <div
+            className={`menu-item ${activeTab === 'admissions' ? 'active' : ''}`}
+            onClick={() => handleMenuClick('admissions')}
+          >
+            <i className="fas fa-file-signature"></i>
+            <span>Admissions</span>
+          </div>
 
           {(admin?.superAdmin || admin?.permissions?.includes('MANAGE_FACULTY')) && (
             <>
@@ -314,6 +322,7 @@ const AdminLayout = ({ onLogout }) => {
           {activeTab === 'dashboard' && <AdminDashboard onNavigate={setActiveTab} />}
           {activeTab === 'students' && <StudentManagement currentUser={admin} />}
           {activeTab === 'admins' && <AdminManagement currentUser={admin} />}
+          {activeTab === 'admissions' && <AdmissionsManagement />}
           {activeTab === 'faculty' && <FacultyManagement currentUser={admin} />}
           {activeTab === 'public-faculty' && <PublicFacultyManagement currentUser={admin} />}
           {activeTab === 'courses' && <CourseManagement />}

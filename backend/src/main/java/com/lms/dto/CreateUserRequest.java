@@ -12,6 +12,7 @@ public class CreateUserRequest {
     private String program;
     private String section;
 
+    private String parentName;
     private String parentEmail;
     private String parentPhoneNumber;
 
@@ -66,6 +67,14 @@ public class CreateUserRequest {
 
     public void setSection(String section) {
         this.section = section;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
     }
 
     public String getParentEmail() {

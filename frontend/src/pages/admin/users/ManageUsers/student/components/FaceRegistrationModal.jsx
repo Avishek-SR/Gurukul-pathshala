@@ -40,22 +40,24 @@ const FaceRegistrationModal = ({ student, onClose, onComplete }) => {
     return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
             <div className="w-full max-w-lg">
-                {!isProcessing ? (
+                <div className="relative">
                     <FaceScanner
                         onScan={handleScan}
                         onClose={onClose}
                         title={`Register Face: ${student.name}`}
                     />
-                ) : (
-                    <div className="bg-white rounded-3xl p-12 text-center shadow-2xl flex flex-col items-center">
-                        <div className="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center mb-6 animate-pulse">
-                            <Shield className="text-indigo-600" size={40} />
+                    
+                    {isProcessing && (
+                        <div className="absolute inset-0 bg-white/90 backdrop-blur-sm rounded-3xl p-12 text-center shadow-2xl flex flex-col items-center justify-center z-10 transition-all duration-300">
+                            <div className="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center mb-6 animate-pulse">
+                                <Shield className="text-indigo-600" size={40} />
+                            </div>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-2">Processing Face Data</h3>
+                            <p className="text-gray-500 mb-8">Validating landmarks and generating secure descriptor...</p>
+                            <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-600 rounded-full animate-spin"></div>
                         </div>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Processing Face Data</h3>
-                        <p className="text-gray-500 mb-8">Validating landmarks and generating secure descriptor...</p>
-                        <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-600 rounded-full animate-spin"></div>
-                    </div>
-                )}
+                    )}
+                </div>
 
                 <div className="mt-4 bg-indigo-900/10 border border-white/20 backdrop-blur-md p-4 rounded-2xl flex items-start gap-3">
                     <UserCheck className="text-indigo-600 shrink-0" size={18} />

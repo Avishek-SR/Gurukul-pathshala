@@ -1,16 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Admissionspage.css";
+import { publicAdmission, settingsAPI } from '../../../services/api';
 
 export default function AdmissionsPage() {
   const [formData, setFormData] = useState({
     studentName: "",
+    dob: "",
+    gender: "",
     parentName: "",
+    parentEmail: "",
     classApplying: "",
     mobileNumber: "",
     message: "",
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [admissionsOpen, setAdmissionsOpen] = useState(true); // Default to true while loading
+
+  useEffect(() => {
+    const checkAdmissionsStatus = async () => {
+      try {
+        const settings = await settingsAPI.getPublic();
+        if (settings && settings['admissions_open'] === 'false') {
+          setAdmissionsOpen(false);
+        }
+      } catch (err) {
+        console.error("Failed to load settings", err);
+      }
+    };
+    checkAdmissionsStatus();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,19 +42,30 @@ export default function AdmissionsPage() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // In a real application, you would send this data to a server
-    console.log("Form submitted:", formData);
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000);
-    setFormData({
-      studentName: "",
-      parentName: "",
-      classApplying: "",
-      mobileNumber: "",
-      message: "",
-    });
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      await publicAdmission.submitApplication(formData);
+      setIsSubmitted(true);
+      setTimeout(() => setIsSubmitted(false), 5000);
+      setFormData({
+        studentName: "",
+        dob: "",
+        gender: "",
+        parentName: "",
+        parentEmail: "",
+        classApplying: "",
+        mobileNumber: "",
+        message: "",
+      });
+    } catch (err) {
+      console.error("Admission submission error:", err);
+      setError(err.response?.data?.message || "Failed to submit application. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -41,7 +74,7 @@ export default function AdmissionsPage() {
       <section className="admissions-hero">
         <div className="hero-overlay">
           <div className="hero-content">
-            <h1>Admissions Open for 2024-25</h1>
+            <h1>{admissionsOpen ? 'Admissions Open for 2024-25' : 'Admissions Closed for 2024-25'}</h1>
             <p className="hero-subtitle">
               Join Gurukul Pathshala and shape a brighter future for your child
             </p>
@@ -177,12 +210,24 @@ export default function AdmissionsPage() {
           <div className="form-card">
             {isSubmitted && (
               <div className="success-message">
-                <span>✓</span>
-                <p>Thank you! Your enquiry has been submitted successfully.</p>
+                Thank you! Your application has been submitted successfully.
               </div>
             )}
-
-            <form className="admission-form" onSubmit={handleSubmit}>
+            
+            {!admissionsOpen ? (
+              <div className="admissions-closed-notice" style={{
+                textAlign: 'center', padding: '40px 20px', background: '#fff1f2',
+                border: '1px solid #fda4af', borderRadius: '12px', marginTop: '20px'
+              }}>
+                <i className="fas fa-info-circle" style={{fontSize: '3rem', color: '#e11d48', marginBottom: '15px'}}></i>
+                <h3 style={{color: '#9f1239', fontSize: '1.5rem', marginBottom: '10px'}}>Admissions are Currently Closed</h3>
+                <p style={{color: '#be123c', lineHeight: '1.6'}}>
+                  Thank you for your interest in Gurukul Pathshala. We are not accepting new admission applications at this moment. 
+                  Please check back later for the next academic session announcements.
+                </p>
+              </div>
+            ) : (
+            <form className="admissions-form" onSubmit={handleSubmit}>
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="studentName">Student Name *</label>
@@ -198,6 +243,36 @@ export default function AdmissionsPage() {
                 </div>
 
                 <div className="form-group">
+                  <label htmlFor="dob">Date of Birth *</label>
+                  <input
+                    type="date"
+                    id="dob"
+                    name="dob"
+                    value={formData.dob}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-row">
+                 <div className="form-group">
+                  <label htmlFor="gender">Gender *</label>
+                  <select
+                    id="gender"
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
                   <label htmlFor="parentName">Parent/Guardian Name *</label>
                   <input
                     type="text"
@@ -205,6 +280,21 @@ export default function AdmissionsPage() {
                     name="parentName"
                     placeholder="Enter parent/guardian name"
                     value={formData.parentName}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group full-width">
+                  <label htmlFor="parentEmail">Parent Email *</label>
+                  <input
+                    type="email"
+                    id="parentEmail"
+                    name="parentEmail"
+                    placeholder="Enter parent's email address"
+                    value={formData.parentEmail}
                     onChange={handleChange}
                     required
                   />
@@ -225,10 +315,16 @@ export default function AdmissionsPage() {
                     <option value="Nursery">Nursery</option>
                     <option value="LKG">LKG</option>
                     <option value="UKG">UKG</option>
-                    <option value="1-5">Class 1 - 5</option>
-                    <option value="6-8">Class 6 - 8</option>
-                    <option value="9-10">Class 9 - 10</option>
-                    <option value="11-12">Class 11 - 12</option>
+                    <option value="Class 1">Class 1</option>
+                    <option value="Class 2">Class 2</option>
+                    <option value="Class 3">Class 3</option>
+                    <option value="Class 4">Class 4</option>
+                    <option value="Class 5">Class 5</option>
+                    <option value="Class 6">Class 6</option>
+                    <option value="Class 7">Class 7</option>
+                    <option value="Class 8">Class 8</option>
+                    <option value="Class 9">Class 9</option>
+                    <option value="Class 10">Class 10</option>
                   </select>
                 </div>
 
@@ -264,11 +360,13 @@ export default function AdmissionsPage() {
                   * Required fields. We respect your privacy and will not share
                   your information.
                 </p>
-                <button type="submit" className="submit-btn">
-                  Submit Enquiry
+                <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                  {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
                 </button>
               </div>
+              {error && <div className="error-message" style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
             </form>
+            )}
           </div>
 
           <div className="contact-info">

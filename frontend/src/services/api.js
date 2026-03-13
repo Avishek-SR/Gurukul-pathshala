@@ -50,6 +50,17 @@ api.interceptors.response.use(
   }
 );
 
+export const publicAdmission = {
+  submitApplication: (data) => api.post('/public/admissions/apply', data),
+};
+
+export const adminAdmissions = {
+  getAllApplications: () => api.get('/admin/admissions/applications').then(res => res.data),
+  approveApplication: (id) => api.put(`/admin/admissions/applications/${id}/approve`).then(res => res.data),
+  rejectApplication: (id) => api.put(`/admin/admissions/applications/${id}/reject`).then(res => res.data),
+  deleteApplication: (id) => api.delete(`/admin/admissions/applications/${id}`).then(res => res.data),
+};
+
 // Simple helpers (like apiFetch but using Axios)
 export const apiGet = (url) => api.get(url).then(res => res.data);
 export const apiPost = (url, data) => api.post(url, data).then(res => res.data);

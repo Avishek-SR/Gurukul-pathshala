@@ -130,6 +130,13 @@ const AppRoutes = () => {
         </MainLayout>
       } />
 
+      {/* Notices Page */}
+      <Route path="/notices" element={
+        <MainLayout>
+          <Notices />
+        </MainLayout>
+      } />
+
       {/* Login Page */}
       <Route path="/login" element={<LoginPage />} />
 

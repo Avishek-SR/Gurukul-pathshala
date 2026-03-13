@@ -7,7 +7,6 @@ import StudentStats from './components/StudentStats';
 import StudentFilterPanel from './components/StudentFilterPanel';
 import StudentSearchBar from './components/StudentSearchBar';
 import StudentList from './components/StudentList';
-import StudentPagination from './components/StudentPagination';
 import AddStudentForm from './components/AddStudentForm';
 import EditStudentForm from './components/EditStudentForm';
 import StudentProfile from './components/StudentProfile';
@@ -22,8 +21,6 @@ const StudentManagement = ({ currentUser }) => {
   // UI State
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({ program: '', year: '', status: '' });
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
 
   // Modal State
   const [showAddForm, setShowAddForm] = useState(false);
@@ -94,12 +91,6 @@ const StudentManagement = ({ currentUser }) => {
 
     return matchesSearch && matchesProgram && matchesSection && matchesStatus;
   });
-
-  const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
-  const paginatedStudents = filteredStudents.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
   // Handlers
   const handleAddStudent = async (studentData) => {
@@ -288,7 +279,7 @@ const StudentManagement = ({ currentUser }) => {
 
       {/* Table */}
       <StudentList
-        students={paginatedStudents}
+        students={filteredStudents}
         loading={loading}
         onStatusChange={handleStatusChange}
         onEdit={openEditModal}
@@ -298,13 +289,6 @@ const StudentManagement = ({ currentUser }) => {
         onFaceReg={openFaceRegModal}
         canEdit={canManage}
         canDelete={canDelete}
-      />
-
-      {/* Pagination */}
-      <StudentPagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
       />
 
       {/* Modals */}

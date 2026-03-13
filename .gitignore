@@ -24,3 +24,7 @@ frontend/yarn-error.log*
 .vscode/
 *.swp
 *.swo
+
+# Environments
+venv/
+python-face-api/venv/

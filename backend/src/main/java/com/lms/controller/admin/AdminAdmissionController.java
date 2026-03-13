@@ -1,7 +1,9 @@
 package com.lms.controller.admin;
 
 import com.lms.model.AdmissionInfo;
+import com.lms.model.AdmissionApplication;
 import com.lms.repository.AdmissionInfoRepository;
+import com.lms.service.AdmissionApplicationService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,9 +13,11 @@ import java.util.List;
 public class AdminAdmissionController {
 
     private final AdmissionInfoRepository repository;
+    private final AdmissionApplicationService applicationService;
 
-    public AdminAdmissionController(AdmissionInfoRepository repository) {
+    public AdminAdmissionController(AdmissionInfoRepository repository, AdmissionApplicationService applicationService) {
         this.repository = repository;
+        this.applicationService = applicationService;
     }
 
     @GetMapping
@@ -45,5 +49,27 @@ public class AdminAdmissionController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         repository.deleteById(id);
+    }
+
+    // --- Application Endpoints ---
+
+    @GetMapping("/applications")
+    public List<AdmissionApplication> getAllApplications() {
+        return applicationService.getAllApplications();
+    }
+
+    @PutMapping("/applications/{id}/approve")
+    public AdmissionApplication approveApplication(@PathVariable Long id) {
+        return applicationService.approveApplication(id);
+    }
+
+    @PutMapping("/applications/{id}/reject")
+    public AdmissionApplication rejectApplication(@PathVariable Long id) {
+        return applicationService.rejectApplication(id);
+    }
+
+    @DeleteMapping("/applications/{id}")
+    public void deleteApplication(@PathVariable Long id) {
+        applicationService.deleteApplication(id);
     }
 }

@@ -1,62 +1,103 @@
 import React from 'react';
 import { useOutletContext } from 'react-router-dom';
+import './StudentProfile.css'; // Premium Vanilla CSS
 
 const StudentProfile = () => {
   const { student } = useOutletContext();
 
   if (!student) {
-    return <div className="p-6">Loading profile...</div>;
+    return (
+      <div className="sp-loading-container">
+        <div className="sp-spinner"></div>
+        <p>Loading Profile...</p>
+      </div>
+    );
   }
 
+  const formatDOB = (dob) => {
+    if (!dob) return 'Not provided';
+    if (Array.isArray(dob)) {
+      return new Date(dob[0], dob[1] - 1, dob[2]).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+    return new Date(dob).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
   return (
-    <div className="p-6">
-
-
-      <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100" style={{ borderTop: '4px solid var(--primary-medium)' }}>
-        <div className="flex items-center gap-6 mb-8 pb-8 border-b border-gray-100">
-          <div className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-md transform hover:scale-105 transition-transform"
-            style={{ background: 'linear-gradient(135deg, var(--primary-medium), var(--primary-accent))' }}>
+    <div className="sp-container">
+      <div className="sp-card">
+        <div className="sp-header">
+          <div className="sp-avatar-wrapper">
             {student.name?.substring(0, 2).toUpperCase()}
           </div>
-          <div>
-            <h2 className="text-2xl font-bold mb-1" style={{ color: 'var(--text-dark)' }}>{student.name}</h2>
-            <p className="text-lg font-medium opacity-80" style={{ color: 'var(--text-medium)' }}>{student.program} • Section {student.section}</p>
-            <p className="text-sm mt-1 text-gray-400">Student ID: {student.id}</p>
+          <div className="sp-header-info">
+            <h2>
+              {student.name}
+              <span className="sp-badge">{student.role === 'STUDENT' ? 'Student' : student.role}</span>
+            </h2>
+            <p className="sp-header-subtitle">
+              <i className="fas fa-graduation-cap"></i>
+              {student.program || 'N/A'} • Section {student.section || 'N/A'}
+            </p>
+            <p className="sp-header-id">ID: {student.id}</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold border-b pb-2 mb-4" style={{ color: 'var(--text-dark)' }}>Personal Information</h3>
+        <div className="sp-content-grid">
+          <div className="sp-section">
+            <h3 className="sp-section-title">
+              <i className="fas fa-user"></i> Personal Information
+            </h3>
 
-            <div className="flex flex-col gap-1">
-              <span className="text-sm text-gray-500 font-medium">Full Name</span>
-              <span className="font-medium text-gray-800">{student.name}</span>
+            <div className="sp-info-group">
+              <span className="sp-label">Full Name</span>
+              <span className="sp-value">{student.name}</span>
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-sm text-gray-500 font-medium">Email Address</span>
-              <span className="font-medium text-gray-800">{student.email}</span>
+            <div className="sp-info-group">
+              <span className="sp-label">Email Address</span>
+              <span className="sp-value">{student.email}</span>
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-sm text-gray-500 font-medium">Date of Birth</span>
-              <span className="font-medium text-gray-800">{student.dob || 'Not provided'}</span>
+            <div className="sp-info-group">
+              <span className="sp-label">Date of Birth</span>
+              <span className="sp-value">{formatDOB(student.dob)}</span>
             </div>
+            {student.mobileNumber && (
+              <div className="sp-info-group">
+                <span className="sp-label">Mobile Number</span>
+                <span className="sp-value">{student.mobileNumber}</span>
+              </div>
+            )}
+            {student.gender && (
+              <div className="sp-info-group">
+                <span className="sp-label">Gender</span>
+                <span className="sp-value">{student.gender}</span>
+              </div>
+            )}
           </div>
 
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold border-b pb-2 mb-4" style={{ color: 'var(--text-dark)' }}>Academic Information</h3>
+          <div className="sp-section">
+            <h3 className="sp-section-title">
+              <i className="fas fa-book"></i> Academic Information
+            </h3>
 
-            <div className="flex flex-col gap-1">
-              <span className="text-sm text-gray-500 font-medium">Program / Class</span>
-              <span className="font-medium text-gray-800">{student.program}</span>
+            <div className="sp-info-group">
+              <span className="sp-label">Program / Class</span>
+              <span className="sp-value">{student.program || 'Not Assigned'}</span>
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-sm text-gray-500 font-medium">Section</span>
-              <span className="font-medium text-gray-800">{student.section}</span>
+            <div className="sp-info-group">
+              <span className="sp-label">Section</span>
+              <span className="sp-value">{student.section || 'Not Assigned'}</span>
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-sm text-gray-500 font-medium">Attendance & Performance</span>
-              <span className="font-medium text-green-600">{student.attendance}% Attendance</span>
+            <div className="sp-info-group">
+              <span className="sp-label">Attendance</span>
+              <span className="sp-value highlight">
+                {student.attendance != null ? `${student.attendance}%` : 'No Data yet'}
+              </span>
+            </div>
+            <div className="sp-info-group">
+              <span className="sp-label">Account Status</span>
+              <span className={`sp-value ${student.active !== false ? 'status-active' : 'status-inactive'}`}>
+                {student.active !== false ? 'Active' : 'Inactive'}
+              </span>
             </div>
           </div>
         </div>

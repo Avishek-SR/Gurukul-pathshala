@@ -149,7 +149,9 @@ const StudentProfile = ({ student, isOpen, onClose }) => {
                         </div>
                     </div>
 
-                    <ActivityTimeline userId={currentStudent.id} />
+                    <div style={{ marginTop: '25px', maxHeight: '350px', overflowY: 'auto', paddingRight: '10px', borderRadius: '8px', border: '1px solid #f1f3f5' }}>
+                        <ActivityTimeline userId={currentStudent.id} />
+                    </div>
                 </div>
             </div>
         </div>
