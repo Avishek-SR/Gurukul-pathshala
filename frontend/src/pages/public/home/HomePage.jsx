@@ -7,6 +7,17 @@ export default function HomePage() {
   const navigate = useNavigate();
   const [admissionsOpen, setAdmissionsOpen] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [pageContent, setPageContent] = useState({
+    hero_title: 'Welcome to Gurukul Pathshala',
+    hero_subtitle: '"We believe in excellence in education, Quality Education is our Motto."',
+    stat_years: '40+',
+    stat_alumni: '5000+',
+    stat_faculty: '50+',
+    stat_satisfaction: '100%',
+    know_gurukul_desc: 'Founded in 1980, stands at the intersection of discipline, innovation, and holistic education. We shape future-ready citizens through values, skills, and knowledge.',
+    know_gurukul_mission: 'Our mission is to provide quality education that nurtures intellectual curiosity, critical thinking, and ethical values in every student.',
+    site_name: 'Gurukul Pathshala'
+  });
 
   // Slides State
   const [schoolImages, setSchoolImages] = useState([]);
@@ -17,8 +28,19 @@ export default function HomePage() {
       try {
         // Fetch Global Settings
         const settings = await settingsAPI.getPublic();
-        if (settings && settings['admissions_open'] === 'false') {
-          setAdmissionsOpen(false);
+        if (settings) {
+          if (settings['admissions_open'] === 'false') setAdmissionsOpen(false);
+          setPageContent({
+            hero_title: settings['hero_title'] || 'Welcome to Gurukul Pathshala',
+            hero_subtitle: settings['hero_subtitle'] || '"We believe in excellence in education, Quality Education is our Motto."',
+            stat_years: settings['stat_years'] || '40+',
+            stat_alumni: settings['stat_alumni'] || '5000+',
+            stat_faculty: settings['stat_faculty'] || '50+',
+            stat_satisfaction: settings['stat_satisfaction'] || '100%',
+            know_gurukul_desc: settings['know_gurukul_desc'] || `Founded in 1980, ${settings['site_name'] || 'Gurukul Pathshala'} stands at the intersection of discipline, innovation, and holistic education. We shape future-ready citizens through values, skills, and knowledge.`,
+            know_gurukul_mission: settings['know_gurukul_mission'] || 'Our mission is to provide quality education that nurtures intellectual curiosity, critical thinking, and ethical values in every student.',
+            site_name: settings['site_name'] || 'Gurukul Pathshala'
+          });
         }
 
         // Fetch Slides
@@ -27,7 +49,7 @@ export default function HomePage() {
           setSchoolImages(slides.map(s => {
             let url = s.fileUrl;
             if (url && url.startsWith('/api/uploads')) {
-              const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+              const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
               const baseUrl = API_BASE_URL.replace(/\/api$/, '');
               url = `${baseUrl}${url}`;
             }
@@ -135,8 +157,8 @@ export default function HomePage() {
         )}
 
         <div className="hero-content">
-          <h1>Welcome to Gurukul Pathshala</h1>
-          <p>"We believe in excellence in education, Quality Education is our Motto."</p>
+          <h1>{pageContent.hero_title}</h1>
+          <p>{pageContent.hero_subtitle}</p>
           <div className="hero-buttons">
             <a
               href="#admissions"
@@ -215,15 +237,12 @@ export default function HomePage() {
         <div className="container">
           <div className="know-gurukul-grid">
             <div className="know-gurukul-content">
-              <h2>Know Gurukul</h2>
+              <h2>Know {pageContent.site_name}</h2>
               <p>
-                Founded in 1980, Gurukul Pathshala stands at the intersection of
-                discipline, innovation, and holistic education. We shape future-
-                ready citizens through values, skills, and knowledge.
+                {pageContent.know_gurukul_desc}
               </p>
               <p>
-                Our mission is to provide quality education that nurtures intellectual
-                curiosity, critical thinking, and ethical values in every student.
+                {pageContent.know_gurukul_mission}
               </p>
               <a
                 href="#about"
@@ -240,7 +259,7 @@ export default function HomePage() {
             <div className="know-gurukul-image">
               <div className="image-placeholder">
                 <i className="fas fa-university"></i>
-                <span>GURUKUL Campus View</span>
+                <span>{pageContent.site_name.toUpperCase()} Campus View</span>
               </div>
             </div>
           </div>
@@ -252,19 +271,19 @@ export default function HomePage() {
         <div className="container">
           <div className="stats-grid">
             <div className="stat-item">
-              <h3>40+</h3>
+              <h3>{pageContent.stat_years}</h3>
               <p>Years of Excellence</p>
             </div>
             <div className="stat-item">
-              <h3>5000+</h3>
+              <h3>{pageContent.stat_alumni}</h3>
               <p>Successful Alumni</p>
             </div>
             <div className="stat-item">
-              <h3>50+</h3>
+              <h3>{pageContent.stat_faculty}</h3>
               <p>Expert Faculty</p>
             </div>
             <div className="stat-item">
-              <h3>100%</h3>
+              <h3>{pageContent.stat_satisfaction}</h3>
               <p>Student Satisfaction</p>
             </div>
           </div>

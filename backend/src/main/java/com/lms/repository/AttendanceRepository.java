@@ -39,4 +39,16 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     // Filter by Class (Program) and Section
     List<Attendance> findByStudentProgramAndStudentSection(String program, String section);
+
+    // Filter by Date only
+    List<Attendance> findByDate(LocalDate date);
+
+    // Filter by Class (Program) and Date
+    List<Attendance> findByStudentProgramAndDate(String program, LocalDate date);
+
+    // Filter by Class (Program), Section, and Date
+    List<Attendance> findByStudentProgramAndStudentSectionAndDate(String program, String section, LocalDate date);
+
+    // Filter by Course and Date
+    List<Attendance> findByCourseAndDate(Course course, LocalDate date);
 }

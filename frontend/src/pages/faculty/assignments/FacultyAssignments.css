@@ -1,0 +1,263 @@
+/* ── Faculty Assignments Premium Styling ── */
+
+.fa-page {
+    padding: 24px;
+    background-color: #f8fafc;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ── Premium Header ── */
+.fa-header-premium {
+    background: linear-gradient(135deg, #1eb3ab 0%, #0d9488 100%);
+    border-radius: 16px;
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.2);
+}
+
+.fa-header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.fa-header-icon-box {
+    width: 56px;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.fa-header-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0 0 4px;
+    letter-spacing: -0.02em;
+}
+
+.fa-header-subtitle {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+}
+
+.fa-header-meta {
+    display: flex;
+    gap: 16px;
+}
+
+.fa-meta-item {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 6px 14px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+/* ── Toolbar (Tabs + Selector) ── */
+.fa-toolbar {
+    background: white;
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+/* Tabs */
+.fa-tabs-container {
+    display: flex;
+    background: #f1f5f9;
+    padding: 6px;
+    border-radius: 10px;
+    gap: 4px;
+}
+
+.fa-tab-btn {
+    border: none;
+    background: transparent;
+    padding: 8px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #64748b;
+    position: relative;
+    min-width: 130px;
+}
+
+.fa-tab-btn svg {
+    margin-bottom: 2px;
+}
+
+.fa-tab-btn.active {
+    background: white;
+    color: #0d9488;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.fa-tab-hint {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+}
+
+/* Selector */
+.fa-selector-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f8fafc;
+    padding: 6px 12px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+}
+
+.fa-selector-icon {
+    color: #0d9488;
+}
+
+.fa-select-wrapper {
+    position: relative;
+    margin-right: 8px;
+    padding-right: 8px;
+    border-right: 1px solid #e2e8f0;
+}
+
+.fa-course-select {
+    appearance: none;
+    border: none;
+    background: transparent;
+    padding: 6px 28px 6px 4px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1e293b;
+    cursor: pointer;
+    outline: none;
+    max-width: 300px;
+}
+
+.fa-select-arrow {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #94a3b8;
+}
+
+.fa-selected-badge {
+    color: #0d9488;
+    background: #e0f7f5;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Content ── */
+.fa-content-wrapper {
+    animation: fa-scale-up 0.3s ease-out;
+}
+
+@keyframes fa-scale-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Empty State ── */
+.fa-empty-state {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+}
+
+.fa-empty-card {
+    background: white;
+    border-radius: 20px;
+    padding: 60px 40px;
+    text-align: center;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f1f5f9;
+}
+
+.fa-empty-icon-wrap {
+    width: 80px;
+    height: 80px;
+    background: #f1f5f9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    color: #94a3b8;
+}
+
+.fa-empty-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 12px;
+}
+
+.fa-empty-card p {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.fa-empty-hint {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    background: #f8fafc;
+    padding: 10px;
+    border-radius: 8px;
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .fa-header-premium { flex-direction: column; gap: 20px; text-align: center; }
+    .fa-header-left { flex-direction: column; }
+    .fa-toolbar { flex-direction: column; align-items: stretch; }
+}
+
+@media (max-width: 640px) {
+    .fa-page { padding: 16px; }
+    .fa-tabs-container { overflow-x: auto; }
+    .fa-tab-btn { min-width: 110px; padding: 6px 10px; }
+    .fa-course-select { max-width: 100%; }
+}

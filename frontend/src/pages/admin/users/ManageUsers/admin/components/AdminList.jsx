@@ -27,18 +27,13 @@ const AdminList = ({ admins, loading, onStatusChange, onEdit, onDelete, onResetP
                         <tr key={admin.id}>
                             <td>{admin.userId}</td>
                             <td>
-                                <div className="user-cell">
-                                    <div className="user-avatar-small">
-                                        {admin.name.charAt(0)}
-                                    </div>
-                                    <div>
-                                        {admin.name}
-                                        {admin.superAdmin && (
-                                            <span className="badge badge-warning ml-2" style={{ fontSize: '0.7em', background: '#f39c12', color: 'white', padding: '2px 5px', borderRadius: '4px', marginLeft: '5px' }}>
-                                                SUPER ADMIN
-                                            </span>
-                                        )}
-                                    </div>
+                                <div style={{display:'flex', alignItems:'center', gap:'6px', whiteSpace:'nowrap'}}>
+                                    {admin.name}
+                                    {admin.superAdmin && (
+                                        <span style={{ fontSize: '0.7em', background: '#f39c12', color: 'white', padding: '2px 5px', borderRadius: '4px', marginLeft: '4px' }}>
+                                            SUPER ADMIN
+                                        </span>
+                                    )}
                                 </div>
                             </td>
                             <td>{admin.dob || 'N/A'}</td>

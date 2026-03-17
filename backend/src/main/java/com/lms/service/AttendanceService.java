@@ -113,28 +113,50 @@ public class AttendanceService {
         }
 
         /**
-         * Admin: get all attendance records
+         * Admin: get all attendance records, with optional date filtering
          */
         @Transactional(readOnly = true)
-        public List<AttendanceDTO> getAllAttendance(Long courseId, Long studentId, String program, String section) {
+        public List<AttendanceDTO> getAllAttendance(Long courseId, Long studentId, String program, String section, LocalDate date) {
                 List<Attendance> records;
 
                 if (studentId != null) {
                         User student = userRepository.findById(studentId)
                                         .orElseThrow(() -> new IllegalArgumentException("Student not found"));
                         records = attendanceRepository.findByStudent(student);
+                        // apply date filter in-memory if provided
+                        if (date != null) {
+                                records = records.stream()
+                                                .filter(a -> date.equals(a.getDate()))
+                                                .collect(Collectors.toList());
+                        }
                 } else if (courseId != null) {
                         Course course = courseRepository.findById(courseId)
                                         .orElseThrow(() -> new IllegalArgumentException("Course not found"));
-                        records = attendanceRepository.findByCourse(course);
+                        if (date != null) {
+                                records = attendanceRepository.findByCourseAndDate(course, date);
+                        } else {
+                                records = attendanceRepository.findByCourse(course);
+                        }
                 } else if (program != null && !program.isBlank()) {
                         if (section != null && !section.isBlank()) {
-                                records = attendanceRepository.findByStudentProgramAndStudentSection(program, section);
+                                if (date != null) {
+                                        records = attendanceRepository.findByStudentProgramAndStudentSectionAndDate(program, section, date);
+                                } else {
+                                        records = attendanceRepository.findByStudentProgramAndStudentSection(program, section);
+                                }
                         } else {
-                                records = attendanceRepository.findByStudentProgram(program);
+                                if (date != null) {
+                                        records = attendanceRepository.findByStudentProgramAndDate(program, date);
+                                } else {
+                                        records = attendanceRepository.findByStudentProgram(program);
+                                }
                         }
                 } else {
-                        records = attendanceRepository.findAll();
+                        if (date != null) {
+                                records = attendanceRepository.findByDate(date);
+                        } else {
+                                records = attendanceRepository.findAll();
+                        }
                 }
 
                 return records.stream()
@@ -147,7 +169,7 @@ public class AttendanceService {
          */
         @Transactional(readOnly = true)
         public List<AttendanceDTO> getAllAttendance() {
-                return getAllAttendance(null, null, null, null);
+                return getAllAttendance(null, null, null, null, null);
         }
 
         /**

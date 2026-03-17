@@ -30,6 +30,7 @@ import FacultyDashboard from '../pages/faculty/dashboard/FacultyDashboard';
 import FacultyCourses from '../pages/faculty/courses/FacultyCourses';
 import FacultyProfile from '../pages/faculty/profile/FacultyProfile';
 import FacultyAssignments from '../pages/faculty/assignments/FacultyAssignments';
+import FacultyStudents from '../pages/faculty/students/FacultyStudents';
 import FacultyAnnouncements from '../pages/faculty/announcements/FacultyAnnouncements';
 import MarkAttendance from '../pages/faculty/attendance/MarkAttendance';
 import UploadGrades from '../pages/faculty/grading/UploadGrades';
@@ -170,6 +171,7 @@ const AppRoutes = () => {
         <Route path="profile" element={<FacultyProfile />} />
         <Route path="courses" element={<FacultyCourses />} />
         <Route path="assignments" element={<FacultyAssignments />} />
+        <Route path="students" element={<FacultyStudents />} />
         <Route path="announcements" element={<FacultyAnnouncements />} />
         <Route path="attendance" element={<MarkAttendance />} />
         <Route path="grades" element={<UploadGrades />} />

@@ -19,13 +19,29 @@ export default function AdmissionsPage() {
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [admissionsOpen, setAdmissionsOpen] = useState(true); // Default to true while loading
+  const [pageContent, setPageContent] = useState({
+    admissions_hero_title: 'Admissions Open for 2024-25',
+    admissions_hero_subtitle: 'Join Gurukul Pathshala and shape a brighter future for your child',
+    admissions_open_date: '1st December 2023',
+    admissions_last_date: '31st March 2024',
+    admissions_session_date: 'April 2024',
+    admissions_year_begins: '1st June 2024',
+  });
 
   useEffect(() => {
     const checkAdmissionsStatus = async () => {
       try {
         const settings = await settingsAPI.getPublic();
-        if (settings && settings['admissions_open'] === 'false') {
-          setAdmissionsOpen(false);
+        if (settings) {
+          if (settings['admissions_open'] === 'false') setAdmissionsOpen(false);
+          setPageContent({
+            admissions_hero_title: settings['admissions_hero_title'] || 'Admissions Open for 2024-25',
+            admissions_hero_subtitle: settings['admissions_hero_subtitle'] || 'Join Gurukul Pathshala and shape a brighter future for your child',
+            admissions_open_date: settings['admissions_open_date'] || '1st December 2023',
+            admissions_last_date: settings['admissions_last_date'] || '31st March 2024',
+            admissions_session_date: settings['admissions_session_date'] || 'April 2024',
+            admissions_year_begins: settings['admissions_year_begins'] || '1st June 2024',
+          });
         }
       } catch (err) {
         console.error("Failed to load settings", err);
@@ -74,9 +90,9 @@ export default function AdmissionsPage() {
       <section className="admissions-hero">
         <div className="hero-overlay">
           <div className="hero-content">
-            <h1>{admissionsOpen ? 'Admissions Open for 2024-25' : 'Admissions Closed for 2024-25'}</h1>
+            <h1>{admissionsOpen ? pageContent.admissions_hero_title : pageContent.admissions_hero_title.replace('Open', 'Closed')}</h1>
             <p className="hero-subtitle">
-              Join Gurukul Pathshala and shape a brighter future for your child
+              {pageContent.admissions_hero_subtitle}
             </p>
             <div className="hero-highlights">
               <div className="highlight-item">
@@ -179,19 +195,19 @@ export default function AdmissionsPage() {
             <div className="dates-list">
               <div className="date-item">
                 <div className="date-title">Admissions Open</div>
-                <div className="date-value">1st December 2023</div>
+                <div className="date-value">{pageContent.admissions_open_date}</div>
               </div>
               <div className="date-item">
                 <div className="date-title">Last Date for Submission</div>
-                <div className="date-value">31st March 2024</div>
+                <div className="date-value">{pageContent.admissions_last_date}</div>
               </div>
               <div className="date-item">
                 <div className="date-title">Interaction Sessions</div>
-                <div className="date-value">April 2024</div>
+                <div className="date-value">{pageContent.admissions_session_date}</div>
               </div>
               <div className="date-item">
                 <div className="date-title">Academic Year Begins</div>
-                <div className="date-value">1st June 2024</div>
+                <div className="date-value">{pageContent.admissions_year_begins}</div>
               </div>
             </div>
           </div>

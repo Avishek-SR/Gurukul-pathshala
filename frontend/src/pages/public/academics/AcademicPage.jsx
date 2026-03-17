@@ -1,8 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { settingsAPI } from "../../../services/api";
 import "./AcademicPage.css";
 
 export default function AcademicPage() {
   const [activeSection, setActiveSection] = useState("curriculum");
+  const [pageContent, setPageContent] = useState({
+    academics_hero_title: 'Academic Excellence at Gurukul Pathshala',
+    academics_hero_subtitle: 'Nurturing minds, shaping futures through a holistic and innovative curriculum',
+    academics_stat_board: '98%',
+    academics_stat_faculty: '50+',
+    academics_stat_years: '15+',
+    academics_stat_alumni: '1000+',
+  });
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const settings = await settingsAPI.getPublic();
+        if (settings) {
+          setPageContent({
+            academics_hero_title: settings['academics_hero_title'] || 'Academic Excellence at Gurukul Pathshala',
+            academics_hero_subtitle: settings['academics_hero_subtitle'] || 'Nurturing minds, shaping futures through a holistic and innovative curriculum',
+            academics_stat_board: settings['academics_stat_board'] || '98%',
+            academics_stat_faculty: settings['academics_stat_faculty'] || '50+',
+            academics_stat_years: settings['academics_stat_years'] || '15+',
+            academics_stat_alumni: settings['academics_stat_alumni'] || '1000+',
+          });
+        }
+      } catch (err) {
+        console.error('Failed to fetch academic page settings', err);
+      }
+    };
+    fetchContent();
+  }, []);
 
   const sections = [
     { id: "curriculum", label: "Curriculum", icon: "📚" },
@@ -16,25 +46,25 @@ export default function AcademicPage() {
       {/* Hero Section */}
       <section className="academic-hero">
         <div className="hero-content">
-          <h1>Academic Excellence at Gurukul Pathshala</h1>
+          <h1>{pageContent.academics_hero_title}</h1>
           <p className="hero-subtitle">
-            Nurturing minds, shaping futures through a holistic and innovative curriculum
+            {pageContent.academics_hero_subtitle}
           </p>
           <div className="academic-stats">
             <div className="stat-item">
-              <div className="stat-number">98%</div>
+              <div className="stat-number">{pageContent.academics_stat_board}</div>
               <div className="stat-label">Board Results</div>
             </div>
             <div className="stat-item">
-              <div className="stat-number">50+</div>
+              <div className="stat-number">{pageContent.academics_stat_faculty}</div>
               <div className="stat-label">Expert Faculty</div>
             </div>
             <div className="stat-item">
-              <div className="stat-number">15+</div>
+              <div className="stat-number">{pageContent.academics_stat_years}</div>
               <div className="stat-label">Years Excellence</div>
             </div>
             <div className="stat-item">
-              <div className="stat-number">1000+</div>
+              <div className="stat-number">{pageContent.academics_stat_alumni}</div>
               <div className="stat-label">Successful Alumni</div>
             </div>
           </div>

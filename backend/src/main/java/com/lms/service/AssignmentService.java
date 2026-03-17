@@ -1,9 +1,11 @@
 package com.lms.service;
 
 import com.lms.model.Assignment;
+import com.lms.model.AssignmentSubmission;
 import com.lms.model.Course;
 import com.lms.model.User;
 import com.lms.repository.AssignmentRepository;
+import com.lms.repository.AssignmentSubmissionRepository;
 import com.lms.repository.CourseRepository;
 import com.lms.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,13 +21,16 @@ public class AssignmentService {
     private final AssignmentRepository assignmentRepository;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
+    private final AssignmentSubmissionRepository submissionRepository;
 
     public AssignmentService(AssignmentRepository assignmentRepository,
                              CourseRepository courseRepository,
-                             UserRepository userRepository) {
+                             UserRepository userRepository,
+                             AssignmentSubmissionRepository submissionRepository) {
         this.assignmentRepository = assignmentRepository;
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
+        this.submissionRepository = submissionRepository;
     }
 
     /**
@@ -72,6 +77,15 @@ public class AssignmentService {
     }
 
     /**
+     * Get assignments by course.
+     */
+    @Transactional(readOnly = true)
+    public List<Assignment> getAssignmentsByCourse(Long courseId) {
+        return assignmentRepository.findByCourseId(courseId);
+    }
+
+
+    /**
      * Get assignment by id.
      */
     @Transactional(readOnly = true)
@@ -87,5 +101,62 @@ public class AssignmentService {
         Assignment assignment = getById(id);
         assignment.setActive(false);
         assignmentRepository.save(assignment);
+    }
+
+    // --- Submission Logic ---
+
+    /**
+     * Student submits work for an assignment.
+     */
+    public AssignmentSubmission submitWork(Long assignmentId, String submissionUrl) {
+        String studentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User student = userRepository.findByUserId(studentUserId)
+                .orElseThrow(() -> new IllegalStateException("Student not found"));
+
+        Assignment assignment = getById(assignmentId);
+
+        AssignmentSubmission submission = submissionRepository
+                .findByAssignmentIdAndStudentId(assignmentId, student.getId())
+                .orElse(new AssignmentSubmission());
+
+        submission.setAssignment(assignment);
+        submission.setStudent(student);
+        submission.setSubmissionUrl(submissionUrl);
+        submission.setSubmissionStatus(com.lms.model.enums.SubmissionStatus.SUBMITTED);
+        
+        return submissionRepository.save(submission);
+    }
+
+    /**
+     * Faculty grades a submission.
+     */
+    public AssignmentSubmission gradeSubmission(Long submissionId, Integer grade, String feedback) {
+        AssignmentSubmission submission = submissionRepository.findById(submissionId)
+                .orElseThrow(() -> new IllegalArgumentException("Submission not found"));
+
+        submission.setGrade(grade);
+        submission.setFeedback(feedback);
+        submission.setSubmissionStatus(com.lms.model.enums.SubmissionStatus.APPROVED);
+
+        return submissionRepository.save(submission);
+    }
+
+    /**
+     * Get all submissions for an assignment (for faculty).
+     */
+    public List<AssignmentSubmission> getSubmissions(Long assignmentId) {
+        return submissionRepository.findByAssignmentId(assignmentId);
+    }
+
+    /**
+     * Get student's submission for an assignment.
+     */
+    public AssignmentSubmission getStudentSubmission(Long assignmentId) {
+        String studentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User student = userRepository.findByUserId(studentUserId)
+                .orElseThrow(() -> new IllegalStateException("Student not found"));
+
+        return submissionRepository.findByAssignmentIdAndStudentId(assignmentId, student.getId())
+                .orElse(null);
     }
 }

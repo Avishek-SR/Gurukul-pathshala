@@ -17,6 +17,7 @@ const AttendanceManagement = () => {
   // Filter state (within a class)
   const [sectionFilter, setSectionFilter] = useState('');
   const [courseFilter, setCourseFilter] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
 
   // Dropdown data
   const [courses, setCourses] = useState([]);
@@ -36,24 +37,25 @@ const AttendanceManagement = () => {
     fetchCourses();
   }, []);
 
-  // 2. Fetch Attendance when Class is selected (or section changes)
+  // 2. Fetch Attendance when Class is selected (or filters change)
   useEffect(() => {
     if (selectedClass) {
       fetchClassAttendance();
     } else {
       setAttendanceRecords([]); // clear when back to grid
     }
-  }, [selectedClass, sectionFilter, courseFilter]);
+  }, [selectedClass, sectionFilter, courseFilter, dateFilter]);
 
   const fetchClassAttendance = async () => {
     setLoading(true);
     try {
       const params = {
-        program: `Class ${selectedClass}`, // Filter by the exact class string format in DB
+        program: `Class ${selectedClass}`,
       };
 
       if (sectionFilter) params.section = sectionFilter;
       if (courseFilter) params.courseId = courseFilter;
+      if (dateFilter) params.date = dateFilter; // format: YYYY-MM-DD
 
       const res = await axios.get('/admin/attendance', { params });
       setAttendanceRecords(res.data);
@@ -65,11 +67,18 @@ const AttendanceManagement = () => {
     }
   };
 
+  const handleClearFilters = () => {
+    setSectionFilter('');
+    setCourseFilter('');
+    setDateFilter('');
+  };
+
   // --- Derived Stats (for the selected class view) ---
   const totalPresent = attendanceRecords.filter(r => r.present).length;
   const totalAbsent = attendanceRecords.length - totalPresent;
   const percentage = attendanceRecords.length > 0 ? ((totalPresent / attendanceRecords.length) * 100).toFixed(1) : 0;
 
+  const isFiltered = sectionFilter || courseFilter || dateFilter;
 
   // --- Render: Class Selection Grid (Default View) ---
   if (!selectedClass) {
@@ -99,59 +108,111 @@ const AttendanceManagement = () => {
       <div className="attendance-header">
         <button className="back-btn" onClick={() => {
           setSelectedClass(null);
-          setSectionFilter('');
-          setCourseFilter('');
+          handleClearFilters();
         }}>
           ← Back to Classes
         </button>
         <h1>Attendance: Class {selectedClass}</h1>
-        <p>Monitoring stats for Class {selectedClass}</p>
+        <p>
+          Monitoring stats for Class {selectedClass}
+          {dateFilter && <span className="date-badge"> — {new Date(dateFilter + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</span>}
+        </p>
       </div>
 
       <div className="attendance-card">
 
         {/* Filters Bar */}
         <div className="filters-bar">
-          <select
-            value={sectionFilter}
-            onChange={(e) => setSectionFilter(e.target.value)}
-          >
-            <option value="">All Sections</option>
-            {SECTIONS.map(s => <option key={s} value={s}>Section {s}</option>)}
-          </select>
 
-          <select
-            value={courseFilter}
-            onChange={(e) => setCourseFilter(e.target.value)}
-          >
-            <option value="">All Subjects</option>
-            {courses.map(c => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
+          {/* Section Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Section</label>
+            <select
+              value={sectionFilter}
+              onChange={(e) => setSectionFilter(e.target.value)}
+            >
+              <option value="">All Sections</option>
+              {SECTIONS.map(s => <option key={s} value={s}>Section {s}</option>)}
+            </select>
+          </div>
+
+          {/* Subject Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Subject</label>
+            <select
+              value={courseFilter}
+              onChange={(e) => setCourseFilter(e.target.value)}
+            >
+              <option value="">All Subjects</option>
+              {courses.map(c => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Date Filter */}
+          <div className="filter-group">
+            <label className="filter-label">Date</label>
+            <input
+              type="date"
+              className="date-input"
+              value={dateFilter}
+              max={new Date().toISOString().split('T')[0]}
+              onChange={(e) => setDateFilter(e.target.value)}
+            />
+          </div>
+
+          {/* Clear Button — shown only when any filter is active */}
+          {isFiltered && (
+            <button className="clear-filter-btn" onClick={handleClearFilters}>
+              ✕ Clear Filters
+            </button>
+          )}
         </div>
+
+        {/* Active filter tags */}
+        {isFiltered && (
+          <div className="active-filters">
+            {sectionFilter && <span className="filter-tag">Section: {sectionFilter}</span>}
+            {courseFilter && <span className="filter-tag">Subject: {courses.find(c => c.id == courseFilter)?.name || courseFilter}</span>}
+            {dateFilter && <span className="filter-tag">Date: {new Date(dateFilter + 'T00:00:00').toLocaleDateString()}</span>}
+          </div>
+        )}
 
         {/* Quick Stats for this view */}
         <div className="attendance-stats">
           <div className="stat-box">
+            <h4>Total Records</h4>
+            <strong style={{ color: '#03045e' }}>{attendanceRecords.length}</strong>
+          </div>
+          <div className="stat-box">
             <h4>Presence Rate</h4>
-            <strong className="text-teal-600">{percentage}%</strong>
+            <strong style={{ color: '#0d9488' }}>{percentage}%</strong>
           </div>
           <div className="stat-box">
             <h4>Present</h4>
-            <strong className="text-emerald-600">{totalPresent}</strong>
+            <strong style={{ color: '#16a34a' }}>{totalPresent}</strong>
           </div>
           <div className="stat-box">
             <h4>Absent</h4>
-            <strong className="text-rose-600">{totalAbsent}</strong>
+            <strong style={{ color: '#dc2626' }}>{totalAbsent}</strong>
           </div>
         </div>
 
         {/* Table */}
         {loading ? (
-          <div className="text-center py-10 text-gray-400">Loading records...</div>
+          <div className="loading-state">
+            <div className="loading-spinner"></div>
+            <p>Loading records...</p>
+          </div>
         ) : attendanceRecords.length === 0 ? (
-          <div className="empty-state">No attendance records found for this selection.</div>
+          <div className="empty-state">
+            <div className="empty-icon">📋</div>
+            <p>No attendance records found for this selection.</p>
+            {isFiltered && (
+              <button className="clear-filter-btn" onClick={handleClearFilters}>Clear Filters</button>
+            )}
+          </div>
         ) : (
           <div className="table-responsive">
             <table className="attendance-table">
@@ -168,7 +229,7 @@ const AttendanceManagement = () => {
               <tbody>
                 {attendanceRecords.map((record) => (
                   <tr key={record.id}>
-                    <td>{new Date(record.date).toLocaleDateString()}</td>
+                    <td className="date-cell">{new Date(record.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
 
                     <td className="font-mono font-bold text-gray-600">
                       {record.studentUserId || record.studentId}
@@ -178,14 +239,7 @@ const AttendanceManagement = () => {
                       {courses.find(c => c.id === record.courseId)?.name || record.courseId}
                     </td>
 
-                    {/* Since Section isn't directly on AttendanceDTO, we might need to rely on the context or fetch it if needed. 
-                                            But usually, user info has section. For now, since we filtered by class, we assume correctness.
-                                            Ideally, AttendanceDTO should have section too, or we fetch it. 
-                                            For now, I'll leave it blank or rely on filter context if strict.
-                                            actually, let's just show 'Class X' or similar if we have the data. 
-                                            Wait, the filter 'program' (selectedClass) applies to all.
-                                        */}
-                    <td>{record.section || selectedClass}</td>
+                    <td>{record.section || `Class ${selectedClass}`}</td>
 
                     <td>
                       {record.facultyUserId ? (
@@ -193,15 +247,15 @@ const AttendanceManagement = () => {
                           {record.facultyUserId}
                         </span>
                       ) : (
-                        <span className="text-gray-400 text-sm italic">System</span>
+                        <span className="system-badge">System</span>
                       )}
                     </td>
 
                     <td>
                       {record.present ? (
-                        <span className="status-badge present">Present</span>
+                        <span className="status-badge present">✓ Present</span>
                       ) : (
-                        <span className="status-badge absent">Absent</span>
+                        <span className="status-badge absent">✗ Absent</span>
                       )}
                     </td>
                   </tr>

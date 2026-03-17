@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './StudentCourses.css';
 
 const MyClasses = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -25,35 +27,60 @@ const MyClasses = () => {
         fetchCourses();
     }, []);
 
-    if (loading) return <div className="p-8">Loading classes...</div>;
+    const handleSubjectClick = (courseId) => {
+        navigate(`/student/assignments?courseId=${courseId}`);
+    };
+
+    if (loading) return (
+        <div className="sc-loading">
+            <div className="sc-spinner"></div>
+            <p>Loading your subjects...</p>
+        </div>
+    );
 
     return (
-        <div className="student-page">
-
+        <div className="student-page subjects-page">
+            <div className="page-header-simple">
+                <h1>My Subjects</h1>
+                <p>Click on a subject to view assignments and activities.</p>
+            </div>
 
             {courses.length === 0 ? (
                 <div className="empty-state-card">
-                    <p>You are not enrolled in any classes yet.</p>
+                    <div className="empty-icon">📚</div>
+                    <p>You are not enrolled in any subjects yet.</p>
                 </div>
             ) : (
-                <div className="courses-grid">
+                <div className="subjects-grid">
                     {courses.map(course => (
-                        <div key={course.id} className="course-card">
-                            <div className="course-card-header">
-                                <span className="course-code">{course.code}</span>
-                                <span className="course-fee">₹{course.fee}</span>
+                        <div 
+                            key={course.id} 
+                            className="subject-card-premium" 
+                            onClick={() => handleSubjectClick(course.id)}
+                        >
+                            <div className="subj-card-top">
+                                <span className="subj-code-pill">{course.code}</span>
+                                <div className="subj-icon-circle">📖</div>
                             </div>
-                            <h3>{course.name}</h3>
-                            <p className="course-desc">{course.description}</p>
+                            
+                            <div className="subj-card-main">
+                                <h3>{course.name}</h3>
+                                <p className="subj-desc">{course.description || "No description available."}</p>
+                            </div>
 
-                            <div className="course-footer">
-                                <div className="faculty-info">
-                                    <div className="faculty-avatar">
+                            <div className="subj-card-footer">
+                                <div className="instructor-info">
+                                    <div className="instructor-avatar">
                                         {course.facultyName?.charAt(0) || 'T'}
                                     </div>
-                                    <span>{course.facultyName || 'TBA'}</span>
+                                    <div className="instructor-details">
+                                        <span className="inst-label">Instructor</span>
+                                        <span className="inst-name">{course.facultyName || 'To Be Assigned'}</span>
+                                    </div>
                                 </div>
-                                <span className="duration-badge">{course.duration}</span>
+                                <div className="subj-arrow-btn">
+                                    <i className="fas fa-chevron-right"></i>
+                                </div>
                             </div>
                         </div>
                     ))}

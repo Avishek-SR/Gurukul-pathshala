@@ -107,4 +107,24 @@ export const landingSlidesAPI = {
   delete: (id) => apiDelete(`/admin/landing-slides/${id}`),
 };
 
+export const galleryAPI = {
+  getPublicAlbums: () => apiGet('/public/gallery/albums'),
+  getPublicItems: (albumId) => apiGet(`/public/gallery/albums/${albumId}/items`),
+  getAllAlbums: () => apiGet('/admin/gallery/albums'),
+  createAlbum: (name, description) => apiPost('/admin/gallery/albums', { name, description }),
+  updateAlbum: (id, data) => apiPut(`/admin/gallery/albums/${id}`, data),
+  deleteAlbum: (id) => apiDelete(`/admin/gallery/albums/${id}`),
+  getItemsByAlbum: (albumId) => apiGet(`/admin/gallery/albums/${albumId}/items`),
+  uploadItem: (albumId, file, title, description) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (title) formData.append('title', title);
+    if (description) formData.append('description', description);
+    return api.post(`/admin/gallery/albums/${albumId}/items`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }).then(res => res.data);
+  },
+  deleteItem: (id) => apiDelete(`/admin/gallery/items/${id}`),
+};
+
 export default api;

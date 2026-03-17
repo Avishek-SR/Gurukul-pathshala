@@ -84,7 +84,12 @@ public class SecurityConfig {
                         // Admin endpoints
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
 
-                        // Faculty endpoints
+                        // Specific Assignment Access (Allow students to view and submit)
+                        .requestMatchers(HttpMethod.GET, "/faculty/assignments/course/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/faculty/assignments/*/my-submission").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/faculty/assignments/*/submit").hasAnyAuthority("ROLE_STUDENT", "ROLE_ADMIN")
+                        
+                        // Faculty endpoints (Rest of them)
                         .requestMatchers("/faculty/**").hasAnyAuthority("ROLE_FACULTY", "ROLE_ADMIN")
 
                         // Student endpoints

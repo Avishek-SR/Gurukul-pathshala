@@ -32,9 +32,14 @@ public class AdminAttendanceController {
             @RequestParam(required = false) Long courseId,
             @RequestParam(required = false) Long studentId,
             @RequestParam(required = false) String program,
-            @RequestParam(required = false) String section) {
+            @RequestParam(required = false) String section,
+            @RequestParam(required = false) String date) {
 
-        return ResponseEntity.ok(attendanceService.getAllAttendance(courseId, studentId, program, section));
+        java.time.LocalDate parsedDate = (date != null && !date.isBlank())
+                ? java.time.LocalDate.parse(date)
+                : null;
+
+        return ResponseEntity.ok(attendanceService.getAllAttendance(courseId, studentId, program, section, parsedDate));
     }
 
     /**

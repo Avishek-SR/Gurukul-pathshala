@@ -8,6 +8,7 @@ const ContactPage = () => {
         phone: '+977-1234567890',
         address: 'Kathmandu, Nepal'
     });
+    const [pageSubtitle, setPageSubtitle] = useState('Get in touch with us for admissions, inquiries, or support.');
 
     useEffect(() => {
         const fetchSettings = async () => {
@@ -18,6 +19,7 @@ const ContactPage = () => {
                     phone: data.contact_phone || '+977-1234567890',
                     address: data.contact_address || 'Kathmandu, Nepal'
                 });
+                if (data['contact_page_subtitle']) setPageSubtitle(data['contact_page_subtitle']);
             } catch (error) {
                 console.error("Failed to load settings");
             }
@@ -30,7 +32,7 @@ const ContactPage = () => {
             <div className="page-header-section">
                 <div className="container">
                     <h1>Contact Us</h1>
-                    <p>Get in touch with us for admissions, inquiries, or support.</p>
+                    <p>{pageSubtitle}</p>
                 </div>
             </div>
 

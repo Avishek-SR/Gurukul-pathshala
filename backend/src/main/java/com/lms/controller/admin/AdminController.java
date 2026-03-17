@@ -245,4 +245,67 @@ public class AdminController {
         landingPageSlideService.deleteSlide(id);
         return ResponseEntity.noContent().build();
     }
+
+    // --- Gallery Album & Item Management ---
+
+    @Autowired
+    private com.lms.service.GalleryService galleryService;
+
+    @GetMapping("/gallery/albums")
+    public ResponseEntity<java.util.List<com.lms.model.GalleryAlbum>> getAllGalleryAlbums() {
+        return ResponseEntity.ok(galleryService.getAllAlbumsForAdmin());
+    }
+
+    @PostMapping("/gallery/albums")
+    public ResponseEntity<com.lms.model.GalleryAlbum> createGalleryAlbum(
+            @RequestBody Map<String, String> payload) {
+        String name = payload.getOrDefault("name", "Untitled Album");
+        String description = payload.get("description");
+        return ResponseEntity.ok(galleryService.createAlbum(name, description));
+    }
+
+    @PutMapping("/gallery/albums/{id}")
+    public ResponseEntity<com.lms.model.GalleryAlbum> updateGalleryAlbum(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> payload) {
+        String name = (String) payload.get("name");
+        String description = (String) payload.get("description");
+        Boolean active = payload.get("active") != null ? (Boolean) payload.get("active") : null;
+        return ResponseEntity.ok(galleryService.updateAlbum(id, name, description, active));
+    }
+
+    @DeleteMapping("/gallery/albums/{id}")
+    public ResponseEntity<Void> deleteGalleryAlbum(@PathVariable Long id) {
+        galleryService.deleteAlbum(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/gallery/albums/{albumId}/items")
+    public ResponseEntity<java.util.List<com.lms.model.GalleryItem>> getGalleryItemsByAlbum(
+            @PathVariable Long albumId) {
+        return ResponseEntity.ok(galleryService.getItemsByAlbumId(albumId));
+    }
+
+    @PostMapping("/gallery/albums/{albumId}/items")
+    public ResponseEntity<com.lms.model.GalleryItem> addGalleryItem(
+            @PathVariable Long albumId,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "description", required = false) String description) {
+        String filePath = fileStorageService.storeFile(file);
+        String mediaType = "IMAGE";
+        String contentType = file.getContentType();
+        if (contentType != null && contentType.startsWith("video")) {
+            mediaType = "VIDEO";
+        } else if (filePath.endsWith(".mp4") || filePath.endsWith(".webm")) {
+            mediaType = "VIDEO";
+        }
+        return ResponseEntity.ok(galleryService.addItem(albumId, filePath, mediaType, title, description));
+    }
+
+    @DeleteMapping("/gallery/items/{id}")
+    public ResponseEntity<Void> deleteGalleryItem(@PathVariable Long id) {
+        galleryService.deleteItem(id);
+        return ResponseEntity.noContent().build();
+    }
 }

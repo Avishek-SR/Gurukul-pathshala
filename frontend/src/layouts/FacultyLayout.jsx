@@ -104,7 +104,17 @@ const FacultyLayout = () => {
         <div className="sidebar-footer">
           <div className="faculty-profile-mini">
             <div className="mini-avatar">
-              <i className="fas fa-user-tie"></i>
+              {user?.profilePictureUrl ? (
+                <img
+                  src={user.profilePictureUrl}
+                  alt={user?.name}
+                  style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                />
+              ) : (
+                <span style={{ fontSize: '1rem', fontWeight: 700, color: 'white' }}>
+                  {user?.name?.charAt(0) || 'F'}
+                </span>
+              )}
             </div>
             <div className="mini-details">
               <span>{user?.name?.split(' ')[0] || 'Faculty'}</span>

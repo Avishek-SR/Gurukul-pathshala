@@ -12,7 +12,9 @@ export default function MainLayout({ children }) {
   const navigate = useNavigate();
 
   const [settings, setSettings] = useState({
+    site_name: 'Gurukul Pathshala',
     site_logo_text: 'Gurukul Pathshala',
+    site_logo: '',
     contact_email: 'gurukulpathshala76@gmail.com',
     contact_phone: '+977-9819782671',
     contact_address: 'Lahan-8, Nepal'
@@ -85,10 +87,20 @@ export default function MainLayout({ children }) {
     <div className="main-layout-wrapper">
       <header className="main-layout-header">
         <div className="main-layout-logo-section">
-          <div className="main-layout-logo">
-            <i className="fas fa-atom"></i>
-          </div>
-          <span className="main-layout-title">{settings.site_logo_text}</span>
+          <Link to="/" className="main-layout-logo-link" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: 'inherit' }}>
+            <div className="main-layout-logo">
+              {settings.site_logo ? (
+                <img 
+                  src={settings.site_logo.startsWith('http') ? settings.site_logo : `${(import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')}${settings.site_logo}`} 
+                  alt="Logo" 
+                  style={{ width: '40px', height: '40px', objectFit: 'contain' }} 
+                />
+              ) : (
+                <i className="fas fa-atom"></i>
+              )}
+            </div>
+            <span className="main-layout-title">{settings.site_name || settings.site_logo_text}</span>
+          </Link>
         </div>
 
         {!isMobile && (
@@ -224,9 +236,17 @@ export default function MainLayout({ children }) {
           <div className="main-layout-footer-content">
             <div className="main-layout-footer-brand">
               <div className="main-layout-footer-logo">
-                <i className="fas fa-atom"></i>
+                {settings.site_logo ? (
+                  <img 
+                    src={settings.site_logo.startsWith('http') ? settings.site_logo : `${(import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')}${settings.site_logo}`} 
+                    alt="Logo" 
+                    style={{ width: '50px', height: '50px', objectFit: 'contain', marginBottom: '10px' }} 
+                  />
+                ) : (
+                  <i className="fas fa-atom"></i>
+                )}
               </div>
-              <h3>{settings.site_logo_text.toUpperCase()}</h3>
+              <h3>{(settings.site_name || settings.site_logo_text).toUpperCase()}</h3>
               <p>{settings.contact_address}</p>
             </div>
 

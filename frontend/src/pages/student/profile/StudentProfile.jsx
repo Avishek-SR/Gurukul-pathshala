@@ -27,7 +27,15 @@ const StudentProfile = () => {
       <div className="sp-card">
         <div className="sp-header">
           <div className="sp-avatar-wrapper">
-            {student.name?.substring(0, 2).toUpperCase()}
+            {student.profilePictureUrl ? (
+              <img
+                src={student.profilePictureUrl}
+                alt={student.name}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+              />
+            ) : (
+              student.name?.substring(0, 2).toUpperCase()
+            )}
           </div>
           <div className="sp-header-info">
             <h2>

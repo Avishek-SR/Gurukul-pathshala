@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { apiGet } from '../../../services/api';
+import { apiGet, settingsAPI } from '../../../services/api';
 import './PublicPages.css';
 
 const FacultyPage = () => {
     const [facultyMembers, setFacultyMembers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedFaculty, setSelectedFaculty] = useState(null);
+    const [pageContent, setPageContent] = useState({
+        faculty_page_title: 'Our Faculty',
+        faculty_page_subtitle: 'Meet the dedicated educators shaping the future of our students.',
+    });
+
+    useEffect(() => {
+        settingsAPI.getPublic().then(settings => {
+            if (settings) {
+                setPageContent({
+                    faculty_page_title: settings['faculty_page_title'] || 'Our Faculty',
+                    faculty_page_subtitle: settings['faculty_page_subtitle'] || 'Meet the dedicated educators shaping the future of our students.',
+                });
+            }
+        }).catch(() => {});
+    }, []);
 
     useEffect(() => {
         const fetchFaculty = async () => {
@@ -26,8 +41,8 @@ const FacultyPage = () => {
         <>
             <div className="page-header-section">
                 <div className="container">
-                    <h1>Our Faculty</h1>
-                    <p>Meet the dedicated educators shaping the future of our students.</p>
+                    <h1>{pageContent.faculty_page_title}</h1>
+                    <p>{pageContent.faculty_page_subtitle}</p>
                 </div>
             </div>
 

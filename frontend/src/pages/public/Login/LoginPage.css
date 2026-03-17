@@ -22,7 +22,8 @@ body {
 /* Modern EdTech Palette */
 :root {
   --primary-dark: #141e30;
-  --primary-medium: #20b2aa;    /* Single button color */
+  --primary-medium: #20b2aa;
+  /* Single button color */
   --primary-accent: #48cae4;
   --secondary-accent: #caf0f8;
   --card-bg: #FFFFFF;
@@ -61,8 +62,13 @@ body {
 }
 
 @keyframes rotatePattern {
-  from { transform: scale(2.5) rotate(0deg); }
-  to { transform: scale(2.5) rotate(360deg); }
+  from {
+    transform: scale(2.5) rotate(0deg);
+  }
+
+  to {
+    transform: scale(2.5) rotate(360deg);
+  }
 }
 
 .main-title {
@@ -159,17 +165,23 @@ body {
   width: 100%;
   max-width: 500px;
   background: var(--card-bg);
-  border: 3px solid var(--border-color); /* Thicker border */
+  border: 3px solid var(--border-color);
+  /* Thicker border */
   border-radius: 20px;
   padding: 2rem;
   box-shadow: 0 20px 50px rgba(0, 119, 182, 0.1);
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Increased from auto */
-  max-height: 95vh; /* Maximum height */
-  justify-content: space-between; /* Distribute content */
-  align-self: center; /* Center vertically */
-  margin: auto 0; /* Vertical centering */
+  min-height: 90vh;
+  /* Increased from auto */
+  max-height: 95vh;
+  /* Maximum height */
+  justify-content: space-between;
+  /* Distribute content */
+  align-self: center;
+  /* Center vertically */
+  margin: auto 0;
+  /* Vertical centering */
 }
 
 .gurukul-brand {
@@ -334,12 +346,12 @@ label {
     min-height: 100vh;
     background: var(--white);
   }
-  
+
   /* Hide left side completely on mobile */
   .visual-cards {
     display: none !important;
   }
-  
+
   /* Make login section full viewport on mobile */
   .login-section {
     flex: 1;
@@ -353,7 +365,7 @@ label {
     justify-content: center;
     overflow-y: auto;
   }
-  
+
   /* Login form container - Stick to top and bottom with border */
   .login-form-container {
     max-width: 100%;
@@ -371,50 +383,50 @@ label {
     justify-content: center;
     background: var(--white);
   }
-  
+
   /* Reduce logo and title size for mobile (same style as desktop) */
   .gurukul-brand {
     gap: 12px;
     margin-bottom: 2rem;
   }
-  
+
   .gurukul-logo {
     width: 55px;
     height: 55px;
   }
-  
+
   .gurukul-text h1 {
     font-size: 2rem;
   }
-  
+
   .gurukul-text p {
     font-size: 0.8rem;
     letter-spacing: 2px;
   }
-  
+
   /* Adjust form inputs for mobile */
   .form-input {
     font-size: 1rem;
     height: 48px;
     padding: 0 1rem;
   }
-  
+
   .captcha-display {
     font-size: 1.2rem;
     letter-spacing: 6px;
     height: 48px;
   }
-  
+
   .login-btn {
     font-size: 1rem;
     height: 50px;
   }
-  
+
   .form-links {
     margin-top: 1.5rem;
     padding-top: 1.5rem;
   }
-  
+
   /* Portal adjustments for mobile */
   .portal-header {
     padding: 1rem;
@@ -422,44 +434,44 @@ label {
     text-align: center;
     gap: 1rem;
   }
-  
+
   .portal-brand {
     justify-content: center;
     width: 100%;
   }
-  
+
   .user-profile {
     justify-content: center;
     width: 100%;
   }
-  
+
   .portal-content {
     padding: 1.5rem;
   }
-  
+
   .welcome-section {
     padding: 1.5rem;
     margin-bottom: 1.5rem;
   }
-  
+
   .welcome-section h1 {
     font-size: 1.8rem;
   }
-  
+
   .portal-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .portal-card {
     padding: 1.5rem;
   }
-  
+
   .quick-stats {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
-  
+
   .calendar-grid {
     grid-template-columns: 1fr;
   }
@@ -472,29 +484,29 @@ label {
   .app-container {
     flex-direction: row;
   }
-  
+
   .visual-cards {
     flex: 1;
     padding: 2rem 1rem;
   }
-  
+
   .main-title {
     font-size: 2.2rem;
     margin-bottom: 2rem;
   }
-  
+
   .user-type-card {
     max-width: 280px;
   }
-  
+
   .user-svg-container {
     height: 120px;
   }
-  
+
   .login-section {
     padding: 1.5rem;
   }
-  
+
   .login-form-container {
     padding: 2rem;
     max-height: 90vh;
@@ -536,7 +548,7 @@ label {
 .test-credentials {
   margin-top: 20px;
   padding: 15px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
 }
 
@@ -604,7 +616,8 @@ label {
 }
 
 .password-wrapper .password-input {
-  padding-right: 44px; /* space for eye icon */
+  padding-right: 44px;
+  /* space for eye icon */
 }
 
 .eye-toggle {

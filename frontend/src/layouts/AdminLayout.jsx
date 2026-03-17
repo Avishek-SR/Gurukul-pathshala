@@ -238,7 +238,17 @@ const AdminLayout = ({ onLogout }) => {
         <div className="sidebar-footer">
           <div className="admin-profile-mini">
             <div className="mini-avatar">
-              <i className="fas fa-user-shield"></i>
+              {admin?.profilePictureUrl ? (
+                <img
+                  src={admin.profilePictureUrl}
+                  alt={admin?.name}
+                  style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                />
+              ) : (
+                <span style={{ fontSize: '1rem', fontWeight: 700, color: 'white' }}>
+                  {admin?.name?.charAt(0) || 'A'}
+                </span>
+              )}
             </div>
             <div className="mini-details">
               <span>{admin?.name?.split(' ')[0] || 'Admin'}</span>
@@ -284,7 +294,9 @@ const AdminLayout = ({ onLogout }) => {
                       style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                     />
                   ) : (
-                    <i className="fas fa-user-shield"></i>
+                    <span style={{ fontSize: '1rem', fontWeight: 700, color: 'white' }}>
+                      {admin?.name?.charAt(0) || 'A'}
+                    </span>
                   )}
                 </div>
                 <i className={`fas fa-chevron-${profileMenuOpen ? 'up' : 'down'}`} style={{ fontSize: '0.8rem', color: '#666' }}></i>
@@ -332,7 +344,6 @@ const AdminLayout = ({ onLogout }) => {
           {activeTab === 'profile' && <AdminProfile />}
           {activeTab === 'all-users' && <AllUsersManagement />}
           {activeTab === 'global-activity' && <GlobalActivityLog />}
-          {activeTab === 'timetable' && <TimetableManagement />}
           {activeTab === 'timetable' && <TimetableManagement />}
           {activeTab === 'activities' && <AdminActivities />}
           {activeTab === 'notices' && <NoticeManagement />}

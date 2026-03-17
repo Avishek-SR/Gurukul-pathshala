@@ -14,12 +14,20 @@ import {
   TrendingUp,
   AlertCircle,
   MessageSquare,
-  Loader2
+  Loader2,
+  CheckCircle2,
+  Bell,
+  Zap
 } from 'lucide-react';
 import './facultyDashboard.css';
 
 const FacultyDashboard = () => {
-  // Fetch dashboard data
+  const facultyName = sessionStorage.getItem('name') || 'Faculty';
+  const now = new Date();
+  const hour = now.getHours();
+  const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+  const today = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
   const { data: statsData, isLoading: statsLoading, isError: statsError } = useQuery({
     queryKey: ['facultyDashboardStats'],
     queryFn: facultyService.getDashboardStats,
@@ -44,10 +52,10 @@ const FacultyDashboard = () => {
     queryFn: facultyService.getRecentAnnouncements,
     enabled: !!statsData
   });
+
   const { data: timetableData } = useQuery({
     queryKey: ['facultyTimetable'],
     queryFn: async () => {
-      // Direct call or service call
       const response = await fetch('http://localhost:8080/api/faculty/timetable', {
         headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
       });
@@ -56,237 +64,226 @@ const FacultyDashboard = () => {
     }
   });
 
-  // Loading state
+  const todaySchedule = timetableData
+    ? timetableData
+        .filter(t => t.dayOfWeek === now.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase())
+        .sort((a, b) => a.startTime.localeCompare(b.startTime))
+    : [];
+
   if (statsLoading) {
     return (
-      <div className="dashboard-loading">
-        <Loader2 className="loading-spinner" size={48} />
-        <p>Loading dashboard data...</p>
+      <div className="fd-loading">
+        <Loader2 className="fd-spinner" size={40} />
+        <p>Loading dashboard...</p>
       </div>
     );
   }
 
-  // Error state
   if (statsError) {
     return (
-      <div className="dashboard-error">
-        <AlertCircle size={64} />
+      <div className="fd-error">
+        <AlertCircle size={48} />
         <h2>Unable to load dashboard</h2>
         <p>Please check your connection and try again</p>
-        <button onClick={() => window.location.reload()} className="retry-btn">
-          Retry
-        </button>
+        <button onClick={() => window.location.reload()} className="fd-retry-btn">Retry</button>
       </div>
     );
   }
 
   return (
-    <div className="faculty-dashboard">
+    <div className="fd-wrap">
 
-
-      {/* Stats Grid */}
-      <div className="stats-grid">
-
-
-        <div className="stat-card">
-          <div className="stat-icon">
-            <Users size={24} />
-          </div>
-          <div className="stat-content">
-            <h3>Total Students</h3>
-            <p className="stat-value">{statsData?.totalStudents || 0}</p>
-            <span className="stat-trend positive">
-              <TrendingUp size={16} />
-              {statsData?.newStudents || 0} newly enrolled
-            </span>
-          </div>
+      {/* ── Welcome Banner ── */}
+      <div className="fd-welcome">
+        <div className="fd-welcome-left">
+          <p className="fd-greeting">{greeting},</p>
+          <h2 className="fd-name">{facultyName} 👋</h2>
+          <p className="fd-date">{today}</p>
         </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">
-            <FileText size={24} />
+        <div className="fd-welcome-right">
+          <div className="fd-welcome-stat">
+            <span className="fd-ws-value">{todaySchedule.length}</span>
+            <span className="fd-ws-label">Classes Today</span>
           </div>
-          <div className="stat-content">
-            <h3>Pending Grading</h3>
-            <p className="stat-value">{statsData?.pendingGrading || 0}</p>
-            <span className="stat-trend urgent">
-              {statsData?.overdueGrading || 0} overdue
-            </span>
+          <div className="fd-welcome-divider" />
+          <div className="fd-welcome-stat">
+            <span className="fd-ws-value">{statsData?.pendingGrading || 0}</span>
+            <span className="fd-ws-label">Pending Grades</span>
           </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">
-            <BarChart3 size={24} />
-          </div>
-          <div className="stat-content">
-            <h3>Avg. Attendance</h3>
-            <p className="stat-value">{statsData?.attendanceRate || 0}%</p>
-            <span className="stat-trend positive">
-              +{statsData?.attendanceChange || 0}% from last week
-            </span>
+          <div className="fd-welcome-divider" />
+          <div className="fd-welcome-stat">
+            <span className="fd-ws-value">{statsData?.totalStudents || 0}</span>
+            <span className="fd-ws-label">Total Students</span>
           </div>
         </div>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="dashboard-grid">
-        {/* Your Schedule (New Card) */}
-        <div className="dashboard-card">
-          <div className="card-header">
-            <h3>Your Schedule (Today)</h3>
-            <Link to="/faculty/timetable" className="view-all">
-              View Full <ChevronRight size={16} />
-            </Link>
+      {/* ── KPI Stats Row ── */}
+      <div className="fd-stats">
+        <div className="fd-stat-card fd-stat-teal">
+          <div className="fd-stat-icon"><Users size={22} /></div>
+          <div className="fd-stat-body">
+            <span className="fd-stat-val">{statsData?.totalStudents || 0}</span>
+            <span className="fd-stat-lbl">Total Students</span>
+            <span className="fd-stat-sub positive"><TrendingUp size={12}/> {statsData?.newStudents || 0} newly enrolled</span>
           </div>
-          <div className="card-content">
-            {timetableData?.length > 0 ? (
-              timetableData.filter(t => t.dayOfWeek === new Date().toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase())
-                .sort((a, b) => a.startTime.localeCompare(b.startTime))
-                .map((slot) => (
-                  <div key={slot.id} className="course-item">
-                    <div className="course-icon" style={{ background: '#e0f2fe' }}>
-                      <Clock size={20} className="text-blue-600" />
-                    </div>
-                    <div className="course-info">
-                      <h4>{slot.startTime.substring(0, 5)} - {slot.courseName}</h4>
-                      <p className="course-code">{slot.program} {slot.year} • Room {slot.roomNumber || 'N/A'}</p>
-                    </div>
-                  </div>
-                ))
-            ) : <div className="empty-state-text">No classes scheduled for today.</div>}
-            {timetableData?.filter(t => t.dayOfWeek === new Date().toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase()).length === 0 && timetableData?.length > 0 && (
-              <div className="empty-state-text">No classes scheduled for today.</div>
+        </div>
+        <div className="fd-stat-card fd-stat-orange">
+          <div className="fd-stat-icon"><FileText size={22} /></div>
+          <div className="fd-stat-body">
+            <span className="fd-stat-val">{statsData?.pendingGrading || 0}</span>
+            <span className="fd-stat-lbl">Pending Grading</span>
+            <span className="fd-stat-sub warn">{statsData?.overdueGrading || 0} overdue</span>
+          </div>
+        </div>
+        <div className="fd-stat-card fd-stat-green">
+          <div className="fd-stat-icon"><BarChart3 size={22} /></div>
+          <div className="fd-stat-body">
+            <span className="fd-stat-val">{statsData?.attendanceRate || 0}%</span>
+            <span className="fd-stat-lbl">Avg. Attendance</span>
+            <span className="fd-stat-sub positive"><TrendingUp size={12}/> +{statsData?.attendanceChange || 0}% this week</span>
+          </div>
+        </div>
+        <div className="fd-stat-card fd-stat-purple">
+          <div className="fd-stat-icon"><BookOpen size={22} /></div>
+          <div className="fd-stat-body">
+            <span className="fd-stat-val">{coursesData?.courses?.length || 0}</span>
+            <span className="fd-stat-lbl">My Subjects</span>
+            <span className="fd-stat-sub neutral">Active this semester</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Main Grid ── */}
+      <div className="fd-grid">
+
+        {/* Today's Schedule — spans left 2/3 */}
+        <div className="fd-card fd-schedule">
+          <div className="fd-card-header">
+            <div className="fd-card-title">
+              <Clock size={18} className="fd-card-icon" />
+              <h3>Today's Schedule</h3>
+            </div>
+            <Link to="/faculty/timetable" className="fd-view-all">View Full <ChevronRight size={15}/></Link>
+          </div>
+          <div className="fd-card-body">
+            {todaySchedule.length > 0 ? todaySchedule.map((slot, i) => (
+              <div key={slot.id} className="fd-schedule-row">
+                <div className="fd-time-badge">{slot.startTime.substring(0, 5)}</div>
+                <div className="fd-schedule-info">
+                  <span className="fd-course-name">{slot.courseName}</span>
+                  <span className="fd-course-meta">{slot.program} {slot.year} &bull; Room {slot.roomNumber || 'N/A'}</span>
+                </div>
+                <CheckCircle2 size={16} className="fd-done-icon" />
+              </div>
+            )) : (
+              <div className="fd-empty"><Calendar size={36}/><p>No classes today — enjoy your day!</p></div>
             )}
           </div>
         </div>
 
-        {/* My Subjects */}
-        <div className="dashboard-card">
-          <div className="card-header">
-            <h3>My Subjects</h3>
-            <Link to="/faculty/courses" className="view-all">
-              View All <ChevronRight size={16} />
+        {/* Quick Actions — right 1/3 */}
+        <div className="fd-card fd-quick">
+          <div className="fd-card-header">
+            <div className="fd-card-title">
+              <Zap size={18} className="fd-card-icon" />
+              <h3>Quick Actions</h3>
+            </div>
+          </div>
+          <div className="fd-card-body fd-qa-body">
+            <Link to="/faculty/attendance/take" className="fd-qa-btn fd-qa-teal">
+              <Clock size={20} />
+              <span>Take Attendance</span>
+            </Link>
+            <Link to="/faculty/grades/enter" className="fd-qa-btn fd-qa-purple">
+              <Award size={20} />
+              <span>Enter Grades</span>
+            </Link>
+            <Link to="/faculty/assignments/create" className="fd-qa-btn fd-qa-orange">
+              <FileText size={20} />
+              <span>Create Assignment</span>
+            </Link>
+            <Link to="/faculty/announcements/new" className="fd-qa-btn fd-qa-green">
+              <MessageSquare size={20} />
+              <span>Post Announcement</span>
             </Link>
           </div>
-          <div className="card-content">
-            {coursesData?.courses?.length > 0 ? coursesData.courses.slice(0, 4).map((course) => (
-              <div key={course.id} className="course-item">
-                <div className="course-icon">
-                  <BookOpen size={20} />
+        </div>
+
+        {/* My Subjects */}
+        <div className="fd-card fd-subjects">
+          <div className="fd-card-header">
+            <div className="fd-card-title">
+              <BookOpen size={18} className="fd-card-icon" />
+              <h3>My Subjects</h3>
+            </div>
+            <Link to="/faculty/courses" className="fd-view-all">View All <ChevronRight size={15}/></Link>
+          </div>
+          <div className="fd-card-body">
+            {coursesData?.courses?.length > 0 ? coursesData.courses.slice(0, 5).map((course) => (
+              <div key={course.id} className="fd-subject-row">
+                <div className="fd-subject-dot" />
+                <div className="fd-subject-info">
+                  <span className="fd-course-name">{course.name}</span>
+                  <span className="fd-course-meta">{course.code} &bull; {course.program} {course.year}</span>
                 </div>
-                <div className="course-info">
-                  <h4>{course.name}</h4>
-                  <p className="course-code">{course.code} • {course.program} {course.year}</p>
-                </div>
-                <Link to={`/faculty/courses/${course.id}`} className="course-link">
-                  <ChevronRight size={20} />
-                </Link>
+                <Link to={`/faculty/courses/${course.id}`} className="fd-arrow"><ChevronRight size={18}/></Link>
               </div>
-            )) : <div className="empty-state-text">No subjects assigned.</div>}
+            )) : <div className="fd-empty"><BookOpen size={32}/><p>No subjects assigned</p></div>}
           </div>
         </div>
 
         {/* Upcoming Deadlines */}
-        <div className="dashboard-card">
-          <div className="card-header">
-            <h3>Upcoming Deadlines</h3>
-            <Link to="/faculty/assignments" className="view-all">
-              View All <ChevronRight size={16} />
-            </Link>
+        <div className="fd-card fd-deadlines">
+          <div className="fd-card-header">
+            <div className="fd-card-title">
+              <AlertCircle size={18} className="fd-card-icon" />
+              <h3>Upcoming Deadlines</h3>
+            </div>
+            <Link to="/faculty/assignments" className="fd-view-all">View All <ChevronRight size={15}/></Link>
           </div>
-          <div className="card-content">
-            {deadlinesData?.deadlines?.slice(0, 4).map((deadline) => (
-              <div key={deadline.id} className="deadline-item">
-                <div className="deadline-date">
-                  <div className="date-month">
-                    {new Date(deadline.dueDate).toLocaleDateString('en-US', { month: 'short' })}
-                  </div>
-                  <div className="date-day">
-                    {new Date(deadline.dueDate).getDate()}
-                  </div>
+          <div className="fd-card-body">
+            {deadlinesData?.deadlines?.length > 0 ? deadlinesData.deadlines.slice(0, 4).map((d) => (
+              <div key={d.id} className="fd-deadline-row">
+                <div className="fd-date-box">
+                  <span className="fd-date-mon">{new Date(d.dueDate).toLocaleDateString('en-US', {month:'short'})}</span>
+                  <span className="fd-date-day">{new Date(d.dueDate).getDate()}</span>
                 </div>
-                <div className="deadline-info">
-                  <h4>{deadline.title}</h4>
-                  <p className="deadline-course">{deadline.course}</p>
-                  <div className="deadline-meta">
-                    <span className="meta-item">
-                      <Clock size={14} />
-                      {new Date(deadline.dueDate).toLocaleTimeString('en-US', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </span>
-                    <span className={`priority-badge ${deadline.priority}`}>
-                      {deadline.priority}
-                    </span>
-                  </div>
+                <div className="fd-deadline-info">
+                  <span className="fd-course-name">{d.title}</span>
+                  <span className="fd-course-meta">{d.course}</span>
                 </div>
+                <span className={`fd-priority fd-p-${d.priority?.toLowerCase()}`}>{d.priority}</span>
               </div>
-            ))}
+            )) : <div className="fd-empty"><CheckCircle2 size={32}/><p>No upcoming deadlines</p></div>}
           </div>
         </div>
 
         {/* Recent Announcements */}
-        <div className="dashboard-card">
-          <div className="card-header">
-            <h3>Recent Announcements</h3>
-            <Link to="/faculty/announcements" className="view-all">
-              View All <ChevronRight size={16} />
-            </Link>
+        <div className="fd-card fd-announcements">
+          <div className="fd-card-header">
+            <div className="fd-card-title">
+              <Bell size={18} className="fd-card-icon" />
+              <h3>Recent Announcements</h3>
+            </div>
+            <Link to="/faculty/announcements" className="fd-view-all">View All <ChevronRight size={15}/></Link>
           </div>
-          <div className="card-content">
-            {announcementsData?.announcements?.slice(0, 3).map((announcement) => (
-              <div key={announcement.id} className="announcement-item">
-                <div className="announcement-icon">
-                  <MessageSquare size={20} />
-                </div>
-                <div className="announcement-content">
-                  <h4>{announcement.title}</h4>
-                  <p className="announcement-text">{announcement.content}</p>
-                  <div className="announcement-meta">
-                    <span className="meta-item">
-                      {new Date(announcement.createdAt).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric'
-                      })}
-                    </span>
-                    <span className="meta-item">
-                      By {announcement.author}
-                    </span>
-                  </div>
+          <div className="fd-card-body">
+            {announcementsData?.announcements?.length > 0 ? announcementsData.announcements.slice(0, 3).map((a) => (
+              <div key={a.id} className="fd-announcement-row">
+                <div className="fd-ann-icon"><Bell size={16}/></div>
+                <div className="fd-ann-info">
+                  <span className="fd-course-name">{a.title}</span>
+                  <p className="fd-ann-text">{a.content}</p>
+                  <span className="fd-course-meta">
+                    {new Date(a.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric'})} &bull; By {a.author}
+                  </span>
                 </div>
               </div>
-            ))}
+            )) : <div className="fd-empty"><Bell size={32}/><p>No announcements yet</p></div>}
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="dashboard-card">
-          <div className="card-header">
-            <h3>Quick Actions</h3>
-          </div>
-          <div className="card-content">
-            <div className="quick-actions-grid">
-              <Link to="/faculty/attendance/take" className="quick-action">
-                <Clock size={24} />
-                <span>Take Attendance</span>
-              </Link>
-              <Link to="/faculty/grades/enter" className="quick-action">
-                <Award size={24} />
-                <span>Enter Grades</span>
-              </Link>
-              <Link to="/faculty/assignments/create" className="quick-action">
-                <FileText size={24} />
-                <span>Create Assignment</span>
-              </Link>
-              <Link to="/faculty/announcements/new" className="quick-action">
-                <MessageSquare size={24} />
-                <span>Post Announcement</span>
-              </Link>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

@@ -181,19 +181,77 @@
   color: #854d0e;
 }
 
-.action-btn {
-  background: #f1f5f9;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  color: #475569;
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s;
+/* 
+  FIX: Action Buttons Overlapping 
+  Use ultra-specific selector and absolute values to force separation.
+*/
+.admissions-container .applications-table table {
+  table-layout: auto !important; /* Allow table to expand for content */
+  min-width: 1000px; /* Prevent shrinking too much */
 }
 
-.action-btn:hover {
-  background: #e2e8f0;
-  color: #0f172a;
+.admissions-container .applications-table td:last-child {
+  min-width: 320px !important;
+  width: 320px !important;
+  padding: 10px 15px !important;
+}
+
+.admissions-container .action-buttons-group {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important; /* Modern spacing */
+  width: 100% !important;
+  flex-wrap: nowrap !important;
+}
+
+.admissions-container .action-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 10px 16px !important; /* More breathing room */
+  margin-right: 5px !important; /* Fallback for older browsers without gap */
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  white-space: nowrap !important; /* NEVER wrap text */
+  flex-shrink: 0 !important; /* NEVER squash buttons */
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  min-width: 110px !important; /* Force a decent size */
+}
+
+.admissions-container .btn-view {
+  background-color: #e0f2fe !important;
+  color: #0369a1 !important;
+  min-width: 130px !important; /* "View Details" is longer */
+}
+
+.admissions-container .btn-approve {
+  background-color: #dcfce7 !important;
+  color: #15803d !important;
+}
+
+.admissions-container .btn-reject, 
+.admissions-container .btn-delete {
+  background-color: #fee2e2 !important;
+  color: #b91c1c !important;
+}
+
+.admissions-container .action-btn i {
+  margin-right: 8px !important;
+  font-size: 1rem !important;
+}
+
+.admissions-container .action-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12) !important;
+  filter: brightness(0.95);
+}
+
+/* Specific button button text spacing */
+.admissions-container .action-btn span {
+  display: inline-block !important;
 }

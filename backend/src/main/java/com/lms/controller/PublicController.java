@@ -2,9 +2,12 @@ package com.lms.controller;
 
 import com.lms.model.Notice;
 import com.lms.model.LandingPageSlide;
+import com.lms.model.GalleryAlbum;
+import com.lms.model.GalleryItem;
 import com.lms.service.impl.NoticeServiceImpl;
 import com.lms.service.impl.SystemSettingServiceImpl;
 import com.lms.service.LandingPageSlideService;
+import com.lms.service.GalleryService;
 import com.lms.service.UserService;
 import com.lms.dto.UserDTO;
 import com.lms.model.User;
@@ -13,6 +16,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,6 +37,9 @@ public class PublicController {
 
     @Autowired
     private LandingPageSlideService landingPageSlideService;
+
+    @Autowired
+    private GalleryService galleryService;
 
     @Autowired
     private UserService userService;
@@ -72,6 +79,16 @@ public class PublicController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(dtoList);
+    }
+
+    @GetMapping("/gallery/albums")
+    public ResponseEntity<List<GalleryAlbum>> getActiveGalleryAlbums() {
+        return ResponseEntity.ok(galleryService.getActiveAlbums());
+    }
+
+    @GetMapping("/gallery/albums/{albumId}/items")
+    public ResponseEntity<List<GalleryItem>> getPublicGalleryItems(@PathVariable Long albumId) {
+        return ResponseEntity.ok(galleryService.getActiveItemsByAlbumId(albumId));
     }
 
     private UserDTO convertToDTO(User user) {

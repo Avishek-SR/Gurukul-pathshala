@@ -2,149 +2,304 @@ import React, { useState, useEffect } from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
 import './StudentDashboard.css';
 
+const SUBJECT_COLORS = [
+  { bg: '#e0f2fe', icon: '#0284c7', border: '#bae6fd' },
+  { bg: '#e0fcf9', icon: '#20b2aa', border: '#b2ebe8' },
+  { bg: '#fdf4ff', icon: '#a21caf', border: '#f5d0fe' },
+  { bg: '#fff7ed', icon: '#ea580c', border: '#fed7aa' },
+  { bg: '#fef2f2', icon: '#dc2626', border: '#fecaca' },
+  { bg: '#f0f9ff', icon: '#0369a1', border: '#bae6fd' },
+];
+
+const QUICK_ACTIONS = [
+  { to: '/student/courses',     icon: '📚', label: 'My Subjects',   desc: 'View enrolled subjects',  color: '#e0fcf9', hover: '#20b2aa' },
+  { to: '/student/assignments', icon: '📝', label: 'Assignments',  desc: 'Submit & track tasks',    color: '#f0fcf9', hover: '#20b2aa' },
+  { to: '/student/attendance',  icon: '✅', label: 'Attendance',   desc: 'Check your attendance',   color: '#e0fcf9', hover: '#20b2aa' },
+  { to: '/student/timetable',   icon: '🗓️', label: 'Timetable',   desc: 'View class schedule',     color: '#e0fcf9', hover: '#20b2aa' },
+  { to: '/student/fees',        icon: '💳', label: 'Fee Status',   desc: 'Pay & track fees',        color: '#e0fcf9', hover: '#20b2aa' },
+  { to: '/student/profile',     icon: '👤', label: 'My Profile',   desc: 'Update your details',     color: '#e0fcf9', hover: '#20b2aa' },
+];
+
+const getGreeting = () => {
+  const h = new Date().getHours();
+  if (h < 12) return { text: 'Good Morning', emoji: '🌅' };
+  if (h < 17) return { text: 'Good Afternoon', emoji: '☀️' };
+  return { text: 'Good Evening', emoji: '🌙' };
+};
+
+const getTodayStr = () =>
+  new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
 const StudentDashboard = () => {
-  const { student } = useOutletContext(); // Basic profile from layout
+  const { student } = useOutletContext();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const greeting = getGreeting();
 
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
         const token = sessionStorage.getItem('token');
-        const res = await fetch('http://localhost:8080/api/student/dashboard', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          // Fetch subjects separately to show in My Subjects card
-          const subjectsRes = await fetch('http://localhost:8080/api/student/courses', {
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
-          const subjects = subjectsRes.ok ? await subjectsRes.json() : [];
-
-          setDashboardData({ ...data, subjects });
-        }
-      } catch (error) {
-        console.error("Error fetching dashboard stats", error);
+        const [dashRes, subjectsRes] = await Promise.all([
+          fetch('http://localhost:8080/api/student/dashboard', { headers: { Authorization: `Bearer ${token}` } }),
+          fetch('http://localhost:8080/api/student/courses',   { headers: { Authorization: `Bearer ${token}` } }),
+        ]);
+        const data = dashRes.ok ? await dashRes.json() : {};
+        const subjects = subjectsRes.ok ? await subjectsRes.json() : [];
+        setDashboardData({ ...data, subjects });
+      } catch (err) {
+        console.error('Dashboard fetch error', err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchDashboard();
   }, []);
 
-  if (loading) return <div className="p-8">Loading dashboard...</div>;
+  if (loading) {
+    return (
+      <div className="sd-loading">
+        <div className="sd-loader"></div>
+        <p>Loading your dashboard…</p>
+      </div>
+    );
+  }
+
+  const attendance = dashboardData?.attendancePercentage || 0;
+  const courses    = dashboardData?.enrolledCourses || 0;
+  const pending    = dashboardData?.pendingAssignments || 0;
+  const notifs     = dashboardData?.unreadNotifications || 0;
+  const subjects   = dashboardData?.subjects || [];
+
+  const attendanceColor =
+    attendance >= 75 ? '#16a34a' : attendance >= 50 ? '#f59e0b' : '#dc2626';
+  const attendanceBg =
+    attendance >= 75 ? '#dcfce7' : attendance >= 50 ? '#fef9c3' : '#fee2e2';
 
   return (
-    <div className="student-dashboard fade-in">
+    <div className="sd-root">
 
-
-      {/* Stats Grid */}
-      <div className="dashboard-stats">
-        <div className="d-stat-card blue">
-          <div className="icon-wrapper">
-            <i className="fas fa-book-open"></i>
-          </div>
-          <div className="stat-info">
-            <h3>{dashboardData?.enrolledCourses || 0}</h3>
-            <p>Enrolled Courses</p>
-          </div>
+      {/* ── Hero Banner ── */}
+      <div className="sd-hero">
+        <div className="sd-hero-left">
+          <div className="sd-greeting-tag">{greeting.emoji} {greeting.text}</div>
+          <h1 className="sd-hero-name">{student?.name || 'Student'} 👋</h1>
+          <p className="sd-hero-meta">
+            {student?.program && <span className="sd-pill">{student.program}</span>}
+            {student?.section && <span className="sd-pill">Section {student.section}</span>}
+            {student?.userId  && <span className="sd-pill sd-pill-id">ID: {student.userId}</span>}
+          </p>
+          <p className="sd-hero-date">{getTodayStr()}</p>
         </div>
-
-        <div className="d-stat-card green">
-          <div className="icon-wrapper">
-            <i className="fas fa-calendar-check"></i>
-          </div>
-          <div className="stat-info">
-            <h3>{dashboardData?.attendancePercentage || 0}%</h3>
-            <p>Attendance</p>
-          </div>
-        </div>
-
-        <div className="d-stat-card purple">
-          <div className="icon-wrapper">
-            <i className="fas fa-tasks"></i>
-          </div>
-          <div className="stat-info">
-            <h3>{dashboardData?.pendingAssignments || 0}</h3>
-            <p>Pending Tasks</p>
-          </div>
-        </div>
-
-        <div className="d-stat-card orange">
-          <div className="icon-wrapper">
-            <i className="fas fa-bell"></i>
-          </div>
-          <div className="stat-info">
-            <h3>{dashboardData?.unreadNotifications || 0}</h3>
-            <p>Notifications</p>
+        <div className="sd-hero-right">
+          <div className="sd-avatar-big">
+            {student?.profilePictureUrl
+              ? <img src={student.profilePictureUrl} alt="avatar" />
+              : <span>{student?.name?.charAt(0) || 'S'}</span>}
           </div>
         </div>
       </div>
 
-      {/* Main Grid: Quick Access & Calendar */}
-      <div className="dashboard-main-grid">
-        {/* Quick Actions */}
-        <div className="dashboard-card quick-actions">
-          <div className="card-header">
-            <h3>Quick Actions</h3>
+      {/* ── Stat Cards ── */}
+      <div className="sd-stats">
+        {/* Courses */}
+        <div className="sd-stat-card" style={{ '--accent': '#0284c7', '--accent-bg': '#e0f2fe' }}>
+          <div className="sd-stat-icon">📚</div>
+          <div className="sd-stat-body">
+            <span className="sd-stat-value">{courses}</span>
+            <span className="sd-stat-label">Enrolled Courses</span>
           </div>
-          <div className="actions-grid">
-            <Link to="/student/courses" className="action-btn">
-              <i className="fas fa-chalkboard-teacher"></i>
-              <span>My Classes</span>
-            </Link>
-            <Link to="/student/assignments" className="action-btn">
-              <i className="fas fa-file-alt"></i>
-              <span>Assignments</span>
-            </Link>
-            <Link to="/student/attendance" className="action-btn">
-              <i className="fas fa-user-check"></i>
-              <span>Attendance</span>
-            </Link>
-            <Link to="/student/fees" className="action-btn">
-              <i className="fas fa-receipt"></i>
-              <span>Pay Fees</span>
-            </Link>
+          <div className="sd-stat-bar" style={{ '--fill': '100%' }}></div>
+        </div>
+
+        {/* Attendance */}
+        <div className="sd-stat-card" style={{ '--accent': attendanceColor, '--accent-bg': attendanceBg }}>
+          <div className="sd-stat-icon">✅</div>
+          <div className="sd-stat-body">
+            <span className="sd-stat-value">{attendance}%</span>
+            <span className="sd-stat-label">Attendance</span>
+          </div>
+          <div className="sd-stat-bar" style={{ '--fill': `${attendance}%` }}></div>
+          <span className={`sd-stat-badge ${attendance >= 75 ? 'good' : attendance >= 50 ? 'warn' : 'bad'}`}>
+            {attendance >= 75 ? 'On Track' : attendance >= 50 ? 'Moderate' : 'Low'}
+          </span>
+        </div>
+
+        {/* Pending Assignments */}
+        <div className="sd-stat-card" style={{ '--accent': '#a21caf', '--accent-bg': '#fdf4ff' }}>
+          <div className="sd-stat-icon">📝</div>
+          <div className="sd-stat-body">
+            <span className="sd-stat-value">{pending}</span>
+            <span className="sd-stat-label">Pending Tasks</span>
+          </div>
+          {pending > 0 && <span className="sd-stat-badge bad">Due Soon</span>}
+          <div className="sd-stat-bar" style={{ '--fill': pending > 0 ? '60%' : '10%' }}></div>
+        </div>
+
+        {/* Notifications */}
+        <div className="sd-stat-card" style={{ '--accent': '#ea580c', '--accent-bg': '#fff7ed' }}>
+          <div className="sd-stat-icon">🔔</div>
+          <div className="sd-stat-body">
+            <span className="sd-stat-value">{notifs}</span>
+            <span className="sd-stat-label">Notifications</span>
+          </div>
+          <div className="sd-stat-bar" style={{ '--fill': notifs > 0 ? '50%' : '5%' }}></div>
+        </div>
+      </div>
+
+      {/* ── Main Two-Column Grid ── */}
+      <div className="sd-grid">
+
+        {/* Quick Access */}
+        <div className="sd-card sd-quick-access">
+          <div className="sd-card-header">
+            <h2>Quick Access</h2>
+            <span className="sd-card-tag">Jump to any section</span>
+          </div>
+          <div className="sd-actions-grid">
+            {QUICK_ACTIONS.map(action => (
+              <Link key={action.to} to={action.to} className="sd-action-tile"
+                style={{ '--tile-bg': action.color, '--tile-hover': action.hover }}>
+                <span className="sd-action-emoji">{action.icon}</span>
+                <span className="sd-action-label">{action.label}</span>
+                <span className="sd-action-desc">{action.desc}</span>
+              </Link>
+            ))}
           </div>
         </div>
 
-        {/* Recent Notices / Events Placeholder */}
-        <div className="dashboard-card events-widget">
-          <div className="card-header">
-            <h3>Upcoming Events</h3>
+        {/* Attendance Snapshot */}
+        <div className="sd-card sd-attendance-snap">
+          <div className="sd-card-header">
+            <h2>Attendance Overview</h2>
+            <Link to="/student/attendance" className="sd-view-all">View Details →</Link>
           </div>
-          <div className="events-list">
-            <div className="empty-state">
-              <i className="fas fa-calendar-day"></i>
-              <p>No upcoming events scheduled.</p>
+
+          {/* Donut chart using conic-gradient */}
+          <div className="sd-donut-wrap">
+            <div className="sd-donut"
+              style={{
+                background: `conic-gradient(${attendanceColor} 0% ${attendance}%, #e5e7eb ${attendance}% 100%)`
+              }}>
+              <div className="sd-donut-hole">
+                <span className="sd-donut-pct">{attendance}%</span>
+                <span className="sd-donut-sub">Present</span>
+              </div>
             </div>
           </div>
+
+          <div className="sd-att-legend">
+            <div className="sd-legend-item">
+              <span className="sd-legend-dot" style={{ background: attendanceColor }}></span>
+              <span>Present</span>
+              <strong>{attendance}%</strong>
+            </div>
+            <div className="sd-legend-item">
+              <span className="sd-legend-dot" style={{ background: '#e5e7eb' }}></span>
+              <span>Absent</span>
+              <strong>{100 - attendance}%</strong>
+            </div>
+          </div>
+
+          <div className={`sd-att-status ${attendance >= 75 ? 'good' : attendance >= 50 ? 'warn' : 'bad'}`}>
+            {attendance >= 75
+              ? '🎉 Great! Your attendance is on track.'
+              : attendance >= 50
+              ? '⚠️ Attendance is moderate. Try to improve.'
+              : '🚨 Attendance is low. Please attend classes regularly.'}
+          </div>
         </div>
       </div>
-      {/* My Subjects Card */}
-      <div className="dashboard-card my-subjects">
-        <div className="card-header">
-          <h3>My Subjects</h3>
-          <Link to="/student/courses" className="view-all">View All <i className="fas fa-arrow-right"></i></Link>
+
+      {/* ── My Subjects ── */}
+      <div className="sd-card sd-subjects-card">
+        <div className="sd-card-header">
+          <h2>My Subjects</h2>
+          <Link to="/student/courses" className="sd-view-all">View All →</Link>
         </div>
-        <div className="subjects-list-dashboard">
-          {dashboardData?.subjects?.length > 0 ? (
-            dashboardData.subjects.map(subj => (
-              <div key={subj.id} className="subject-item-mini">
-                <div className="subj-icon"><i className="fas fa-book"></i></div>
-                <div className="subj-info">
-                  <h4>{subj.name}</h4>
-                  <span>{subj.code}</span>
+
+        {subjects.length > 0 ? (
+          <div className="sd-subjects-grid">
+            {subjects.map((subj, idx) => {
+              const colors = SUBJECT_COLORS[idx % SUBJECT_COLORS.length];
+              return (
+                <div key={subj.id} className="sd-subject-card"
+                  style={{ background: colors.bg, border: `1px solid ${colors.border}` }}>
+                  <div className="sd-subj-icon" style={{ color: colors.icon }}>📖</div>
+                  <div className="sd-subj-info">
+                    <h4>{subj.name}</h4>
+                    <span className="sd-subj-code" style={{ color: colors.icon, background: colors.border }}>
+                      {subj.code || 'N/A'}
+                    </span>
+                  </div>
+                  <Link to={`/student/assignments?courseId=${subj.id}`} className="sd-subj-arrow" style={{ color: colors.icon }}>→</Link>
                 </div>
-              </div>
-            ))
+              );
+            })}
+          </div>
+        ) : (
+          <div className="sd-empty">
+            <span>📚</span>
+            <p>No subjects assigned yet. Check back later.</p>
+          </div>
+        )}
+      </div>
+
+      {/* ── Bottom Row: Pending + Today ── */}
+      <div className="sd-bottom-row">
+
+        {/* Pending Assignments */}
+        <div className="sd-card">
+          <div className="sd-card-header">
+            <h2>Pending Assignments</h2>
+            <Link to="/student/assignments" className="sd-view-all">View All →</Link>
+          </div>
+          {pending > 0 ? (
+            <div className="sd-pending-info">
+              <div className="sd-pending-count">{pending}</div>
+              <p>assignment{pending !== 1 ? 's' : ''} awaiting your submission.</p>
+              <Link to="/student/assignments" className="sd-cta-btn">Go to Assignments →</Link>
+            </div>
           ) : (
-            <div className="empty-mini">No subjects assigned yet.</div>
+            <div className="sd-empty">
+              <span>🎉</span>
+              <p>All caught up! No pending assignments.</p>
+            </div>
           )}
         </div>
+
+        {/* Today's Info */}
+        <div className="sd-card sd-today-card">
+          <div className="sd-card-header">
+            <h2>Today</h2>
+            <span className="sd-card-tag">{new Date().toLocaleDateString('en-IN', { weekday: 'long' })}</span>
+          </div>
+          <div className="sd-today-items">
+            <div className="sd-today-item">
+              <span className="sd-today-icon">📅</span>
+              <div>
+                <strong>{getTodayStr()}</strong>
+                <p>School Day</p>
+              </div>
+            </div>
+            <div className="sd-today-item">
+              <span className="sd-today-icon">🎓</span>
+              <div>
+                <strong>{student?.program || '—'}</strong>
+                <p>Your Programme</p>
+              </div>
+            </div>
+            <div className="sd-today-item">
+              <span className="sd-today-icon">🔖</span>
+              <div>
+                <strong>Section {student?.section || '—'}</strong>
+                <p>Your Section</p>
+              </div>
+            </div>
+            <Link to="/student/timetable" className="sd-cta-btn">View Today's Schedule →</Link>
+          </div>
+        </div>
+
       </div>
     </div>
   );

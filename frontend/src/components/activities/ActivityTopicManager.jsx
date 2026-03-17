@@ -279,27 +279,40 @@ const ActivityTopicManager = ({ courseId }) => {
                                 <p className="empty-title">No activities created yet.</p>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {activities.map(activity => (
+                            <div className="activity-cards-grid">
+                                {activities.map((activity, idx) => (
                                     <div
                                         key={activity.id}
-                                        className="relative group cursor-pointer bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-xl hover:border-indigo-300 transition-all duration-300 flex flex-col items-center justify-center p-6 aspect-video overflow-hidden"
+                                        className="activity-card"
                                         onClick={() => openTopicManager(activity)}
                                     >
-                                        <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 opacity-50 group-hover:opacity-0 transition-opacity" />
-                                        <div className="absolute top-0 left-0 w-full h-1 bg-indigo-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+                                        {/* Coloured top strip */}
+                                        <div className={`activity-card-strip strip-${idx % 4}`} />
 
+                                        {/* Delete button — hover only */}
                                         <button
-                                            onClick={(e) => { e.stopPropagation(); if (window.confirm('Delete activity?')) deleteActivityMutation.mutate(activity.id); }}
-                                            className="absolute top-3 right-3 text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all z-10"
+                                            className="activity-card-delete"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (window.confirm('Delete activity?')) deleteActivityMutation.mutate(activity.id);
+                                            }}
                                             title="Delete Activity"
                                         >
-                                            <Trash2 size={18} />
+                                            <Trash2 size={16} />
                                         </button>
 
-                                        <h3 className="relative z-10 text-xl font-bold text-gray-800 text-center group-hover:text-indigo-600 transition-colors px-2 line-clamp-2">
-                                            {activity.title}
-                                        </h3>
+                                        {/* Icon */}
+                                        <div className={`activity-card-icon icon-${idx % 4}`}>
+                                            <Briefcase size={26} />
+                                        </div>
+
+                                        {/* Title */}
+                                        <h3 className="activity-card-title">{activity.title}</h3>
+
+                                        {/* Footer */}
+                                        <div className="activity-card-footer">
+                                            <span className="activity-card-btn">Manage Topics →</span>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

@@ -58,6 +58,11 @@ public class StudentService {
         profile.put("section", "Section " + (student.getSection() != null ? student.getSection() : "N/A"));
         profile.put("program", student.getProgram());
         profile.put("dob", student.getDob());
+        profile.put("profilePictureUrl", student.getProfilePictureUrl());
+        profile.put("active", student.isActive());
+        profile.put("mobileNumber", student.getMobileNumber());
+        profile.put("gender", student.getGender());
+        profile.put("parentEmail", student.getParentEmail());
         // Calculate basic stats for profile
         profile.put("attendance", calculateAttendancePercentage(student));
         return profile;

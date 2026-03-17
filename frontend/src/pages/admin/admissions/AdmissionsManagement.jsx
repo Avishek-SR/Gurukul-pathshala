@@ -3,11 +3,12 @@ import './AdmissionsManagement.css';
 import { adminAdmissions, settingsAPI, publicAdmission } from '../../../services/api';
 
 const AdmissionsManagement = () => {
-  const [activeTab, setActiveTab] = useState('new'); // new, approved, rejected
+  const [activeTab, setActiveTab] = useState('new');
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [admissionsOpen, setAdmissionsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [selectedApp, setSelectedApp] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     studentName: '', dob: '', gender: '', parentName: '', parentEmail: '', classApplying: '', mobileNumber: '', message: ''
@@ -217,17 +218,23 @@ const AdmissionsManagement = () => {
                       <span className={`status-badge ${app.status.toLowerCase()}`}>{app.status}</span>
                     </td>
                     <td>
-                      {app.status === 'PENDING' && (
-                        <div style={{display: 'flex', gap: '8px'}}>
-                           <button onClick={() => handleApprove(app.id)} className="action-btn" style={{background: '#dcfce7', color: '#15803d'}}>Approve</button>
-                           <button onClick={() => handleReject(app.id)} className="action-btn" style={{background: '#fee2e2', color: '#b91c1c'}}>Reject</button>
-                        </div>
-                      )}
-                      {app.status !== 'PENDING' && (
-                        <div style={{display: 'flex', gap: '8px'}}>
-                           <button onClick={() => handleDelete(app.id)} className="action-btn" style={{background: '#fee2e2', color: '#b91c1c'}}>Delete</button>
-                        </div>
-                      )}
+                      <div className="action-buttons-group">
+                        <button
+                          onClick={() => setSelectedApp(app)}
+                          className="action-btn btn-view"
+                        >
+                          <i className="fas fa-eye"></i> View Details
+                        </button>
+                        {app.status === 'PENDING' && (
+                          <>
+                            <button onClick={() => handleApprove(app.id)} className="action-btn btn-approve">Approve</button>
+                            <button onClick={() => handleReject(app.id)} className="action-btn btn-reject">Reject</button>
+                          </>
+                        )}
+                        {app.status !== 'PENDING' && (
+                          <button onClick={() => handleDelete(app.id)} className="action-btn btn-delete">Delete</button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -304,6 +311,169 @@ const AdmissionsManagement = () => {
                   </button>
                </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── View Details Modal ── */}
+      {selectedApp && (
+        <div
+          onClick={() => setSelectedApp(null)}
+          style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.55)', display: 'flex',
+            zIndex: 1100, justifyContent: 'center', alignItems: 'center'
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: '#fff', borderRadius: '14px', width: '90%', maxWidth: '640px',
+              maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
+            }}
+          >
+            {/* Modal Header */}
+            <div style={{
+              background: 'linear-gradient(135deg, #20b2aa, #178a83)',
+              padding: '20px 24px', borderRadius: '14px 14px 0 0',
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+            }}>
+              <div>
+                <h3 style={{color:'#fff', margin:0, fontSize:'1.25rem'}}>
+                  <i className="fas fa-file-alt" style={{marginRight:'10px'}}></i>
+                  Application Details
+                </h3>
+                <p style={{color:'rgba(255,255,255,0.8)', margin:'4px 0 0', fontSize:'0.85rem'}}>
+                  {selectedApp.applicationId}
+                </p>
+              </div>
+              <button
+                onClick={() => setSelectedApp(null)}
+                style={{
+                  background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: '50%',
+                  width: '34px', height: '34px', cursor: 'pointer', color: '#fff',
+                  fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}
+              >&times;</button>
+            </div>
+
+            {/* Status Banner */}
+            <div style={{
+              padding: '10px 24px',
+              background: selectedApp.status === 'APPROVED' ? '#dcfce7'
+                : selectedApp.status === 'REJECTED' ? '#fee2e2'
+                : '#fef9c3',
+              borderBottom: '1px solid #e2e8f0',
+              display: 'flex', alignItems: 'center', gap: '10px'
+            }}>
+              <span style={{
+                fontWeight: '700', fontSize: '0.9rem',
+                color: selectedApp.status === 'APPROVED' ? '#15803d'
+                  : selectedApp.status === 'REJECTED' ? '#b91c1c'
+                  : '#92400e'
+              }}>
+                <i className={`fas fa-${
+                  selectedApp.status === 'APPROVED' ? 'check-circle'
+                  : selectedApp.status === 'REJECTED' ? 'times-circle'
+                  : 'clock'
+                }`} style={{marginRight:'6px'}}></i>
+                Status: {selectedApp.status}
+              </span>
+              {selectedApp.generatedStudentId && (
+                <span style={{marginLeft:'auto', background:'#20b2aa', color:'#fff', padding:'3px 10px', borderRadius:'12px', fontSize:'0.8rem', fontWeight:'600'}}>
+                  Student ID: {selectedApp.generatedStudentId}
+                </span>
+              )}
+            </div>
+
+            {/* Details Body */}
+            <div style={{padding: '20px 24px'}}>
+
+              {/* Section: Student Info */}
+              <h4 style={{color:'#20b2aa', marginBottom:'12px', fontSize:'0.95rem', textTransform:'uppercase', letterSpacing:'0.5px'}}>
+                <i className="fas fa-user-graduate" style={{marginRight:'8px'}}></i>Student Information
+              </h4>
+              <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px', marginBottom:'20px'}}>
+                {[
+                  {label: 'Full Name', value: selectedApp.studentName},
+                  {label: 'Date of Birth', value: selectedApp.dob ? new Date(selectedApp.dob).toLocaleDateString() : '—'},
+                  {label: 'Gender', value: selectedApp.gender || '—'},
+                  {label: 'Class Applying For', value: selectedApp.classApplying || '—'},
+                ].map(({label, value}) => (
+                  <div key={label} style={{background:'#f8fafc', borderRadius:'8px', padding:'10px 14px'}}>
+                    <div style={{fontSize:'0.75rem', color:'#64748b', fontWeight:'600', marginBottom:'3px'}}>{label}</div>
+                    <div style={{fontSize:'0.95rem', fontWeight:'600', color:'#1e293b'}}>{value}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Section: Parent / Contact Info */}
+              <h4 style={{color:'#20b2aa', marginBottom:'12px', fontSize:'0.95rem', textTransform:'uppercase', letterSpacing:'0.5px'}}>
+                <i className="fas fa-users" style={{marginRight:'8px'}}></i>Parent / Contact Information
+              </h4>
+              <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px', marginBottom:'20px'}}>
+                {[
+                  {label: 'Parent / Guardian Name', value: selectedApp.parentName || '—'},
+                  {label: 'Parent Email', value: selectedApp.parentEmail || '—'},
+                  {label: 'Mobile Number', value: selectedApp.mobileNumber || '—'},
+                ].map(({label, value}) => (
+                  <div key={label} style={{background:'#f8fafc', borderRadius:'8px', padding:'10px 14px'}}>
+                    <div style={{fontSize:'0.75rem', color:'#64748b', fontWeight:'600', marginBottom:'3px'}}>{label}</div>
+                    <div style={{fontSize:'0.95rem', fontWeight:'600', color:'#1e293b'}}>{value}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Section: Application Info */}
+              <h4 style={{color:'#20b2aa', marginBottom:'12px', fontSize:'0.95rem', textTransform:'uppercase', letterSpacing:'0.5px'}}>
+                <i className="fas fa-info-circle" style={{marginRight:'8px'}}></i>Application Information
+              </h4>
+              <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px', marginBottom:'20px'}}>
+                {[
+                  {label: 'Application ID', value: selectedApp.applicationId || '—'},
+                  {label: 'Date Submitted', value: selectedApp.submissionDate ? new Date(selectedApp.submissionDate).toLocaleDateString('en-IN', {day:'2-digit', month:'long', year:'numeric'}) : '—'},
+                  {label: 'Reviewed / Processed Date', value: selectedApp.reviewDate ? new Date(selectedApp.reviewDate).toLocaleDateString() : '—'},
+                ].map(({label, value}) => (
+                  <div key={label} style={{background:'#f8fafc', borderRadius:'8px', padding:'10px 14px'}}>
+                    <div style={{fontSize:'0.75rem', color:'#64748b', fontWeight:'600', marginBottom:'3px'}}>{label}</div>
+                    <div style={{fontSize:'0.95rem', fontWeight:'600', color:'#1e293b'}}>{value}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Message / Notes */}
+              {selectedApp.message && (
+                <>
+                  <h4 style={{color:'#20b2aa', marginBottom:'8px', fontSize:'0.95rem', textTransform:'uppercase', letterSpacing:'0.5px'}}>
+                    <i className="fas fa-comment-alt" style={{marginRight:'8px'}}></i>Message / Notes
+                  </h4>
+                  <div style={{background:'#f8fafc', borderRadius:'8px', padding:'12px 14px', marginBottom:'20px', color:'#334155', lineHeight:'1.6'}}>
+                    {selectedApp.message}
+                  </div>
+                </>
+              )}
+
+              {/* Footer Actions */}
+              <div style={{display:'flex', gap:'10px', justifyContent:'flex-end', borderTop:'1px solid #e2e8f0', paddingTop:'16px'}}>
+                {selectedApp.status === 'PENDING' && (
+                  <>
+                    <button
+                      onClick={() => { handleApprove(selectedApp.id); setSelectedApp(null); }}
+                      style={{padding:'9px 20px', background:'#dcfce7', color:'#15803d', border:'none', borderRadius:'8px', cursor:'pointer', fontWeight:'600'}}
+                    ><i className="fas fa-check" style={{marginRight:'6px'}}></i>Approve</button>
+                    <button
+                      onClick={() => { handleReject(selectedApp.id); setSelectedApp(null); }}
+                      style={{padding:'9px 20px', background:'#fee2e2', color:'#b91c1c', border:'none', borderRadius:'8px', cursor:'pointer', fontWeight:'600'}}
+                    ><i className="fas fa-times" style={{marginRight:'6px'}}></i>Reject</button>
+                  </>
+                )}
+                <button
+                  onClick={() => setSelectedApp(null)}
+                  style={{padding:'9px 20px', background:'#f1f5f9', border:'none', borderRadius:'8px', cursor:'pointer', fontWeight:'500', color:'#475569'}}
+                >Close</button>
+              </div>
+
+            </div>
           </div>
         </div>
       )}

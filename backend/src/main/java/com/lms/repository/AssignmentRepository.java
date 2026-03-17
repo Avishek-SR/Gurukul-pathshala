@@ -14,6 +14,9 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     // All active assignments
     List<Assignment> findByActiveTrue();
 
+    // All assignments for a specific course ID
+    List<Assignment> findByCourseId(Long courseId);
+
     // All assignments for a course
     List<Assignment> findByCourseAndActiveTrue(Course course);
 

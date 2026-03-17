@@ -127,7 +127,6 @@ com/lms/service/StaffService.class
 com/lms/controller/PublicAdmissionController.class
 com/lms/service/FacultyAttendanceService.class
 com/lms/dto/ActivityTopicDTO.class
-com/lms/controller/AssignmentController.class
 com/lms/controller/admin/AdminFaceRegistrationController.class
 com/lms/service/ClassroomActivityService.class
 com/lms/controller/admin/FacultyAttendanceController.class

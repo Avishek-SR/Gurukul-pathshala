@@ -82,7 +82,7 @@ const StudentLayout = ({ onLogout }) => { // onLogout prop kept for compatibilit
 
   const navItems = [
     { path: '/student', label: 'Dashboard', icon: 'fa-home', end: true },
-    { path: '/student/courses', label: 'My Classes', icon: 'fa-book' },
+    { path: '/student/courses', label: 'My Subjects', icon: 'fa-book' },
     { path: '/student/assignments', label: 'Assignments', icon: 'fa-tasks' },
     { path: '/student/attendance', label: 'Attendance', icon: 'fa-calendar-check' },
     { path: '/student/timetable', label: 'Time Table', icon: 'fa-calendar-alt' },
@@ -148,7 +148,17 @@ const StudentLayout = ({ onLogout }) => { // onLogout prop kept for compatibilit
         <div className="sidebar-footer">
           <div className="student-profile-mini">
             <div className="mini-avatar">
-              <i className="fas fa-user-graduate"></i>
+              {student?.profilePictureUrl ? (
+                <img
+                  src={student.profilePictureUrl}
+                  alt={student?.name}
+                  style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                />
+              ) : (
+                <span style={{ fontSize: '1rem', fontWeight: 700, color: 'white' }}>
+                  {student?.name?.charAt(0) || 'S'}
+                </span>
+              )}
             </div>
             <div className="mini-details">
               <span>{student?.name?.split(' ')[0] || 'Student'}</span>
