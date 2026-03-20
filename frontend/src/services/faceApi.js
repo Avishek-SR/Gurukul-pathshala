@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // URL for the new Python FastAPI microservice
-const DEEPFACE_API_URL = 'http://localhost:8000';
+const DEEPFACE_API_URL = import.meta.env.VITE_FACE_API_URL || 'http://localhost:8000';
 
 export const loadModels = async () => {
     try {

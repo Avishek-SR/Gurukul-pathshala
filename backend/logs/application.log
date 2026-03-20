@@ -1,21 +1,17 @@
-2026-03-17 19:16:27 - Starting SchoolManagementApplication using Java 17.0.13 with PID 9420 (/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/target/classes started by abishek in /Volumes/Macbook-1/Gurukul/React/Gurukul/backend)
-2026-03-17 19:16:27 - Running with Spring Boot v3.2.6, Spring v6.1.8
-2026-03-17 19:16:27 - No active profile set, falling back to 1 default profile: "default"
-2026-03-17 19:16:28 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-03-17 19:16:29 - Finished Spring Data repository scanning in 179 ms. Found 21 JPA repository interfaces.
-2026-03-17 19:16:30 - Tomcat initialized with port 8080 (http)
-2026-03-17 19:16:30 - Starting service [Tomcat]
-2026-03-17 19:16:30 - Starting Servlet engine: [Apache Tomcat/10.1.24]
-2026-03-17 19:16:30 - Initializing Spring embedded WebApplicationContext
-2026-03-17 19:16:30 - Root WebApplicationContext: initialization completed in 2386 ms
-2026-03-17 19:16:30 - Filter 'jwtAuthenticationFilter' configured for use
-2026-03-17 19:16:30 - HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-03-17 19:16:30 - HHH000412: Hibernate ORM core version 6.4.8.Final
-2026-03-17 19:16:30 - HHH000026: Second-level cache disabled
-2026-03-17 19:16:30 - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-03-17 19:16:30 - HikariPool-1 - Starting...
-2026-03-17 19:16:31 - HikariPool-1 - Exception during pool initialization.
-org.postgresql.util.PSQLException: FATAL: role "postgres" does not exist
+2026-03-20 23:10:21 - Starting SchoolManagementApplication using Java 17.0.13 with PID 9666 (/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/target/classes started by abishek in /Volumes/Macbook-1/Gurukul/React/Gurukul/backend)
+2026-03-20 23:10:21 - Running with Spring Boot v3.2.6, Spring v6.1.8
+2026-03-20 23:10:21 - No active profile set, falling back to 1 default profile: "default"
+2026-03-20 23:10:22 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-20 23:10:22 - Finished Spring Data repository scanning in 168 ms. Found 21 JPA repository interfaces.
+2026-03-20 23:10:23 - Tomcat initialized with port 8080 (http)
+2026-03-20 23:10:23 - Starting service [Tomcat]
+2026-03-20 23:10:23 - Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-03-20 23:10:23 - Initializing Spring embedded WebApplicationContext
+2026-03-20 23:10:23 - Root WebApplicationContext: initialization completed in 2431 ms
+2026-03-20 23:10:23 - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-20 23:10:23 - HikariPool-1 - Starting...
+2026-03-20 23:10:24 - HikariPool-1 - Exception during pool initialization.
+org.postgresql.util.PSQLException: FATAL: database "gurukuldb" does not exist
 	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2713)
 	at org.postgresql.core.v3.QueryExecutorImpl.readStartupMessages(QueryExecutorImpl.java:2825)
 	at org.postgresql.core.v3.QueryExecutorImpl.<init>(QueryExecutorImpl.java:175)
@@ -31,27 +27,16 @@ org.postgresql.util.PSQLException: FATAL: role "postgres" does not exist
 	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561)
 	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:100)
 	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
-	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122)
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:428)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.delegateWork(JdbcIsolationDelegate.java:61)
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:276)
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:107)
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:68)
-	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:130)
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263)
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:238)
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:215)
-	at org.hibernate.boot.model.relational.Database.<init>(Database.java:45)
-	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.getDatabase(InFlightMetadataCollectorImpl.java:223)
-	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:191)
-	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:170)
-	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1432)
-	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1503)
-	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:160)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:118)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:81)
+	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:52)
+	at org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer.runScripts(DataSourceScriptDatabaseInitializer.java:87)
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.runScripts(AbstractScriptDatabaseInitializer.java:146)
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyScripts(AbstractScriptDatabaseInitializer.java:108)
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyDataScripts(AbstractScriptDatabaseInitializer.java:102)
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.initializeDatabase(AbstractScriptDatabaseInitializer.java:77)
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.afterPropertiesSet(AbstractScriptDatabaseInitializer.java:66)
 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1835)
 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1784)
 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
@@ -59,6 +44,8 @@ org.postgresql.util.PSQLException: FATAL: role "postgres" does not exist
 	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
 	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
 	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:313)
 	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
 	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952)
 	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
@@ -69,166 +56,50 @@ org.postgresql.util.PSQLException: FATAL: role "postgres" does not exist
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
 	at com.lms.SchoolManagementApplication.main(SchoolManagementApplication.java:13)
-2026-03-17 19:16:31 - HHH000342: Could not obtain connection to query metadata
-java.lang.NullPointerException: Cannot invoke "org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(java.sql.SQLException, String)" because the return value of "org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.sqlExceptionHelper()" is null
-	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.delegateWork(JdbcIsolationDelegate.java:116)
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:276)
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:107)
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:68)
-	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:130)
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263)
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:238)
-	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:215)
-	at org.hibernate.boot.model.relational.Database.<init>(Database.java:45)
-	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.getDatabase(InFlightMetadataCollectorImpl.java:223)
-	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:191)
-	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:170)
-	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1432)
-	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1503)
-	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1835)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1784)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
-	at com.lms.SchoolManagementApplication.main(SchoolManagementApplication.java:13)
-2026-03-17 19:16:31 - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-03-17 19:16:33 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-03-17 19:16:33 - HikariPool-1 - Starting...
-2026-03-17 19:16:34 - HikariPool-1 - Exception during pool initialization.
-org.postgresql.util.PSQLException: FATAL: role "postgres" does not exist
-	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2713)
-	at org.postgresql.core.v3.QueryExecutorImpl.readStartupMessages(QueryExecutorImpl.java:2825)
-	at org.postgresql.core.v3.QueryExecutorImpl.<init>(QueryExecutorImpl.java:175)
-	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:313)
-	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:54)
-	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:263)
-	at org.postgresql.Driver.makeConnection(Driver.java:443)
-	at org.postgresql.Driver.connect(Driver.java:297)
-	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
-	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:359)
-	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:201)
-	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:470)
-	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561)
-	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:100)
-	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
-	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122)
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:428)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl.getIsolatedConnection(DdlTransactionIsolatorNonJtaImpl.java:46)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl.getIsolatedConnection(DdlTransactionIsolatorNonJtaImpl.java:39)
-	at org.hibernate.tool.schema.internal.exec.ImprovedExtractionContextImpl.getJdbcConnection(ImprovedExtractionContextImpl.java:63)
-	at org.hibernate.tool.schema.extract.spi.ExtractionContext.getQueryResults(ExtractionContext.java:43)
-	at org.hibernate.tool.schema.extract.internal.SequenceInformationExtractorLegacyImpl.extractMetadata(SequenceInformationExtractorLegacyImpl.java:39)
-	at org.hibernate.tool.schema.extract.internal.DatabaseInformationImpl.initializeSequences(DatabaseInformationImpl.java:66)
-	at org.hibernate.tool.schema.extract.internal.DatabaseInformationImpl.<init>(DatabaseInformationImpl.java:60)
-	at org.hibernate.tool.schema.internal.Helper.buildDatabaseInformation(Helper.java:185)
-	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:98)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
-	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
-	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
-	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
-	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:315)
-	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:450)
-	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1507)
-	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1835)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1784)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
-	at com.lms.SchoolManagementApplication.main(SchoolManagementApplication.java:13)
-2026-03-17 19:16:34 - SQL Error: 0, SQLState: 28000
-2026-03-17 19:16:34 - FATAL: role "postgres" does not exist
-2026-03-17 19:16:34 - Failed to initialize JPA EntityManagerFactory: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.exception.GenericJDBCException: Unable to open JDBC Connection for DDL execution [FATAL: role "postgres" does not exist] [n/a]
-2026-03-17 19:16:34 - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.exception.GenericJDBCException: Unable to open JDBC Connection for DDL execution [FATAL: role "postgres" does not exist] [n/a]
-2026-03-17 19:16:34 - Stopping service [Tomcat]
-2026-03-17 19:16:34 - 
+2026-03-20 23:10:24 - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Failed to initialize dependency 'dataSourceScriptDatabaseInitializer' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Failed to execute database script
+2026-03-20 23:10:24 - Stopping service [Tomcat]
+2026-03-20 23:10:25 - 
 
 Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-2026-03-17 19:16:34 - Application run failed
-org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.exception.GenericJDBCException: Unable to open JDBC Connection for DDL execution [FATAL: role "postgres" does not exist] [n/a]
+2026-03-20 23:10:25 - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Failed to initialize dependency 'dataSourceScriptDatabaseInitializer' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Failed to execute database script
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at com.lms.SchoolManagementApplication.main(SchoolManagementApplication.java:13)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Failed to execute database script
 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1788)
 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
 	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
 	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
 	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
-	at com.lms.SchoolManagementApplication.main(SchoolManagementApplication.java:13)
-Caused by: jakarta.persistence.PersistenceException: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.exception.GenericJDBCException: Unable to open JDBC Connection for DDL execution [FATAL: role "postgres" does not exist] [n/a]
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:421)
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:313)
+	... 10 common frames omitted
+Caused by: org.springframework.jdbc.datasource.init.UncategorizedScriptException: Failed to execute database script
+	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:67)
+	at org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer.runScripts(DataSourceScriptDatabaseInitializer.java:87)
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.runScripts(AbstractScriptDatabaseInitializer.java:146)
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyScripts(AbstractScriptDatabaseInitializer.java:108)
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyDataScripts(AbstractScriptDatabaseInitializer.java:102)
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.initializeDatabase(AbstractScriptDatabaseInitializer.java:77)
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.afterPropertiesSet(AbstractScriptDatabaseInitializer.java:66)
 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1835)
 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1784)
-	... 15 common frames omitted
-Caused by: org.hibernate.exception.GenericJDBCException: Unable to open JDBC Connection for DDL execution [FATAL: role "postgres" does not exist] [n/a]
-	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:63)
-	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
-	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl.getIsolatedConnection(DdlTransactionIsolatorNonJtaImpl.java:74)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl.getIsolatedConnection(DdlTransactionIsolatorNonJtaImpl.java:39)
-	at org.hibernate.tool.schema.internal.exec.ImprovedExtractionContextImpl.getJdbcConnection(ImprovedExtractionContextImpl.java:63)
-	at org.hibernate.tool.schema.extract.spi.ExtractionContext.getQueryResults(ExtractionContext.java:43)
-	at org.hibernate.tool.schema.extract.internal.SequenceInformationExtractorLegacyImpl.extractMetadata(SequenceInformationExtractorLegacyImpl.java:39)
-	at org.hibernate.tool.schema.extract.internal.DatabaseInformationImpl.initializeSequences(DatabaseInformationImpl.java:66)
-	at org.hibernate.tool.schema.extract.internal.DatabaseInformationImpl.<init>(DatabaseInformationImpl.java:60)
-	at org.hibernate.tool.schema.internal.Helper.buildDatabaseInformation(Helper.java:185)
-	at org.hibernate.tool.schema.internal.AbstractSchemaMigrator.doMigration(AbstractSchemaMigrator.java:98)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:280)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
-	at java.base/java.util.HashMap.forEach(HashMap.java:1421)
-	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
-	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
-	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
-	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:315)
-	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:450)
-	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1507)
-	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
-	... 19 common frames omitted
-Caused by: org.postgresql.util.PSQLException: FATAL: role "postgres" does not exist
+	... 17 common frames omitted
+Caused by: org.springframework.jdbc.CannotGetJdbcConnectionException: Failed to obtain JDBC Connection
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:84)
+	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:52)
+	... 25 common frames omitted
+Caused by: org.postgresql.util.PSQLException: FATAL: database "gurukuldb" does not exist
 	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2713)
 	at org.postgresql.core.v3.QueryExecutorImpl.readStartupMessages(QueryExecutorImpl.java:2825)
 	at org.postgresql.core.v3.QueryExecutorImpl.<init>(QueryExecutorImpl.java:175)
@@ -244,629 +115,129 @@ Caused by: org.postgresql.util.PSQLException: FATAL: role "postgres" does not ex
 	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561)
 	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:100)
 	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
-	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122)
-	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:428)
-	at org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl.getIsolatedConnection(DdlTransactionIsolatorNonJtaImpl.java:46)
-	... 39 common frames omitted
-2026-03-17 19:18:08 - Starting SchoolManagementApplication using Java 17.0.13 with PID 9630 (/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/target/classes started by abishek in /Volumes/Macbook-1/Gurukul/React/Gurukul/backend)
-2026-03-17 19:18:08 - Running with Spring Boot v3.2.6, Spring v6.1.8
-2026-03-17 19:18:08 - No active profile set, falling back to 1 default profile: "default"
-2026-03-17 19:18:09 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-03-17 19:18:10 - Finished Spring Data repository scanning in 167 ms. Found 21 JPA repository interfaces.
-2026-03-17 19:18:11 - Tomcat initialized with port 8080 (http)
-2026-03-17 19:18:11 - Starting service [Tomcat]
-2026-03-17 19:18:11 - Starting Servlet engine: [Apache Tomcat/10.1.24]
-2026-03-17 19:18:11 - Initializing Spring embedded WebApplicationContext
-2026-03-17 19:18:11 - Root WebApplicationContext: initialization completed in 2459 ms
-2026-03-17 19:18:11 - Filter 'jwtAuthenticationFilter' configured for use
-2026-03-17 19:18:11 - HikariPool-1 - Starting...
-2026-03-17 19:18:11 - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@231df705
-2026-03-17 19:18:11 - HikariPool-1 - Start completed.
-2026-03-17 19:18:11 - HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-03-17 19:18:11 - HHH000412: Hibernate ORM core version 6.4.8.Final
-2026-03-17 19:18:11 - HHH000026: Second-level cache disabled
-2026-03-17 19:18:11 - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-03-17 19:18:11 - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-03-17 19:18:13 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-03-17 19:18:14 - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-03-17 19:18:15 - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-03-17 19:18:17 - === AdminFacultyController INITIALIZED ===
-2026-03-17 19:18:17 - Controller mapped to: /admin/faculty
-2026-03-17 19:18:17 - Full URL will be: /api/admin/faculty (context-path adds /api)
-2026-03-17 19:18:17 - Available endpoints:
-2026-03-17 19:18:17 -   GET  /admin/faculty
-2026-03-17 19:18:17 -   GET  /admin/faculty/test
-2026-03-17 19:18:17 -   POST /admin/faculty
-2026-03-17 19:18:17 -   PUT  /admin/faculty/{id}/status
-2026-03-17 19:18:17 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@7a625e2e, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1812086, org.springframework.security.web.context.SecurityContextHolderFilter@7d2ccbcd, org.springframework.security.web.header.HeaderWriterFilter@2f8afb66, org.springframework.web.filter.CorsFilter@6c8fa6b3, org.springframework.security.web.authentication.logout.LogoutFilter@f6bcac8, com.lms.security.JwtAuthenticationFilter@5234b61a, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@65bccd0f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@78373fdf, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@78ead218, org.springframework.security.web.session.SessionManagementFilter@78513ad9, org.springframework.security.web.access.ExceptionTranslationFilter@82bbbdc, org.springframework.security.web.access.intercept.AuthorizationFilter@5b14018d]
-2026-03-17 19:18:18 - Tomcat started on port 8080 (http) with context path '/api'
-2026-03-17 19:18:18 - Started SchoolManagementApplication in 10.485 seconds (process running for 11.336)
-2026-03-17 19:18:36 - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-03-17 19:18:36 - Initializing Servlet 'dispatcherServlet'
-2026-03-17 19:18:36 - Completed initialization in 13 ms
-2026-03-17 19:18:36 - Securing GET /public/captcha
-2026-03-17 19:18:36 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:18:36 - Secured GET /public/captcha
-2026-03-17 19:18:54 - Securing POST /auth/login
-2026-03-17 19:18:54 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:18:54 - Secured POST /auth/login
-2026-03-17 19:18:55 - Securing GET /public/captcha
-2026-03-17 19:18:55 - Securing GET /uploads/f11afb05-7fc9-4fd4-be7e-78888e02853d.png
-2026-03-17 19:18:55 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:18:55 - Secured GET /uploads/f11afb05-7fc9-4fd4-be7e-78888e02853d.png
-2026-03-17 19:18:55 - Securing GET /faculty/dashboard
-2026-03-17 19:18:55 - Securing OPTIONS /faculty/timetable
-2026-03-17 19:18:55 - Securing GET /faculty/timetable
-2026-03-17 19:18:55 - Processing JWT for UserID: avi190126
-2026-03-17 19:18:55 - Processing JWT for UserID: avi190126
-2026-03-17 19:18:55 - Extracted Roles from JWT: [ROLE_FACULTY]
-2026-03-17 19:18:55 - Extracted Roles from JWT: [ROLE_FACULTY]
-2026-03-17 19:18:55 - Processing JWT for UserID: avi190126
-2026-03-17 19:18:55 - Extracted Roles from JWT: [ROLE_FACULTY]
-2026-03-17 19:18:55 - Setting authentication for user: avi190126
-2026-03-17 19:18:55 - Setting authentication for user: avi190126
-2026-03-17 19:18:55 - Setting authentication for user: avi190126
-2026-03-17 19:18:55 - Final Authorities set in SecurityContext: [ROLE_FACULTY]
-2026-03-17 19:18:55 - Final Authorities set in SecurityContext: [ROLE_FACULTY]
-2026-03-17 19:18:55 - Final Authorities set in SecurityContext: [ROLE_FACULTY]
-2026-03-17 19:18:55 - Authenticated user: avi190126, Authorities: [ROLE_FACULTY]
-2026-03-17 19:18:55 - Authenticated user: avi190126, Authorities: [ROLE_FACULTY]
-2026-03-17 19:18:55 - Authenticated user: avi190126, Authorities: [ROLE_FACULTY]
-2026-03-17 19:18:55 - Secured GET /faculty/timetable
-2026-03-17 19:18:55 - Secured GET /faculty/dashboard
-2026-03-17 19:18:55 - Secured GET /public/captcha
-2026-03-17 19:18:55 - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.lms.controller.TimetableController.getMyTimetable(); target is of class [com.lms.controller.TimetableController]
-2026-03-17 19:18:55 - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.lms.controller.TimetableController.getMyTimetable(); target is of class [com.lms.controller.TimetableController]
-2026-03-17 19:18:55 - Securing GET /faculty/courses
-2026-03-17 19:18:55 - Processing JWT for UserID: avi190126
-2026-03-17 19:18:55 - Extracted Roles from JWT: [ROLE_FACULTY]
-2026-03-17 19:18:55 - Setting authentication for user: avi190126
-2026-03-17 19:18:55 - Final Authorities set in SecurityContext: [ROLE_FACULTY]
-2026-03-17 19:18:55 - Authenticated user: avi190126, Authorities: [ROLE_FACULTY]
-2026-03-17 19:18:55 - Secured GET /faculty/courses
-2026-03-17 19:19:05 - Securing GET /faculty/courses
-2026-03-17 19:19:05 - Processing JWT for UserID: avi190126
-2026-03-17 19:19:05 - Extracted Roles from JWT: [ROLE_FACULTY]
-2026-03-17 19:19:05 - Setting authentication for user: avi190126
-2026-03-17 19:19:05 - Final Authorities set in SecurityContext: [ROLE_FACULTY]
-2026-03-17 19:19:05 - Authenticated user: avi190126, Authorities: [ROLE_FACULTY]
-2026-03-17 19:19:05 - Secured GET /faculty/courses
-2026-03-17 19:19:18 - Securing POST /auth/logout
-2026-03-17 19:19:18 - Processing JWT for UserID: avi190126
-2026-03-17 19:19:18 - Extracted Roles from JWT: [ROLE_FACULTY]
-2026-03-17 19:19:18 - Setting authentication for user: avi190126
-2026-03-17 19:19:18 - Final Authorities set in SecurityContext: [ROLE_FACULTY]
-2026-03-17 19:19:18 - Authenticated user: avi190126, Authorities: [ROLE_FACULTY]
-2026-03-17 19:19:18 - Secured POST /auth/logout
-2026-03-17 19:19:18 - Securing POST /error
-2026-03-17 19:19:18 - Secured POST /error
-2026-03-17 19:19:18 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:19:18 - Securing GET /public/captcha
-2026-03-17 19:19:18 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:19:18 - Secured GET /public/captcha
-2026-03-17 19:19:19 - Securing GET /public/captcha
-2026-03-17 19:19:19 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:19:19 - Secured GET /public/captcha
-2026-03-17 19:19:34 - Securing POST /auth/login
-2026-03-17 19:19:34 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:19:34 - Secured POST /auth/login
-2026-03-17 19:19:35 - Securing GET /public/captcha
-2026-03-17 19:19:35 - Securing GET /student/profile
-2026-03-17 19:19:35 - Processing JWT for UserID: avi1901261
-2026-03-17 19:19:35 - Processing JWT for UserID: avi1901261
-2026-03-17 19:19:35 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:19:35 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:19:35 - Setting authentication for user: avi1901261
-2026-03-17 19:19:35 - Setting authentication for user: avi1901261
-2026-03-17 19:19:35 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:19:35 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:19:35 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:19:35 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:19:35 - Secured GET /public/captcha
-2026-03-17 19:19:35 - Secured GET /student/profile
-2026-03-17 19:19:35 - Securing OPTIONS /student/dashboard
-2026-03-17 19:19:35 - Securing OPTIONS /student/courses
-2026-03-17 19:19:35 - Securing GET /uploads/3c716bc1-cbc1-4062-af2b-49983bea2217.png
-2026-03-17 19:19:35 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:19:35 - Secured GET /uploads/3c716bc1-cbc1-4062-af2b-49983bea2217.png
-2026-03-17 19:19:35 - Securing GET /student/courses
-2026-03-17 19:19:35 - Securing GET /student/dashboard
-2026-03-17 19:19:35 - Processing JWT for UserID: avi1901261
-2026-03-17 19:19:35 - Processing JWT for UserID: avi1901261
-2026-03-17 19:19:35 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:19:35 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:19:35 - Setting authentication for user: avi1901261
-2026-03-17 19:19:35 - Setting authentication for user: avi1901261
-2026-03-17 19:19:35 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:19:35 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:19:35 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:19:35 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:19:35 - Secured GET /student/courses
-2026-03-17 19:19:35 - Secured GET /student/dashboard
-2026-03-17 19:19:35 - Securing GET /uploads/3c716bc1-cbc1-4062-af2b-49983bea2217.png
-2026-03-17 19:19:35 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:19:35 - Secured GET /uploads/3c716bc1-cbc1-4062-af2b-49983bea2217.png
-2026-03-17 19:19:51 - Securing GET /student/profile
-2026-03-17 19:19:51 - Securing GET /student/courses
-2026-03-17 19:19:51 - Processing JWT for UserID: avi1901261
-2026-03-17 19:19:51 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:19:51 - Processing JWT for UserID: avi1901261
-2026-03-17 19:19:51 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:19:51 - Setting authentication for user: avi1901261
-2026-03-17 19:19:51 - Setting authentication for user: avi1901261
-2026-03-17 19:19:51 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:19:51 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:19:51 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:19:51 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:19:51 - Secured GET /student/courses
-2026-03-17 19:19:51 - Secured GET /student/profile
-2026-03-17 19:19:54 - Securing GET /faculty/assignments/course/6
-2026-03-17 19:19:54 - Processing JWT for UserID: avi1901261
-2026-03-17 19:19:54 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:19:54 - Setting authentication for user: avi1901261
-2026-03-17 19:19:54 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:19:54 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:19:54 - Secured GET /faculty/assignments/course/6
-2026-03-17 19:19:54 - Securing GET /faculty/assignments/2/my-submission
-2026-03-17 19:19:54 - Securing GET /faculty/assignments/1/my-submission
-2026-03-17 19:19:54 - Processing JWT for UserID: avi1901261
-2026-03-17 19:19:54 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:19:54 - Setting authentication for user: avi1901261
-2026-03-17 19:19:54 - Processing JWT for UserID: avi1901261
-2026-03-17 19:19:54 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:19:54 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:19:54 - Setting authentication for user: avi1901261
-2026-03-17 19:19:54 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:19:54 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:19:54 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:19:54 - Secured GET /faculty/assignments/2/my-submission
-2026-03-17 19:19:54 - Secured GET /faculty/assignments/1/my-submission
-2026-03-17 19:20:13 - Securing GET /activities/course/6
-2026-03-17 19:20:13 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:13 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:13 - Setting authentication for user: avi1901261
-2026-03-17 19:20:13 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:13 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:13 - Secured GET /activities/course/6
-2026-03-17 19:20:16 - Securing GET /activities/9/topics
-2026-03-17 19:20:16 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:16 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:16 - Setting authentication for user: avi1901261
-2026-03-17 19:20:16 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:16 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:16 - Secured GET /activities/9/topics
-2026-03-17 19:20:19 - Securing GET /student/courses
-2026-03-17 19:20:19 - Securing GET /student/dashboard
-2026-03-17 19:20:19 - Securing GET /student/profile
-2026-03-17 19:20:19 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:19 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:19 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:19 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:19 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:19 - Setting authentication for user: avi1901261
-2026-03-17 19:20:19 - Setting authentication for user: avi1901261
-2026-03-17 19:20:19 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:19 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:19 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:19 - Setting authentication for user: avi1901261
-2026-03-17 19:20:19 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:19 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:19 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:19 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:19 - Secured GET /student/courses
-2026-03-17 19:20:19 - Secured GET /student/profile
-2026-03-17 19:20:19 - Secured GET /student/dashboard
-2026-03-17 19:20:19 - Securing GET /uploads/3c716bc1-cbc1-4062-af2b-49983bea2217.png
-2026-03-17 19:20:19 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:20:19 - Secured GET /uploads/3c716bc1-cbc1-4062-af2b-49983bea2217.png
-2026-03-17 19:20:30 - Securing GET /student/courses
-2026-03-17 19:20:30 - Securing GET /student/profile
-2026-03-17 19:20:30 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:30 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:30 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:30 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:30 - Setting authentication for user: avi1901261
-2026-03-17 19:20:30 - Setting authentication for user: avi1901261
-2026-03-17 19:20:30 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:30 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:30 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:30 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:30 - Secured GET /student/profile
-2026-03-17 19:20:30 - Secured GET /student/courses
-2026-03-17 19:20:46 - Securing GET /student/dashboard
-2026-03-17 19:20:46 - Securing GET /student/courses
-2026-03-17 19:20:46 - Securing GET /student/profile
-2026-03-17 19:20:46 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:46 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:46 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:46 - Setting authentication for user: avi1901261
-2026-03-17 19:20:46 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:46 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:46 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:46 - Setting authentication for user: avi1901261
-2026-03-17 19:20:46 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:46 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:46 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:46 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:46 - Setting authentication for user: avi1901261
-2026-03-17 19:20:46 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:46 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:46 - Secured GET /student/profile
-2026-03-17 19:20:46 - Secured GET /student/courses
-2026-03-17 19:20:46 - Secured GET /student/dashboard
-2026-03-17 19:20:46 - Securing GET /uploads/3c716bc1-cbc1-4062-af2b-49983bea2217.png
-2026-03-17 19:20:46 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:20:46 - Secured GET /uploads/3c716bc1-cbc1-4062-af2b-49983bea2217.png
-2026-03-17 19:20:51 - Securing GET /student/profile
-2026-03-17 19:20:51 - Securing GET /student/attendance
-2026-03-17 19:20:51 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:51 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:51 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:51 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:51 - Setting authentication for user: avi1901261
-2026-03-17 19:20:51 - Setting authentication for user: avi1901261
-2026-03-17 19:20:51 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:51 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:51 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:51 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:51 - Secured GET /student/profile
-2026-03-17 19:20:51 - Secured GET /student/attendance
-2026-03-17 19:20:53 - Securing GET /student/timetable
-2026-03-17 19:20:53 - Securing GET /student/profile
-2026-03-17 19:20:53 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:53 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:53 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:53 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:53 - Setting authentication for user: avi1901261
-2026-03-17 19:20:53 - Setting authentication for user: avi1901261
-2026-03-17 19:20:53 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:53 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:53 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:53 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:53 - Secured GET /student/timetable
-2026-03-17 19:20:53 - Secured GET /student/profile
-2026-03-17 19:20:53 - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.lms.controller.TimetableController.getStudentTimetable(); target is of class [com.lms.controller.TimetableController]
-2026-03-17 19:20:53 - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.lms.controller.TimetableController.getStudentTimetable(); target is of class [com.lms.controller.TimetableController]
-2026-03-17 19:20:55 - Securing GET /student/profile
-2026-03-17 19:20:55 - Securing GET /student/courses
-2026-03-17 19:20:55 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:55 - Processing JWT for UserID: avi1901261
-2026-03-17 19:20:55 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:55 - Extracted Roles from JWT: [ROLE_STUDENT]
-2026-03-17 19:20:55 - Setting authentication for user: avi1901261
-2026-03-17 19:20:55 - Setting authentication for user: avi1901261
-2026-03-17 19:20:55 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:55 - Final Authorities set in SecurityContext: [ROLE_STUDENT]
-2026-03-17 19:20:55 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:55 - Authenticated user: avi1901261, Authorities: [ROLE_STUDENT]
-2026-03-17 19:20:55 - Secured GET /student/courses
-2026-03-17 19:20:55 - Secured GET /student/profile
-2026-03-17 19:21:36 - Securing GET /public/notices
-2026-03-17 19:21:36 - Securing GET /public/settings
-2026-03-17 19:21:36 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:21:36 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:21:36 - Secured GET /public/notices
-2026-03-17 19:21:36 - Secured GET /public/settings
-2026-03-17 19:21:36 - Securing GET /public/settings
-2026-03-17 19:21:36 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:21:36 - Secured GET /public/settings
-2026-03-17 19:21:37 - Securing GET /public/landing-slides
-2026-03-17 19:21:37 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:21:37 - Secured GET /public/landing-slides
-2026-03-17 19:21:37 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-17 19:21:37 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:21:37 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-17 19:21:39 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:21:39 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:21:39 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:21:53 - Securing GET /public/notices
-2026-03-17 19:21:53 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:21:53 - Secured GET /public/notices
-2026-03-17 19:21:57 - Securing GET /public/settings
-2026-03-17 19:21:57 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:21:57 - Secured GET /public/settings
-2026-03-17 19:21:57 - Securing GET /public/landing-slides
-2026-03-17 19:21:57 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:21:57 - Secured GET /public/landing-slides
-2026-03-17 19:21:57 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-17 19:21:57 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:21:57 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-17 19:22:10 - Securing GET /public/notices
-2026-03-17 19:22:10 - Securing GET /public/settings
-2026-03-17 19:22:10 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:22:10 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:22:10 - Secured GET /public/settings
-2026-03-17 19:22:10 - Secured GET /public/notices
-2026-03-17 19:22:10 - Securing GET /public/settings
-2026-03-17 19:22:10 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:22:10 - Secured GET /public/settings
-2026-03-17 19:22:10 - Securing GET /public/landing-slides
-2026-03-17 19:22:10 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:22:10 - Secured GET /public/landing-slides
-2026-03-17 19:22:10 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-17 19:22:10 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:22:10 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-17 19:22:12 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:22:12 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:22:12 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:22:15 - Securing GET /public/captcha
-2026-03-17 19:22:15 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:22:15 - Secured GET /public/captcha
-2026-03-17 19:22:54 - Securing GET /public/settings
-2026-03-17 19:22:54 - Securing GET /public/notices
-2026-03-17 19:22:54 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:22:54 - Secured GET /public/notices
-2026-03-17 19:22:54 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:22:54 - Secured GET /public/settings
-2026-03-17 19:22:54 - Securing GET /public/settings
-2026-03-17 19:22:54 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:22:54 - Secured GET /public/settings
-2026-03-17 19:22:54 - Securing GET /public/landing-slides
-2026-03-17 19:22:54 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:22:54 - Secured GET /public/landing-slides
-2026-03-17 19:22:54 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-17 19:22:54 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:22:54 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-17 19:22:54 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:22:54 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:22:54 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:22:57 - Securing GET /public/captcha
-2026-03-17 19:22:57 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:22:57 - Secured GET /public/captcha
-2026-03-17 19:23:04 - Securing POST /auth/login
-2026-03-17 19:23:04 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:23:04 - Secured POST /auth/login
-2026-03-17 19:23:04 - Securing GET /public/captcha
-2026-03-17 19:23:04 - Securing GET /admin/dashboard
-2026-03-17 19:23:04 - Securing GET /admin/dashboard/analytics
-2026-03-17 19:23:04 - Securing GET /uploads/ffb1d981-a349-48ca-83c0-e94dec07c943.png
-2026-03-17 19:23:04 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:23:04 - Secured GET /uploads/ffb1d981-a349-48ca-83c0-e94dec07c943.png
-2026-03-17 19:23:04 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:04 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:04 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:04 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:04 - Setting authentication for user: avishek070504
-2026-03-17 19:23:04 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:04 - Setting authentication for user: avishek070504
-2026-03-17 19:23:04 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:04 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:04 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:04 - Secured GET /admin/dashboard/analytics
-2026-03-17 19:23:04 - Secured GET /public/captcha
-2026-03-17 19:23:04 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:04 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:04 - Setting authentication for user: avishek070504
-2026-03-17 19:23:04 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:04 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:04 - Secured GET /admin/dashboard
-2026-03-17 19:23:05 - Securing GET /admin/activity-logs
-2026-03-17 19:23:05 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:05 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:05 - Setting authentication for user: avishek070504
-2026-03-17 19:23:05 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:05 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:05 - Secured GET /admin/activity-logs
-2026-03-17 19:23:10 - Securing GET /admin/users/role/STUDENT
-2026-03-17 19:23:10 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:10 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:10 - Setting authentication for user: avishek070504
-2026-03-17 19:23:10 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:10 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:10 - Secured GET /admin/users/role/STUDENT
-2026-03-17 19:23:15 - Securing GET /admin/users/role/ADMIN
-2026-03-17 19:23:15 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:15 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:15 - Setting authentication for user: avishek070504
-2026-03-17 19:23:15 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:15 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:15 - Secured GET /admin/users/role/ADMIN
-2026-03-17 19:23:20 - Securing GET /admin/admissions/applications
-2026-03-17 19:23:20 - Securing GET /admin/settings
-2026-03-17 19:23:20 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:20 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:20 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:20 - Setting authentication for user: avishek070504
-2026-03-17 19:23:20 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:20 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:20 - Setting authentication for user: avishek070504
-2026-03-17 19:23:20 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:20 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:20 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:20 - Secured GET /admin/settings
-2026-03-17 19:23:20 - Secured GET /admin/admissions/applications
-2026-03-17 19:23:26 - Securing GET /admin/users/role/FACULTY
-2026-03-17 19:23:26 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:26 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:26 - Setting authentication for user: avishek070504
-2026-03-17 19:23:26 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:26 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:26 - Secured GET /admin/users/role/FACULTY
-2026-03-17 19:23:29 - Securing GET /admin/courses
-2026-03-17 19:23:29 - Securing GET /admin/users/role/FACULTY
-2026-03-17 19:23:29 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:29 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:29 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:29 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:29 - Setting authentication for user: avishek070504
-2026-03-17 19:23:29 - Setting authentication for user: avishek070504
-2026-03-17 19:23:29 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:29 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:29 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:29 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:29 - Secured GET /admin/courses
-2026-03-17 19:23:29 - Secured GET /admin/users/role/FACULTY
-2026-03-17 19:23:33 - Securing GET /admin/courses?program=Nursery&section=
-2026-03-17 19:23:33 - Securing GET /admin/timetable?program=Nursery&section=&shift=Morning
-2026-03-17 19:23:33 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:33 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:33 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:33 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:33 - Setting authentication for user: avishek070504
-2026-03-17 19:23:33 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:33 - Setting authentication for user: avishek070504
-2026-03-17 19:23:33 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:33 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:33 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:33 - Secured GET /admin/courses?program=Nursery&section=
-2026-03-17 19:23:33 - Secured GET /admin/timetable?program=Nursery&section=&shift=Morning
-2026-03-17 19:23:33 - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.lms.controller.TimetableController.getTimetableByClass(java.lang.String,java.lang.String,java.lang.String); target is of class [com.lms.controller.TimetableController]
-2026-03-17 19:23:33 - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.lms.controller.TimetableController.getTimetableByClass(java.lang.String,java.lang.String,java.lang.String); target is of class [com.lms.controller.TimetableController]
-2026-03-17 19:23:35 - Securing GET /admin/courses
-2026-03-17 19:23:35 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:35 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:35 - Setting authentication for user: avishek070504
-2026-03-17 19:23:35 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:35 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:35 - Secured GET /admin/courses
-2026-03-17 19:23:48 - Securing GET /admin/users/role/FACULTY
-2026-03-17 19:23:48 - Securing GET /admin/courses
-2026-03-17 19:23:48 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:48 - Processing JWT for UserID: avishek070504
-2026-03-17 19:23:48 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:48 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:23:48 - Setting authentication for user: avishek070504
-2026-03-17 19:23:48 - Setting authentication for user: avishek070504
-2026-03-17 19:23:48 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:48 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:23:48 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:48 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:23:48 - Secured GET /admin/users/role/FACULTY
-2026-03-17 19:23:48 - Secured GET /admin/courses
-2026-03-17 19:24:05 - Securing GET /activities/course/6
-2026-03-17 19:24:05 - Processing JWT for UserID: avishek070504
-2026-03-17 19:24:05 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:24:05 - Setting authentication for user: avishek070504
-2026-03-17 19:24:05 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:24:05 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:24:05 - Secured GET /activities/course/6
-2026-03-17 19:24:21 - Securing GET /admin/notices
-2026-03-17 19:24:21 - Processing JWT for UserID: avishek070504
-2026-03-17 19:24:21 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:24:21 - Setting authentication for user: avishek070504
-2026-03-17 19:24:21 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:24:21 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:24:21 - Secured GET /admin/notices
-2026-03-17 19:24:41 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:24:41 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:24:41 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:24:55 - Securing GET /public/settings
-2026-03-17 19:24:55 - Securing GET /public/notices
-2026-03-17 19:24:55 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:24:55 - Secured GET /public/notices
-2026-03-17 19:24:55 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:24:55 - Secured GET /public/settings
-2026-03-17 19:24:55 - Securing GET /auth/profile
-2026-03-17 19:24:55 - Processing JWT for UserID: avishek070504
-2026-03-17 19:24:55 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:24:55 - Setting authentication for user: avishek070504
-2026-03-17 19:24:55 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:24:55 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:24:55 - Secured GET /auth/profile
-2026-03-17 19:24:55 - Securing GET /public/settings
-2026-03-17 19:24:55 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:24:55 - Secured GET /public/settings
-2026-03-17 19:24:56 - Securing GET /admin/dashboard
-2026-03-17 19:24:56 - Securing GET /admin/dashboard/analytics
-2026-03-17 19:24:56 - Securing GET /uploads/ffb1d981-a349-48ca-83c0-e94dec07c943.png
-2026-03-17 19:24:56 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:24:56 - Secured GET /uploads/ffb1d981-a349-48ca-83c0-e94dec07c943.png
-2026-03-17 19:24:56 - Processing JWT for UserID: avishek070504
-2026-03-17 19:24:56 - Processing JWT for UserID: avishek070504
-2026-03-17 19:24:56 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:24:56 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:24:56 - Setting authentication for user: avishek070504
-2026-03-17 19:24:56 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:24:56 - Setting authentication for user: avishek070504
-2026-03-17 19:24:56 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:24:56 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:24:56 - Secured GET /admin/dashboard/analytics
-2026-03-17 19:24:56 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:24:56 - Secured GET /admin/dashboard
-2026-03-17 19:24:56 - Securing GET /public/landing-slides
-2026-03-17 19:24:56 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:24:56 - Secured GET /public/landing-slides
-2026-03-17 19:24:56 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:24:56 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:24:56 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-17 19:24:56 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:24:56 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:24:56 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-17 19:24:56 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:24:56 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:24:56 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:24:56 - Cannot set user authentication: java.io.IOException: Broken pipe
-2026-03-17 19:24:56 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:24:56 - Securing GET /admin/activity-logs
-2026-03-17 19:24:56 - Processing JWT for UserID: avishek070504
-2026-03-17 19:24:56 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 19:24:56 - Setting authentication for user: avishek070504
-2026-03-17 19:24:56 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 19:24:56 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 19:24:56 - Secured GET /admin/activity-logs
-2026-03-17 19:25:24 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:25:24 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 19:25:24 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 19:25:32 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=50s578ms).
-2026-03-17 19:26:56 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=53s837ms).
-2026-03-17 19:47:02 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=20m6s602ms).
-2026-03-17 20:20:55 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=33m52s704ms).
-2026-03-17 20:32:56 - Securing GET /auth/profile
-2026-03-17 20:32:56 - Securing GET /public/notices
-2026-03-17 20:32:56 - Securing GET /public/settings
-2026-03-17 20:32:56 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 20:32:56 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 20:32:56 - Secured GET /public/notices
-2026-03-17 20:32:56 - Secured GET /public/settings
-2026-03-17 20:32:56 - Processing JWT for UserID: avishek070504
-2026-03-17 20:32:56 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 20:32:56 - Setting authentication for user: avishek070504
-2026-03-17 20:32:56 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 20:32:56 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 20:32:56 - Secured GET /auth/profile
-2026-03-17 20:32:56 - Securing GET /public/settings
-2026-03-17 20:32:56 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 20:32:56 - Securing GET /admin/dashboard/analytics
-2026-03-17 20:32:56 - Securing GET /admin/dashboard
-2026-03-17 20:32:56 - Secured GET /public/settings
-2026-03-17 20:32:56 - Processing JWT for UserID: avishek070504
-2026-03-17 20:32:56 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 20:32:56 - Setting authentication for user: avishek070504
-2026-03-17 20:32:56 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 20:32:56 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 20:32:56 - Secured GET /admin/dashboard/analytics
-2026-03-17 20:32:56 - Securing GET /uploads/ffb1d981-a349-48ca-83c0-e94dec07c943.png
-2026-03-17 20:32:56 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 20:32:56 - Secured GET /uploads/ffb1d981-a349-48ca-83c0-e94dec07c943.png
-2026-03-17 20:32:56 - Processing JWT for UserID: avishek070504
-2026-03-17 20:32:56 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 20:32:56 - Setting authentication for user: avishek070504
-2026-03-17 20:32:56 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 20:32:56 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 20:32:56 - Secured GET /admin/dashboard
-2026-03-17 20:32:57 - Securing GET /public/landing-slides
-2026-03-17 20:32:57 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 20:32:57 - Secured GET /public/landing-slides
-2026-03-17 20:32:57 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-17 20:32:57 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 20:32:57 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 20:32:57 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 20:32:57 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 20:32:57 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-17 20:32:57 - Securing GET /admin/activity-logs
-2026-03-17 20:32:57 - Processing JWT for UserID: avishek070504
-2026-03-17 20:32:57 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-17 20:32:57 - Setting authentication for user: avishek070504
-2026-03-17 20:32:57 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-17 20:32:57 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-17 20:32:57 - Secured GET /admin/activity-logs
-2026-03-17 20:32:57 - Cannot set user authentication: java.io.IOException: Broken pipe
-2026-03-17 20:32:57 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 20:32:57 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 20:32:57 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 20:32:57 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 20:33:00 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=12m5s453ms).
-2026-03-17 20:33:09 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 20:33:09 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-17 20:33:09 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-17 20:35:12 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m12s59ms).
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:160)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:118)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:81)
+	... 26 common frames omitted
+2026-03-20 23:11:08 - Starting SchoolManagementApplication using Java 17.0.13 with PID 9820 (/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/target/classes started by abishek in /Volumes/Macbook-1/Gurukul/React/Gurukul/backend)
+2026-03-20 23:11:08 - Running with Spring Boot v3.2.6, Spring v6.1.8
+2026-03-20 23:11:08 - No active profile set, falling back to 1 default profile: "default"
+2026-03-20 23:11:09 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-20 23:11:10 - Finished Spring Data repository scanning in 160 ms. Found 21 JPA repository interfaces.
+2026-03-20 23:11:11 - Tomcat initialized with port 8080 (http)
+2026-03-20 23:11:11 - Starting service [Tomcat]
+2026-03-20 23:11:11 - Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-03-20 23:11:11 - Initializing Spring embedded WebApplicationContext
+2026-03-20 23:11:11 - Root WebApplicationContext: initialization completed in 2416 ms
+2026-03-20 23:11:11 - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-20 23:11:11 - HikariPool-1 - Starting...
+2026-03-20 23:11:11 - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@794240e2
+2026-03-20 23:11:11 - HikariPool-1 - Start completed.
+2026-03-20 23:11:11 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-20 23:11:11 - HHH000412: Hibernate ORM core version 6.4.8.Final
+2026-03-20 23:11:11 - HHH000026: Second-level cache disabled
+2026-03-20 23:11:12 - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-20 23:11:12 - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-20 23:11:13 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-20 23:11:14 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-20 23:11:15 - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-20 23:11:17 - === AdminFacultyController INITIALIZED ===
+2026-03-20 23:11:17 - Controller mapped to: /admin/faculty
+2026-03-20 23:11:17 - Full URL will be: /api/admin/faculty (context-path adds /api)
+2026-03-20 23:11:17 - Available endpoints:
+2026-03-20 23:11:17 -   GET  /admin/faculty
+2026-03-20 23:11:17 -   GET  /admin/faculty/test
+2026-03-20 23:11:17 -   POST /admin/faculty
+2026-03-20 23:11:17 -   PUT  /admin/faculty/{id}/status
+2026-03-20 23:11:17 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4f3b5c60, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@23bc053c, org.springframework.security.web.context.SecurityContextHolderFilter@4fd727d7, org.springframework.security.web.header.HeaderWriterFilter@3b5a4aa5, org.springframework.web.filter.CorsFilter@5d947961, org.springframework.security.web.authentication.logout.LogoutFilter@1812086, com.lms.security.JwtAuthenticationFilter@33e0c716, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@16510bb9, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5590d10f, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2d0d357b, org.springframework.security.web.session.SessionManagementFilter@5417f849, org.springframework.security.web.access.ExceptionTranslationFilter@3de9a4f4, org.springframework.security.web.access.intercept.AuthorizationFilter@7133bb00]
+2026-03-20 23:11:18 - Tomcat started on port 8080 (http) with context path '/api'
+2026-03-20 23:11:18 - Started SchoolManagementApplication in 10.136 seconds (process running for 10.838)
+2026-03-20 23:11:22 - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-20 23:11:22 - Initializing Servlet 'dispatcherServlet'
+2026-03-20 23:11:22 - Completed initialization in 9 ms
+2026-03-20 23:11:22 - Securing GET /public/captcha
+2026-03-20 23:11:22 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:11:22 - Secured GET /public/captcha
+2026-03-20 23:11:37 - Securing GET /public/notices
+2026-03-20 23:11:37 - Securing GET /public/settings
+2026-03-20 23:11:37 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:11:37 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:11:37 - Secured GET /public/notices
+2026-03-20 23:11:37 - Secured GET /public/settings
+2026-03-20 23:11:37 - Securing GET /public/settings
+2026-03-20 23:11:37 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:11:37 - Secured GET /public/settings
+2026-03-20 23:11:37 - Securing GET /public/landing-slides
+2026-03-20 23:11:37 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:11:37 - Secured GET /public/landing-slides
+2026-03-20 23:11:37 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-20 23:11:37 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-20 23:11:37 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:11:37 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:11:37 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-20 23:11:37 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-20 23:11:41 - Securing GET /public/captcha
+2026-03-20 23:11:41 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:11:41 - Secured GET /public/captcha
+2026-03-20 23:11:46 - Securing POST /auth/login
+2026-03-20 23:11:46 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:11:46 - Secured POST /auth/login
+2026-03-20 23:11:46 - Securing GET /public/captcha
+2026-03-20 23:11:46 - Securing GET /uploads/ffb1d981-a349-48ca-83c0-e94dec07c943.png
+2026-03-20 23:11:46 - Securing GET /admin/dashboard
+2026-03-20 23:11:46 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:11:46 - Securing GET /admin/dashboard/analytics
+2026-03-20 23:11:46 - Secured GET /uploads/ffb1d981-a349-48ca-83c0-e94dec07c943.png
+2026-03-20 23:11:47 - Processing JWT for UserID: avishek070504
+2026-03-20 23:11:47 - Processing JWT for UserID: avishek070504
+2026-03-20 23:11:47 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-20 23:11:47 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-20 23:11:47 - Processing JWT for UserID: avishek070504
+2026-03-20 23:11:47 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-20 23:11:47 - Setting authentication for user: avishek070504
+2026-03-20 23:11:47 - Setting authentication for user: avishek070504
+2026-03-20 23:11:47 - Setting authentication for user: avishek070504
+2026-03-20 23:11:47 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-20 23:11:47 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-20 23:11:47 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-20 23:11:47 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-20 23:11:47 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-20 23:11:47 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-20 23:11:47 - Secured GET /public/captcha
+2026-03-20 23:11:47 - Secured GET /admin/dashboard/analytics
+2026-03-20 23:11:47 - Secured GET /admin/dashboard
+2026-03-20 23:11:47 - Securing GET /admin/activity-logs
+2026-03-20 23:11:47 - Processing JWT for UserID: avishek070504
+2026-03-20 23:11:47 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-20 23:11:47 - Setting authentication for user: avishek070504
+2026-03-20 23:11:47 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-20 23:11:47 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-20 23:11:47 - Secured GET /admin/activity-logs
+2026-03-20 23:11:48 - Securing GET /admin/users/role/STUDENT
+2026-03-20 23:11:48 - Processing JWT for UserID: avishek070504
+2026-03-20 23:11:48 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-20 23:11:48 - Setting authentication for user: avishek070504
+2026-03-20 23:11:48 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-20 23:11:48 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-20 23:11:48 - Secured GET /admin/users/role/STUDENT
+2026-03-20 23:28:30 - Securing GET /public/notices
+2026-03-20 23:28:30 - Securing GET /public/settings
+2026-03-20 23:28:30 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:28:30 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:28:30 - Secured GET /public/notices
+2026-03-20 23:28:30 - Secured GET /public/settings
+2026-03-20 23:28:31 - Securing GET /public/settings
+2026-03-20 23:28:31 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:28:31 - Secured GET /public/settings
+2026-03-20 23:28:31 - Securing GET /public/landing-slides
+2026-03-20 23:28:31 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:28:31 - Secured GET /public/landing-slides
+2026-03-20 23:28:31 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-20 23:28:31 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-20 23:28:31 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:28:31 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-20 23:28:31 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-20 23:28:31 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-20 23:28:46 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-20 23:28:46 - HikariPool-1 - Shutdown initiated...
+2026-03-20 23:28:46 - HikariPool-1 - Shutdown completed.

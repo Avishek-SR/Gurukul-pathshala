@@ -56,7 +56,8 @@ const FacultyDashboard = () => {
   const { data: timetableData } = useQuery({
     queryKey: ['facultyTimetable'],
     queryFn: async () => {
-      const response = await fetch('http://localhost:8080/api/faculty/timetable', {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+      const response = await fetch(`${API_BASE_URL}/faculty/timetable`, {
         headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
       });
       if (!response.ok) throw new Error('Failed to fetch timetable');

@@ -40,9 +40,10 @@ const StudentDashboard = () => {
     const fetchDashboard = async () => {
       try {
         const token = sessionStorage.getItem('token');
+        const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
         const [dashRes, subjectsRes] = await Promise.all([
-          fetch('http://localhost:8080/api/student/dashboard', { headers: { Authorization: `Bearer ${token}` } }),
-          fetch('http://localhost:8080/api/student/courses',   { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${API_BASE_URL}/student/dashboard`, { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${API_BASE_URL}/student/courses`,   { headers: { Authorization: `Bearer ${token}` } }),
         ]);
         const data = dashRes.ok ? await dashRes.json() : {};
         const subjects = subjectsRes.ok ? await subjectsRes.json() : [];
