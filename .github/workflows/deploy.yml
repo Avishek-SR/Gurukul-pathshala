@@ -1,0 +1,26 @@
+name: Deploy to Oracle Cloud
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into Oracle Server and run deploy script
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.ORACLE_HOST }}
+          username: ${{ secrets.ORACLE_USERNAME }}
+          key: ${{ secrets.ORACLE_SSH_KEY }}
+          script: |
+            # Navigate to the project folder - REPLACE /home/opc/Gurukul-pathshala IF DIFFERENT
+            cd /home/opc/Gurukul-pathshala || echo "Could not find Gurukul-pathshala directory! Please update deploy.yml"
+            
+            # Make sure the deployment script is executable
+            chmod +x deploy/oracle/deploy.sh
+            
+            # Run the deployment script
+            ./deploy/oracle/deploy.sh
