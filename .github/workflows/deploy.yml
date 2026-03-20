@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - master
 
 jobs:
   deploy:
@@ -16,8 +17,8 @@ jobs:
           username: ${{ secrets.ORACLE_USERNAME }}
           key: ${{ secrets.ORACLE_SSH_KEY }}
           script: |
-            # Navigate to the project folder - REPLACE /home/opc/Gurukul-pathshala IF DIFFERENT
-            cd /home/opc/Gurukul-pathshala || echo "Could not find Gurukul-pathshala directory! Please update deploy.yml"
+            # Navigate to the project folder
+            cd /home/ubuntu/Gurukul-pathshala || echo "Could not find Gurukul-pathshala directory! Please update deploy.yml"
             
             # Make sure the deployment script is executable
             chmod +x deploy/oracle/deploy.sh
