@@ -715,3 +715,60 @@
 2026-03-26 15:18:23 - Closing JPA EntityManagerFactory for persistence unit 'default'
 2026-03-26 15:18:23 - HikariPool-1 - Shutdown initiated...
 2026-03-26 15:18:23 - HikariPool-1 - Shutdown completed.
+2026-03-26 15:31:31 - Starting SchoolManagementApplication using Java 17.0.13 with PID 7608 (/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/target/classes started by abishek in /Volumes/Macbook-1/Gurukul/React/Gurukul/backend)
+2026-03-26 15:31:31 - Running with Spring Boot v3.2.6, Spring v6.1.8
+2026-03-26 15:31:31 - No active profile set, falling back to 1 default profile: "default"
+2026-03-26 15:31:33 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-26 15:31:33 - Finished Spring Data repository scanning in 186 ms. Found 21 JPA repository interfaces.
+2026-03-26 15:31:34 - Tomcat initialized with port 8080 (http)
+2026-03-26 15:31:34 - Starting service [Tomcat]
+2026-03-26 15:31:34 - Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-03-26 15:31:34 - Initializing Spring embedded WebApplicationContext
+2026-03-26 15:31:34 - Root WebApplicationContext: initialization completed in 2598 ms
+2026-03-26 15:31:34 - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-26 15:31:34 - HikariPool-1 - Starting...
+2026-03-26 15:31:35 - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5a30722c
+2026-03-26 15:31:35 - HikariPool-1 - Start completed.
+2026-03-26 15:31:35 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-26 15:31:35 - HHH000412: Hibernate ORM core version 6.4.8.Final
+2026-03-26 15:31:35 - HHH000026: Second-level cache disabled
+2026-03-26 15:31:35 - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-26 15:31:35 - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-26 15:31:37 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-26 15:31:37 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-26 15:31:39 - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-26 15:31:40 - === AdminFacultyController INITIALIZED ===
+2026-03-26 15:31:40 - Controller mapped to: /admin/faculty
+2026-03-26 15:31:40 - Full URL will be: /api/admin/faculty (context-path adds /api)
+2026-03-26 15:31:40 - Available endpoints:
+2026-03-26 15:31:40 -   GET  /admin/faculty
+2026-03-26 15:31:40 -   GET  /admin/faculty/test
+2026-03-26 15:31:40 -   POST /admin/faculty
+2026-03-26 15:31:40 -   PUT  /admin/faculty/{id}/status
+2026-03-26 15:31:41 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4f3b5c60, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@23bc053c, org.springframework.security.web.context.SecurityContextHolderFilter@4fd727d7, org.springframework.security.web.header.HeaderWriterFilter@3b5a4aa5, org.springframework.web.filter.CorsFilter@5d947961, org.springframework.security.web.authentication.logout.LogoutFilter@1812086, com.lms.security.JwtAuthenticationFilter@1d6a8386, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@16510bb9, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5590d10f, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2d0d357b, org.springframework.security.web.session.SessionManagementFilter@5417f849, org.springframework.security.web.access.ExceptionTranslationFilter@3de9a4f4, org.springframework.security.web.access.intercept.AuthorizationFilter@7133bb00]
+2026-03-26 15:31:41 - Tomcat started on port 8080 (http) with context path '/api'
+2026-03-26 15:31:41 - Started SchoolManagementApplication in 10.415 seconds (process running for 11.666)
+2026-03-26 15:31:54 - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-26 15:31:54 - Initializing Servlet 'dispatcherServlet'
+2026-03-26 15:31:54 - Completed initialization in 10 ms
+2026-03-26 15:31:54 - Securing GET /public/settings
+2026-03-26 15:31:54 - Securing GET /public/notices
+2026-03-26 15:31:54 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:31:54 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:31:54 - Secured GET /public/notices
+2026-03-26 15:31:54 - Secured GET /public/settings
+2026-03-26 15:31:54 - Securing GET /public/settings
+2026-03-26 15:31:54 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:31:54 - Secured GET /public/settings
+2026-03-26 15:31:54 - Securing GET /public/landing-slides
+2026-03-26 15:31:54 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:31:54 - Secured GET /public/landing-slides
+2026-03-26 15:31:54 - Securing GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 15:31:54 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:31:54 - Secured GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 15:31:54 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:31:54 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 15:31:54 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:31:54 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:31:54 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:31:54 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg

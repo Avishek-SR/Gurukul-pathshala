@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { settingsAPI, noticeAPI } from "../services/api";
+import defaultLogo from "../assets/logo.svg";
 import "./MainLayout.css";
 
 export default function MainLayout({ children }) {
@@ -89,13 +90,11 @@ export default function MainLayout({ children }) {
         <div className="main-layout-logo-section">
           <Link to="/" className="main-layout-logo-link" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: 'inherit' }}>
             <div className="main-layout-logo">
-              {settings.site_logo && (
-                <img
-                  src={settings.site_logo.startsWith('http') ? settings.site_logo : `${(import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')}${settings.site_logo}`}
-                  alt="Logo"
-                  style={{ width: '90px', height: '90px', objectFit: 'contain', display: 'block' }}
-                />
-              )}
+              <img
+                src={settings.site_logo ? (settings.site_logo.startsWith('http') ? settings.site_logo : `${(import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')}${settings.site_logo}`) : defaultLogo}
+                alt="Logo"
+                style={{ width: '90px', height: '90px', objectFit: 'contain', display: 'block' }}
+              />
             </div>
             <span className="main-layout-title">{settings.site_name || settings.site_logo_text}</span>
           </Link>
@@ -234,13 +233,11 @@ export default function MainLayout({ children }) {
           <div className="main-layout-footer-content">
             <div className="main-layout-footer-brand">
               <div className="main-layout-footer-logo">
-                {settings.site_logo && (
-                  <img
-                    src={settings.site_logo.startsWith('http') ? settings.site_logo : `${(import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')}${settings.site_logo}`}
-                    alt="Logo"
-                    style={{ width: '120px', height: '120px', objectFit: 'contain', display: 'block' }}
-                  />
-                )}
+                <img
+                  src={settings.site_logo ? (settings.site_logo.startsWith('http') ? settings.site_logo : `${(import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')}${settings.site_logo}`) : defaultLogo}
+                  alt="Logo"
+                  style={{ width: '120px', height: '120px', objectFit: 'contain', display: 'block' }}
+                />
               </div>
               <h3>{(settings.site_name || settings.site_logo_text).toUpperCase()}</h3>
               <p>{settings.contact_address}</p>
