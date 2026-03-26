@@ -712,3 +712,6 @@
 2026-03-26 15:09:35 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
 2026-03-26 15:09:35 - Set SecurityContextHolder to anonymous SecurityContext
 2026-03-26 15:09:35 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:18:23 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-26 15:18:23 - HikariPool-1 - Shutdown initiated...
+2026-03-26 15:18:23 - HikariPool-1 - Shutdown completed.
