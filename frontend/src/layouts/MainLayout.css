@@ -35,7 +35,7 @@
 .main-layout-header {
   background: var(--main-white);
   box-shadow: 0 2px 10px var(--main-shadow-light);
-  padding: 15px 30px;
+  padding: 0 30px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -44,28 +44,21 @@
   top: 0;
   z-index: 1000;
   border-bottom: 3px solid var(--main-primary-medium);
-  min-height: 80px;
+  min-height: auto;
 }
 
 /* Logo Section */
 .main-layout-logo-section {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 5px;
   flex-shrink: 0;
 }
 
 .main-layout-logo {
-  width: 50px;
-  height: 50px;
-  background: linear-gradient(135deg, var(--main-primary-medium), var(--main-primary-accent));
-  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 1.5rem;
-  box-shadow: 0 4px 15px rgba(32, 178, 170, 0.3);
   flex-shrink: 0;
 }
 
@@ -252,16 +245,10 @@
 }
 
 .main-layout-footer-logo {
-  width: 60px;
-  height: 60px;
-  background: white;
-  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 20px;
-  font-size: 1.8rem;
-  color: var(--main-primary-medium);
+  margin: 0 auto 5px;
 }
 
 .main-layout-footer-brand h3 {
@@ -396,8 +383,6 @@
   
   /* Logo adjustments */
   .main-layout-logo {
-    width: 40px;
-    height: 40px;
     font-size: 1.2rem;
   }
   
@@ -466,15 +451,12 @@
   .main-layout-logo-section {
     flex-direction: row;
     text-align: left;
-    gap: 10px;
+    gap: 5px;
   }
   
   /* Even smaller logo */
   .main-layout-logo {
-    width: 35px;
-    height: 35px;
     font-size: 1rem;
-    border-radius: 10px;
   }
   
   /* Even smaller title */

@@ -502,19 +502,21 @@ const AdminSettings = () => {
                     <label>School Logo</label>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: '10px' }}>
                       {formData.site_logo ? (
-                        <div style={{ position: 'relative', width: '100px', height: '100px', border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden' }}>
-                          <img 
-                            src={formData.site_logo.startsWith('http') ? formData.site_logo : `${(import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')}${formData.site_logo}`} 
-                            alt={formData.site_logo_text || "School Logo"} 
-                            style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
-                          />
+                        <div style={{ position: 'relative', width: '100px', height: '100px' }}>
+                          <div style={{ width: '100px', height: '100px', borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(32,178,170,0.5)', backgroundColor: '#fff' }}>
+                            <img 
+                              src={formData.site_logo.startsWith('http') ? formData.site_logo : `${(import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')}${formData.site_logo}`} 
+                              alt={formData.site_logo_text || "School Logo"} 
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                            />
+                          </div>
                           <button 
                             onClick={deleteLogo}
-                            style={{ position: 'absolute', top: '5px', right: '5px', background: 'rgba(255,0,0,0.7)', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '12px' }}
+                            style={{ position: 'absolute', top: '0px', right: '0px', background: 'rgba(255,0,0,0.7)', color: 'white', border: 'none', borderRadius: '50%', width: '22px', height: '22px', cursor: 'pointer', fontSize: '12px' }}
                           >✕</button>
                         </div>
                       ) : (
-                        <div style={{ width: '100px', height: '100px', border: '2px dashed #ccc', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>
+                        <div style={{ width: '100px', height: '100px', border: '2px dashed #ccc', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888', fontSize: '12px', textAlign: 'center' }}>
                           No Logo
                         </div>
                       )}

@@ -1,243 +1,714 @@
-2026-03-20 23:10:21 - Starting SchoolManagementApplication using Java 17.0.13 with PID 9666 (/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/target/classes started by abishek in /Volumes/Macbook-1/Gurukul/React/Gurukul/backend)
-2026-03-20 23:10:21 - Running with Spring Boot v3.2.6, Spring v6.1.8
-2026-03-20 23:10:21 - No active profile set, falling back to 1 default profile: "default"
-2026-03-20 23:10:22 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-03-20 23:10:22 - Finished Spring Data repository scanning in 168 ms. Found 21 JPA repository interfaces.
-2026-03-20 23:10:23 - Tomcat initialized with port 8080 (http)
-2026-03-20 23:10:23 - Starting service [Tomcat]
-2026-03-20 23:10:23 - Starting Servlet engine: [Apache Tomcat/10.1.24]
-2026-03-20 23:10:23 - Initializing Spring embedded WebApplicationContext
-2026-03-20 23:10:23 - Root WebApplicationContext: initialization completed in 2431 ms
-2026-03-20 23:10:23 - Filter 'jwtAuthenticationFilter' configured for use
-2026-03-20 23:10:23 - HikariPool-1 - Starting...
-2026-03-20 23:10:24 - HikariPool-1 - Exception during pool initialization.
-org.postgresql.util.PSQLException: FATAL: database "gurukuldb" does not exist
-	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2713)
-	at org.postgresql.core.v3.QueryExecutorImpl.readStartupMessages(QueryExecutorImpl.java:2825)
-	at org.postgresql.core.v3.QueryExecutorImpl.<init>(QueryExecutorImpl.java:175)
-	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:313)
-	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:54)
-	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:263)
-	at org.postgresql.Driver.makeConnection(Driver.java:443)
-	at org.postgresql.Driver.connect(Driver.java:297)
-	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
-	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:359)
-	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:201)
-	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:470)
-	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561)
-	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:100)
-	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
-	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:160)
-	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:118)
-	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:81)
-	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:52)
-	at org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer.runScripts(DataSourceScriptDatabaseInitializer.java:87)
-	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.runScripts(AbstractScriptDatabaseInitializer.java:146)
-	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyScripts(AbstractScriptDatabaseInitializer.java:108)
-	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyDataScripts(AbstractScriptDatabaseInitializer.java:102)
-	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.initializeDatabase(AbstractScriptDatabaseInitializer.java:77)
-	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.afterPropertiesSet(AbstractScriptDatabaseInitializer.java:66)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1835)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1784)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:313)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
-	at com.lms.SchoolManagementApplication.main(SchoolManagementApplication.java:13)
-2026-03-20 23:10:24 - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Failed to initialize dependency 'dataSourceScriptDatabaseInitializer' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Failed to execute database script
-2026-03-20 23:10:24 - Stopping service [Tomcat]
-2026-03-20 23:10:25 - 
-
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-2026-03-20 23:10:25 - Application run failed
-org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Failed to initialize dependency 'dataSourceScriptDatabaseInitializer' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Failed to execute database script
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:326)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:952)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
-	at com.lms.SchoolManagementApplication.main(SchoolManagementApplication.java:13)
-Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Failed to execute database script
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1788)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:313)
-	... 10 common frames omitted
-Caused by: org.springframework.jdbc.datasource.init.UncategorizedScriptException: Failed to execute database script
-	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:67)
-	at org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer.runScripts(DataSourceScriptDatabaseInitializer.java:87)
-	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.runScripts(AbstractScriptDatabaseInitializer.java:146)
-	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyScripts(AbstractScriptDatabaseInitializer.java:108)
-	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyDataScripts(AbstractScriptDatabaseInitializer.java:102)
-	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.initializeDatabase(AbstractScriptDatabaseInitializer.java:77)
-	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.afterPropertiesSet(AbstractScriptDatabaseInitializer.java:66)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1835)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1784)
-	... 17 common frames omitted
-Caused by: org.springframework.jdbc.CannotGetJdbcConnectionException: Failed to obtain JDBC Connection
-	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:84)
-	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:52)
-	... 25 common frames omitted
-Caused by: org.postgresql.util.PSQLException: FATAL: database "gurukuldb" does not exist
-	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2713)
-	at org.postgresql.core.v3.QueryExecutorImpl.readStartupMessages(QueryExecutorImpl.java:2825)
-	at org.postgresql.core.v3.QueryExecutorImpl.<init>(QueryExecutorImpl.java:175)
-	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:313)
-	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:54)
-	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:263)
-	at org.postgresql.Driver.makeConnection(Driver.java:443)
-	at org.postgresql.Driver.connect(Driver.java:297)
-	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138)
-	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:359)
-	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:201)
-	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:470)
-	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561)
-	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:100)
-	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
-	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:160)
-	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:118)
-	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:81)
-	... 26 common frames omitted
-2026-03-20 23:11:08 - Starting SchoolManagementApplication using Java 17.0.13 with PID 9820 (/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/target/classes started by abishek in /Volumes/Macbook-1/Gurukul/React/Gurukul/backend)
-2026-03-20 23:11:08 - Running with Spring Boot v3.2.6, Spring v6.1.8
-2026-03-20 23:11:08 - No active profile set, falling back to 1 default profile: "default"
-2026-03-20 23:11:09 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-03-20 23:11:10 - Finished Spring Data repository scanning in 160 ms. Found 21 JPA repository interfaces.
-2026-03-20 23:11:11 - Tomcat initialized with port 8080 (http)
-2026-03-20 23:11:11 - Starting service [Tomcat]
-2026-03-20 23:11:11 - Starting Servlet engine: [Apache Tomcat/10.1.24]
-2026-03-20 23:11:11 - Initializing Spring embedded WebApplicationContext
-2026-03-20 23:11:11 - Root WebApplicationContext: initialization completed in 2416 ms
-2026-03-20 23:11:11 - Filter 'jwtAuthenticationFilter' configured for use
-2026-03-20 23:11:11 - HikariPool-1 - Starting...
-2026-03-20 23:11:11 - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@794240e2
-2026-03-20 23:11:11 - HikariPool-1 - Start completed.
-2026-03-20 23:11:11 - HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-03-20 23:11:11 - HHH000412: Hibernate ORM core version 6.4.8.Final
-2026-03-20 23:11:11 - HHH000026: Second-level cache disabled
-2026-03-20 23:11:12 - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-03-20 23:11:12 - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-03-20 23:11:13 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-03-20 23:11:14 - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-03-20 23:11:15 - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-03-20 23:11:17 - === AdminFacultyController INITIALIZED ===
-2026-03-20 23:11:17 - Controller mapped to: /admin/faculty
-2026-03-20 23:11:17 - Full URL will be: /api/admin/faculty (context-path adds /api)
-2026-03-20 23:11:17 - Available endpoints:
-2026-03-20 23:11:17 -   GET  /admin/faculty
-2026-03-20 23:11:17 -   GET  /admin/faculty/test
-2026-03-20 23:11:17 -   POST /admin/faculty
-2026-03-20 23:11:17 -   PUT  /admin/faculty/{id}/status
-2026-03-20 23:11:17 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4f3b5c60, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@23bc053c, org.springframework.security.web.context.SecurityContextHolderFilter@4fd727d7, org.springframework.security.web.header.HeaderWriterFilter@3b5a4aa5, org.springframework.web.filter.CorsFilter@5d947961, org.springframework.security.web.authentication.logout.LogoutFilter@1812086, com.lms.security.JwtAuthenticationFilter@33e0c716, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@16510bb9, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5590d10f, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2d0d357b, org.springframework.security.web.session.SessionManagementFilter@5417f849, org.springframework.security.web.access.ExceptionTranslationFilter@3de9a4f4, org.springframework.security.web.access.intercept.AuthorizationFilter@7133bb00]
-2026-03-20 23:11:18 - Tomcat started on port 8080 (http) with context path '/api'
-2026-03-20 23:11:18 - Started SchoolManagementApplication in 10.136 seconds (process running for 10.838)
-2026-03-20 23:11:22 - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-03-20 23:11:22 - Initializing Servlet 'dispatcherServlet'
-2026-03-20 23:11:22 - Completed initialization in 9 ms
-2026-03-20 23:11:22 - Securing GET /public/captcha
-2026-03-20 23:11:22 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:11:22 - Secured GET /public/captcha
-2026-03-20 23:11:37 - Securing GET /public/notices
-2026-03-20 23:11:37 - Securing GET /public/settings
-2026-03-20 23:11:37 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:11:37 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:11:37 - Secured GET /public/notices
-2026-03-20 23:11:37 - Secured GET /public/settings
-2026-03-20 23:11:37 - Securing GET /public/settings
-2026-03-20 23:11:37 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:11:37 - Secured GET /public/settings
-2026-03-20 23:11:37 - Securing GET /public/landing-slides
-2026-03-20 23:11:37 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:11:37 - Secured GET /public/landing-slides
-2026-03-20 23:11:37 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-20 23:11:37 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-20 23:11:37 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:11:37 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:11:37 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-20 23:11:37 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-20 23:11:41 - Securing GET /public/captcha
-2026-03-20 23:11:41 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:11:41 - Secured GET /public/captcha
-2026-03-20 23:11:46 - Securing POST /auth/login
-2026-03-20 23:11:46 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:11:46 - Secured POST /auth/login
-2026-03-20 23:11:46 - Securing GET /public/captcha
-2026-03-20 23:11:46 - Securing GET /uploads/ffb1d981-a349-48ca-83c0-e94dec07c943.png
-2026-03-20 23:11:46 - Securing GET /admin/dashboard
-2026-03-20 23:11:46 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:11:46 - Securing GET /admin/dashboard/analytics
-2026-03-20 23:11:46 - Secured GET /uploads/ffb1d981-a349-48ca-83c0-e94dec07c943.png
-2026-03-20 23:11:47 - Processing JWT for UserID: avishek070504
-2026-03-20 23:11:47 - Processing JWT for UserID: avishek070504
-2026-03-20 23:11:47 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-20 23:11:47 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-20 23:11:47 - Processing JWT for UserID: avishek070504
-2026-03-20 23:11:47 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-20 23:11:47 - Setting authentication for user: avishek070504
-2026-03-20 23:11:47 - Setting authentication for user: avishek070504
-2026-03-20 23:11:47 - Setting authentication for user: avishek070504
-2026-03-20 23:11:47 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-20 23:11:47 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-20 23:11:47 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-20 23:11:47 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-20 23:11:47 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-20 23:11:47 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-20 23:11:47 - Secured GET /public/captcha
-2026-03-20 23:11:47 - Secured GET /admin/dashboard/analytics
-2026-03-20 23:11:47 - Secured GET /admin/dashboard
-2026-03-20 23:11:47 - Securing GET /admin/activity-logs
-2026-03-20 23:11:47 - Processing JWT for UserID: avishek070504
-2026-03-20 23:11:47 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-20 23:11:47 - Setting authentication for user: avishek070504
-2026-03-20 23:11:47 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-20 23:11:47 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-20 23:11:47 - Secured GET /admin/activity-logs
-2026-03-20 23:11:48 - Securing GET /admin/users/role/STUDENT
-2026-03-20 23:11:48 - Processing JWT for UserID: avishek070504
-2026-03-20 23:11:48 - Extracted Roles from JWT: [ROLE_ADMIN]
-2026-03-20 23:11:48 - Setting authentication for user: avishek070504
-2026-03-20 23:11:48 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
-2026-03-20 23:11:48 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
-2026-03-20 23:11:48 - Secured GET /admin/users/role/STUDENT
-2026-03-20 23:28:30 - Securing GET /public/notices
-2026-03-20 23:28:30 - Securing GET /public/settings
-2026-03-20 23:28:30 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:28:30 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:28:30 - Secured GET /public/notices
-2026-03-20 23:28:30 - Secured GET /public/settings
-2026-03-20 23:28:31 - Securing GET /public/settings
-2026-03-20 23:28:31 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:28:31 - Secured GET /public/settings
-2026-03-20 23:28:31 - Securing GET /public/landing-slides
-2026-03-20 23:28:31 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:28:31 - Secured GET /public/landing-slides
-2026-03-20 23:28:31 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-20 23:28:31 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-20 23:28:31 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:28:31 - Set SecurityContextHolder to anonymous SecurityContext
-2026-03-20 23:28:31 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
-2026-03-20 23:28:31 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
-2026-03-20 23:28:46 - Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-03-20 23:28:46 - HikariPool-1 - Shutdown initiated...
-2026-03-20 23:28:46 - HikariPool-1 - Shutdown completed.
+2026-03-26 12:05:10 - Starting SchoolManagementApplication using Java 17.0.13 with PID 55113 (/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/target/classes started by abishek in /Volumes/Macbook-1/Gurukul/React/Gurukul/backend)
+2026-03-26 12:05:10 - Running with Spring Boot v3.2.6, Spring v6.1.8
+2026-03-26 12:05:10 - No active profile set, falling back to 1 default profile: "default"
+2026-03-26 12:05:12 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-26 12:05:12 - Finished Spring Data repository scanning in 164 ms. Found 21 JPA repository interfaces.
+2026-03-26 12:05:13 - Tomcat initialized with port 8080 (http)
+2026-03-26 12:05:13 - Starting service [Tomcat]
+2026-03-26 12:05:13 - Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-03-26 12:05:13 - Initializing Spring embedded WebApplicationContext
+2026-03-26 12:05:13 - Root WebApplicationContext: initialization completed in 2395 ms
+2026-03-26 12:05:13 - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-26 12:05:13 - HikariPool-1 - Starting...
+2026-03-26 12:05:13 - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@c568f91
+2026-03-26 12:05:13 - HikariPool-1 - Start completed.
+2026-03-26 12:05:13 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-26 12:05:13 - HHH000412: Hibernate ORM core version 6.4.8.Final
+2026-03-26 12:05:13 - HHH000026: Second-level cache disabled
+2026-03-26 12:05:14 - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-26 12:05:14 - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-26 12:05:15 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-26 12:05:16 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-26 12:05:17 - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-26 12:05:19 - === AdminFacultyController INITIALIZED ===
+2026-03-26 12:05:19 - Controller mapped to: /admin/faculty
+2026-03-26 12:05:19 - Full URL will be: /api/admin/faculty (context-path adds /api)
+2026-03-26 12:05:19 - Available endpoints:
+2026-03-26 12:05:19 -   GET  /admin/faculty
+2026-03-26 12:05:19 -   GET  /admin/faculty/test
+2026-03-26 12:05:19 -   POST /admin/faculty
+2026-03-26 12:05:19 -   PUT  /admin/faculty/{id}/status
+2026-03-26 12:05:20 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4518ba8c, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4397952a, org.springframework.security.web.context.SecurityContextHolderFilter@154b3fba, org.springframework.security.web.header.HeaderWriterFilter@4fd727d7, org.springframework.web.filter.CorsFilter@4c740874, org.springframework.security.web.authentication.logout.LogoutFilter@2d0d357b, com.lms.security.JwtAuthenticationFilter@3b78c683, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1d0d4478, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@43918bef, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3796062b, org.springframework.security.web.session.SessionManagementFilter@7f256398, org.springframework.security.web.access.ExceptionTranslationFilter@6ffbae2e, org.springframework.security.web.access.intercept.AuthorizationFilter@65bc66bb]
+2026-03-26 12:05:20 - Tomcat started on port 8080 (http) with context path '/api'
+2026-03-26 12:05:20 - Started SchoolManagementApplication in 10.799 seconds (process running for 11.499)
+2026-03-26 12:07:59 - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-26 12:07:59 - Initializing Servlet 'dispatcherServlet'
+2026-03-26 12:07:59 - Completed initialization in 18 ms
+2026-03-26 12:07:59 - Securing GET /public/notices
+2026-03-26 12:07:59 - Securing GET /public/settings
+2026-03-26 12:07:59 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:07:59 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:07:59 - Secured GET /public/notices
+2026-03-26 12:07:59 - Secured GET /public/settings
+2026-03-26 12:08:00 - Securing GET /public/landing-slides
+2026-03-26 12:08:00 - Securing GET /public/settings
+2026-03-26 12:08:00 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:08:00 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:08:00 - Secured GET /public/settings
+2026-03-26 12:08:00 - Secured GET /public/landing-slides
+2026-03-26 12:08:00 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 12:08:00 - Securing GET /uploads/cca41756-477a-4d17-acd8-400d1c258c92.png
+2026-03-26 12:08:00 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 12:08:00 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:08:00 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:08:00 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:08:00 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 12:08:00 - Secured GET /uploads/cca41756-477a-4d17-acd8-400d1c258c92.png
+2026-03-26 12:08:00 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 12:08:04 - Securing GET /public/captcha
+2026-03-26 12:08:04 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:08:04 - Secured GET /public/captcha
+2026-03-26 12:08:11 - Securing POST /auth/login
+2026-03-26 12:08:11 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:08:11 - Secured POST /auth/login
+2026-03-26 12:08:12 - Securing GET /public/captcha
+2026-03-26 12:08:12 - Securing GET /admin/dashboard
+2026-03-26 12:08:12 - Securing GET /admin/dashboard/analytics
+2026-03-26 12:08:12 - Securing GET /uploads/ffb1d981-a349-48ca-83c0-e94dec07c943.png
+2026-03-26 12:08:12 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:08:12 - Secured GET /uploads/ffb1d981-a349-48ca-83c0-e94dec07c943.png
+2026-03-26 12:08:12 - Processing JWT for UserID: avishek070504
+2026-03-26 12:08:12 - Processing JWT for UserID: avishek070504
+2026-03-26 12:08:12 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:08:12 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:08:12 - Setting authentication for user: avishek070504
+2026-03-26 12:08:12 - Setting authentication for user: avishek070504
+2026-03-26 12:08:12 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:08:12 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:08:12 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:08:12 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:08:12 - Processing JWT for UserID: avishek070504
+2026-03-26 12:08:12 - Secured GET /admin/dashboard/analytics
+2026-03-26 12:08:12 - Secured GET /admin/dashboard
+2026-03-26 12:08:12 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:08:12 - Setting authentication for user: avishek070504
+2026-03-26 12:08:12 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:08:12 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:08:12 - Secured GET /public/captcha
+2026-03-26 12:08:12 - Securing GET /admin/activity-logs
+2026-03-26 12:08:12 - Processing JWT for UserID: avishek070504
+2026-03-26 12:08:12 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:08:12 - Setting authentication for user: avishek070504
+2026-03-26 12:08:12 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:08:12 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:08:12 - Secured GET /admin/activity-logs
+2026-03-26 12:08:14 - Securing GET /admin/settings
+2026-03-26 12:08:14 - Processing JWT for UserID: avishek070504
+2026-03-26 12:08:14 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:08:14 - Setting authentication for user: avishek070504
+2026-03-26 12:08:14 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:08:14 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:08:14 - Secured GET /admin/settings
+2026-03-26 12:08:16 - Securing GET /uploads/cca41756-477a-4d17-acd8-400d1c258c92.png
+2026-03-26 12:08:16 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:08:16 - Secured GET /uploads/cca41756-477a-4d17-acd8-400d1c258c92.png
+2026-03-26 12:08:33 - Securing POST /admin/settings/upload-image
+2026-03-26 12:08:33 - Processing JWT for UserID: avishek070504
+2026-03-26 12:08:33 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:08:33 - Setting authentication for user: avishek070504
+2026-03-26 12:08:33 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:08:33 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:08:33 - Secured POST /admin/settings/upload-image
+2026-03-26 12:08:33 - Securing GET /uploads/6b286682-c43b-44a1-a18e-1a0a29bb11bc.png
+2026-03-26 12:08:33 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:08:33 - Secured GET /uploads/6b286682-c43b-44a1-a18e-1a0a29bb11bc.png
+2026-03-26 12:09:55 - Securing POST /admin/settings/upload-image
+2026-03-26 12:09:55 - Processing JWT for UserID: avishek070504
+2026-03-26 12:09:55 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:09:55 - Setting authentication for user: avishek070504
+2026-03-26 12:09:55 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:09:55 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:09:55 - Secured POST /admin/settings/upload-image
+2026-03-26 12:09:56 - Securing GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 12:09:56 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:09:56 - Secured GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 12:10:01 - Securing POST /admin/settings
+2026-03-26 12:10:01 - Processing JWT for UserID: avishek070504
+2026-03-26 12:10:01 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:10:01 - Setting authentication for user: avishek070504
+2026-03-26 12:10:01 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:10:01 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:10:01 - Secured POST /admin/settings
+2026-03-26 12:10:01 - Securing POST /admin/settings
+2026-03-26 12:10:01 - Processing JWT for UserID: avishek070504
+2026-03-26 12:10:01 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:10:01 - Setting authentication for user: avishek070504
+2026-03-26 12:10:01 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:10:01 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:10:01 - Secured POST /admin/settings
+2026-03-26 12:10:01 - Securing POST /admin/settings
+2026-03-26 12:10:01 - Processing JWT for UserID: avishek070504
+2026-03-26 12:10:01 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:10:01 - Setting authentication for user: avishek070504
+2026-03-26 12:10:01 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:10:01 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:10:01 - Secured POST /admin/settings
+2026-03-26 12:10:01 - Securing POST /admin/settings
+2026-03-26 12:10:01 - Processing JWT for UserID: avishek070504
+2026-03-26 12:10:01 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:10:01 - Setting authentication for user: avishek070504
+2026-03-26 12:10:01 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:10:01 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:10:01 - Secured POST /admin/settings
+2026-03-26 12:10:08 - Securing GET /public/settings
+2026-03-26 12:10:08 - Securing GET /public/notices
+2026-03-26 12:10:08 - Securing GET /auth/profile
+2026-03-26 12:10:08 - Processing JWT for UserID: avishek070504
+2026-03-26 12:10:08 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Processing JWT for UserID: avishek070504
+2026-03-26 12:10:08 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Setting authentication for user: avishek070504
+2026-03-26 12:10:08 - Setting authentication for user: avishek070504
+2026-03-26 12:10:08 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Processing JWT for UserID: avishek070504
+2026-03-26 12:10:08 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Setting authentication for user: avishek070504
+2026-03-26 12:10:08 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Secured GET /public/notices
+2026-03-26 12:10:08 - Secured GET /auth/profile
+2026-03-26 12:10:08 - Secured GET /public/settings
+2026-03-26 12:10:08 - Securing GET /public/settings
+2026-03-26 12:10:08 - Processing JWT for UserID: avishek070504
+2026-03-26 12:10:08 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Setting authentication for user: avishek070504
+2026-03-26 12:10:08 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Secured GET /public/settings
+2026-03-26 12:10:08 - Securing GET /public/landing-slides
+2026-03-26 12:10:08 - Processing JWT for UserID: avishek070504
+2026-03-26 12:10:08 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Setting authentication for user: avishek070504
+2026-03-26 12:10:08 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:10:08 - Secured GET /public/landing-slides
+2026-03-26 12:10:08 - Securing GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 12:10:08 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:10:08 - Secured GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 12:10:09 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 12:10:09 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:10:09 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 12:10:09 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 12:10:09 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:10:09 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 12:12:34 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 12:12:34 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:12:34 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 12:12:45 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 12:12:45 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:12:45 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 12:13:32 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 12:13:32 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 12:13:32 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 12:14:51 - Securing GET /public/notices
+2026-03-26 12:14:51 - Securing GET /public/settings
+2026-03-26 12:14:51 - Processing JWT for UserID: avishek070504
+2026-03-26 12:14:51 - Processing JWT for UserID: avishek070504
+2026-03-26 12:14:51 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:14:51 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:14:51 - Setting authentication for user: avishek070504
+2026-03-26 12:14:51 - Setting authentication for user: avishek070504
+2026-03-26 12:14:51 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:14:51 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:14:51 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:14:51 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:14:51 - Secured GET /public/settings
+2026-03-26 12:14:51 - Secured GET /public/notices
+2026-03-26 12:15:28 - Securing GET /public/notices
+2026-03-26 12:15:28 - Securing GET /public/settings
+2026-03-26 12:15:28 - Processing JWT for UserID: avishek070504
+2026-03-26 12:15:28 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:15:28 - Processing JWT for UserID: avishek070504
+2026-03-26 12:15:28 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-03-26 12:15:28 - Setting authentication for user: avishek070504
+2026-03-26 12:15:28 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:15:28 - Setting authentication for user: avishek070504
+2026-03-26 12:15:28 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-03-26 12:15:28 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:15:28 - Authenticated user: avishek070504, Authorities: [ROLE_ADMIN]
+2026-03-26 12:15:28 - Secured GET /public/notices
+2026-03-26 12:15:28 - Secured GET /public/settings
+2026-03-26 12:18:33 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-03-26 12:18:33 - HikariPool-1 - Shutdown initiated...
+2026-03-26 12:18:33 - HikariPool-1 - Shutdown completed.
+2026-03-26 14:09:34 - Starting SchoolManagementApplication using Java 17.0.13 with PID 2038 (/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/target/classes started by abishek in /Volumes/Macbook-1/Gurukul/React/Gurukul/backend)
+2026-03-26 14:09:34 - Running with Spring Boot v3.2.6, Spring v6.1.8
+2026-03-26 14:09:34 - No active profile set, falling back to 1 default profile: "default"
+2026-03-26 14:09:35 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-26 14:09:36 - Finished Spring Data repository scanning in 183 ms. Found 21 JPA repository interfaces.
+2026-03-26 14:09:37 - Tomcat initialized with port 8080 (http)
+2026-03-26 14:09:37 - Starting service [Tomcat]
+2026-03-26 14:09:37 - Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-03-26 14:09:37 - Initializing Spring embedded WebApplicationContext
+2026-03-26 14:09:37 - Root WebApplicationContext: initialization completed in 3028 ms
+2026-03-26 14:09:37 - Filter 'jwtAuthenticationFilter' configured for use
+2026-03-26 14:09:37 - HikariPool-1 - Starting...
+2026-03-26 14:09:38 - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@794240e2
+2026-03-26 14:09:38 - HikariPool-1 - Start completed.
+2026-03-26 14:09:38 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-03-26 14:09:38 - HHH000412: Hibernate ORM core version 6.4.8.Final
+2026-03-26 14:09:38 - HHH000026: Second-level cache disabled
+2026-03-26 14:09:38 - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-26 14:09:38 - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-26 14:09:40 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-26 14:09:41 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-26 14:09:42 - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-26 14:09:43 - === AdminFacultyController INITIALIZED ===
+2026-03-26 14:09:43 - Controller mapped to: /admin/faculty
+2026-03-26 14:09:43 - Full URL will be: /api/admin/faculty (context-path adds /api)
+2026-03-26 14:09:43 - Available endpoints:
+2026-03-26 14:09:43 -   GET  /admin/faculty
+2026-03-26 14:09:43 -   GET  /admin/faculty/test
+2026-03-26 14:09:43 -   POST /admin/faculty
+2026-03-26 14:09:43 -   PUT  /admin/faculty/{id}/status
+2026-03-26 14:09:44 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4e260e04, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3c199e06, org.springframework.security.web.context.SecurityContextHolderFilter@6ffbae2e, org.springframework.security.web.header.HeaderWriterFilter@3de9a4f4, org.springframework.web.filter.CorsFilter@4f3b5c60, org.springframework.security.web.authentication.logout.LogoutFilter@343418b2, com.lms.security.JwtAuthenticationFilter@33e0c716, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4fd727d7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@24e95bd4, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@23bc053c, org.springframework.security.web.session.SessionManagementFilter@6c4fee11, org.springframework.security.web.access.ExceptionTranslationFilter@52b23f41, org.springframework.security.web.access.intercept.AuthorizationFilter@3ce9c492]
+2026-03-26 14:09:45 - Tomcat started on port 8080 (http) with context path '/api'
+2026-03-26 14:09:45 - Started SchoolManagementApplication in 12.017 seconds (process running for 12.969)
+2026-03-26 14:09:54 - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-26 14:09:54 - Initializing Servlet 'dispatcherServlet'
+2026-03-26 14:09:54 - Completed initialization in 5 ms
+2026-03-26 14:09:54 - Securing GET /public/notices
+2026-03-26 14:09:54 - Securing GET /public/settings
+2026-03-26 14:09:54 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:09:54 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:09:54 - Secured GET /public/settings
+2026-03-26 14:09:54 - Secured GET /public/notices
+2026-03-26 14:09:54 - Securing GET /public/settings
+2026-03-26 14:09:54 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:09:54 - Secured GET /public/settings
+2026-03-26 14:09:54 - Securing GET /public/landing-slides
+2026-03-26 14:09:54 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:09:54 - Secured GET /public/landing-slides
+2026-03-26 14:09:54 - Securing GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:09:55 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:09:55 - Secured GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:09:55 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 14:09:55 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:09:55 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 14:09:55 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:09:55 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:09:55 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:12:17 - Securing GET /public/notices
+2026-03-26 14:12:17 - Securing GET /public/settings
+2026-03-26 14:12:17 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:12:17 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:12:17 - Secured GET /public/notices
+2026-03-26 14:12:17 - Secured GET /public/settings
+2026-03-26 14:12:29 - Securing GET /public/settings
+2026-03-26 14:12:29 - Securing GET /public/notices
+2026-03-26 14:12:29 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:12:29 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:12:29 - Secured GET /public/settings
+2026-03-26 14:12:29 - Secured GET /public/notices
+2026-03-26 14:13:14 - Securing GET /public/settings
+2026-03-26 14:13:14 - Securing GET /public/notices
+2026-03-26 14:13:14 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:13:14 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:13:14 - Secured GET /public/settings
+2026-03-26 14:13:14 - Secured GET /public/notices
+2026-03-26 14:13:19 - Securing GET /public/settings
+2026-03-26 14:13:19 - Securing GET /public/notices
+2026-03-26 14:13:19 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:13:19 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:13:19 - Secured GET /public/notices
+2026-03-26 14:13:19 - Secured GET /public/settings
+2026-03-26 14:13:20 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:13:20 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:13:20 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:13:20 - Securing GET /public/settings
+2026-03-26 14:13:20 - Securing GET /public/notices
+2026-03-26 14:13:21 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:13:21 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:13:21 - Secured GET /public/settings
+2026-03-26 14:13:21 - Secured GET /public/notices
+2026-03-26 14:13:29 - Securing GET /public/notices
+2026-03-26 14:13:29 - Securing GET /public/settings
+2026-03-26 14:13:29 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:13:29 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:13:29 - Secured GET /public/settings
+2026-03-26 14:13:29 - Secured GET /public/notices
+2026-03-26 14:13:30 - Securing GET /public/settings
+2026-03-26 14:13:30 - Securing GET /public/notices
+2026-03-26 14:13:30 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:13:30 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:13:30 - Secured GET /public/settings
+2026-03-26 14:13:30 - Secured GET /public/notices
+2026-03-26 14:13:35 - Securing GET /public/settings
+2026-03-26 14:13:35 - Securing GET /public/notices
+2026-03-26 14:13:35 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:13:35 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:13:35 - Secured GET /public/settings
+2026-03-26 14:13:35 - Secured GET /public/notices
+2026-03-26 14:13:44 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:13:44 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:13:44 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:13:44 - Cannot set user authentication: java.io.IOException: Broken pipe
+2026-03-26 14:13:44 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:15:33 - Securing GET /public/notices
+2026-03-26 14:15:33 - Securing GET /public/settings
+2026-03-26 14:15:33 - Securing GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:15:33 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:15:33 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:15:33 - Secured GET /public/settings
+2026-03-26 14:15:33 - Secured GET /public/notices
+2026-03-26 14:15:33 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:15:33 - Secured GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:15:37 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:15:37 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:15:37 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:15:58 - Securing GET /public/notices
+2026-03-26 14:15:58 - Securing GET /public/settings
+2026-03-26 14:15:58 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:15:58 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:15:58 - Secured GET /public/notices
+2026-03-26 14:15:58 - Secured GET /public/settings
+2026-03-26 14:15:58 - Securing GET /public/settings
+2026-03-26 14:15:58 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:15:58 - Secured GET /public/settings
+2026-03-26 14:15:58 - Securing GET /public/landing-slides
+2026-03-26 14:15:58 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:15:58 - Secured GET /public/landing-slides
+2026-03-26 14:15:59 - Securing GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:15:59 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:15:59 - Secured GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:15:59 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 14:15:59 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:15:59 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 14:15:59 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:15:59 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:15:59 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:16:01 - Securing GET /public/notices
+2026-03-26 14:16:01 - Securing GET /public/settings
+2026-03-26 14:16:01 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:16:01 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:16:01 - Secured GET /public/settings
+2026-03-26 14:16:01 - Secured GET /public/notices
+2026-03-26 14:16:01 - Securing GET /public/settings
+2026-03-26 14:16:01 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:16:01 - Secured GET /public/settings
+2026-03-26 14:16:02 - Securing GET /public/landing-slides
+2026-03-26 14:16:02 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:16:02 - Secured GET /public/landing-slides
+2026-03-26 14:16:02 - Securing GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:16:02 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:16:02 - Secured GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:16:02 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 14:16:02 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:16:02 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:16:02 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:16:02 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 14:16:02 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:17:01 - Securing GET /public/notices
+2026-03-26 14:17:01 - Securing GET /public/settings
+2026-03-26 14:17:01 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:17:01 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:17:01 - Secured GET /public/notices
+2026-03-26 14:17:01 - Secured GET /public/settings
+2026-03-26 14:19:36 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:19:36 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:19:36 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:24:24 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:24:24 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:24:24 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:26:04 - Securing GET /public/notices
+2026-03-26 14:26:04 - Securing GET /public/settings
+2026-03-26 14:26:04 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:26:04 - Secured GET /public/settings
+2026-03-26 14:26:04 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:26:04 - Secured GET /public/notices
+2026-03-26 14:26:07 - Securing GET /public/notices
+2026-03-26 14:26:07 - Securing GET /public/settings
+2026-03-26 14:26:07 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:26:07 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:26:07 - Secured GET /public/settings
+2026-03-26 14:26:07 - Secured GET /public/notices
+2026-03-26 14:26:11 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:26:11 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:26:11 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:26:18 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:26:18 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:26:18 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:26:59 - Securing GET /public/notices
+2026-03-26 14:26:59 - Securing GET /public/settings
+2026-03-26 14:26:59 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:26:59 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:26:59 - Secured GET /public/notices
+2026-03-26 14:26:59 - Secured GET /public/settings
+2026-03-26 14:27:01 - Securing GET /public/settings
+2026-03-26 14:27:01 - Securing GET /public/notices
+2026-03-26 14:27:01 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:27:01 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:27:01 - Secured GET /public/settings
+2026-03-26 14:27:01 - Secured GET /public/notices
+2026-03-26 14:27:01 - Securing GET /public/settings
+2026-03-26 14:27:01 - Securing GET /public/notices
+2026-03-26 14:27:01 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:27:01 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:27:01 - Secured GET /public/notices
+2026-03-26 14:27:01 - Secured GET /public/settings
+2026-03-26 14:28:57 - Securing GET /public/notices
+2026-03-26 14:28:57 - Securing GET /public/settings
+2026-03-26 14:28:57 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:28:57 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:28:57 - Secured GET /public/settings
+2026-03-26 14:28:57 - Secured GET /public/notices
+2026-03-26 14:28:57 - Securing GET /public/settings
+2026-03-26 14:28:57 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:28:57 - Secured GET /public/settings
+2026-03-26 14:28:57 - Securing GET /public/landing-slides
+2026-03-26 14:28:57 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:28:57 - Secured GET /public/landing-slides
+2026-03-26 14:28:57 - Securing GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:28:57 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:28:57 - Secured GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:28:58 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 14:28:58 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:28:58 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 14:28:58 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:28:58 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:28:58 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:29:36 - Securing GET /public/settings
+2026-03-26 14:29:36 - Securing GET /public/notices
+2026-03-26 14:29:36 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:29:36 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:29:36 - Secured GET /public/notices
+2026-03-26 14:29:36 - Secured GET /public/settings
+2026-03-26 14:29:36 - Securing GET /public/settings
+2026-03-26 14:29:36 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:29:36 - Secured GET /public/settings
+2026-03-26 14:29:36 - Securing GET /public/landing-slides
+2026-03-26 14:29:36 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:29:36 - Secured GET /public/landing-slides
+2026-03-26 14:29:36 - Securing GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:29:36 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:29:36 - Secured GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:29:36 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 14:29:36 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:29:36 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 14:29:36 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:29:36 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:29:36 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:30:02 - Securing GET /public/settings
+2026-03-26 14:30:02 - Securing GET /public/notices
+2026-03-26 14:30:02 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:30:02 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:30:02 - Secured GET /public/notices
+2026-03-26 14:30:02 - Secured GET /public/settings
+2026-03-26 14:30:02 - Securing GET /public/settings
+2026-03-26 14:30:02 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:30:02 - Secured GET /public/settings
+2026-03-26 14:30:02 - Securing GET /public/landing-slides
+2026-03-26 14:30:02 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:30:02 - Secured GET /public/landing-slides
+2026-03-26 14:30:02 - Securing GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:30:02 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:30:02 - Secured GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:30:02 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 14:30:02 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:30:02 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 14:30:02 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:30:02 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:30:02 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:53:54 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:53:54 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:53:54 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:56:11 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:56:11 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:56:11 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:57:44 - Securing GET /public/notices
+2026-03-26 14:57:44 - Securing GET /public/settings
+2026-03-26 14:57:44 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:57:44 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:57:44 - Secured GET /public/notices
+2026-03-26 14:57:44 - Secured GET /public/settings
+2026-03-26 14:57:50 - Securing GET /public/settings
+2026-03-26 14:57:50 - Securing GET /public/notices
+2026-03-26 14:57:50 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:57:50 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:57:50 - Secured GET /public/settings
+2026-03-26 14:57:50 - Secured GET /public/notices
+2026-03-26 14:57:50 - Securing GET /public/settings
+2026-03-26 14:57:50 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:57:50 - Securing GET /public/landing-slides
+2026-03-26 14:57:50 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:57:50 - Secured GET /public/landing-slides
+2026-03-26 14:57:50 - Secured GET /public/settings
+2026-03-26 14:57:50 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 14:57:50 - Securing GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:57:50 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:57:50 - Secured GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 14:57:50 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:57:50 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 14:57:50 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:57:50 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:57:50 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 14:58:04 - Securing GET /public/settings
+2026-03-26 14:58:04 - Securing GET /public/notices
+2026-03-26 14:58:04 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:58:04 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:58:04 - Secured GET /public/notices
+2026-03-26 14:58:04 - Secured GET /public/settings
+2026-03-26 14:58:05 - Securing GET /public/notices
+2026-03-26 14:58:05 - Securing GET /public/settings
+2026-03-26 14:58:05 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:58:05 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 14:58:05 - Secured GET /public/notices
+2026-03-26 14:58:05 - Secured GET /public/settings
+2026-03-26 15:00:16 - Securing GET /public/notices
+2026-03-26 15:00:16 - Securing GET /public/settings
+2026-03-26 15:00:16 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:00:16 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:00:16 - Secured GET /public/settings
+2026-03-26 15:00:16 - Secured GET /public/notices
+2026-03-26 15:00:52 - Securing GET /public/settings
+2026-03-26 15:00:52 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:00:52 - Secured GET /public/settings
+2026-03-26 15:01:16 - Securing GET /public/notices
+2026-03-26 15:01:16 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:01:16 - Secured GET /public/notices
+2026-03-26 15:01:19 - Securing GET /public/faculty
+2026-03-26 15:01:19 - Securing GET /public/settings
+2026-03-26 15:01:19 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:01:19 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:01:19 - Secured GET /public/settings
+2026-03-26 15:01:19 - Secured GET /public/faculty
+2026-03-26 15:01:19 - Securing GET /uploads/f11afb05-7fc9-4fd4-be7e-78888e02853d.png
+2026-03-26 15:01:19 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:01:19 - Secured GET /uploads/f11afb05-7fc9-4fd4-be7e-78888e02853d.png
+2026-03-26 15:02:28 - Securing GET /public/settings
+2026-03-26 15:02:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:02:28 - Secured GET /public/settings
+2026-03-26 15:02:28 - Securing GET /public/landing-slides
+2026-03-26 15:02:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:02:28 - Secured GET /public/landing-slides
+2026-03-26 15:02:28 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:02:28 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 15:02:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:02:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:02:28 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:02:28 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 15:02:28 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:02:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:02:28 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:02:28 - Cannot set user authentication: java.io.IOException: Broken pipe
+2026-03-26 15:02:28 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:02:28 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:02:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:02:28 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:04:28 - Securing GET /public/notices
+2026-03-26 15:04:28 - Securing GET /public/settings
+2026-03-26 15:04:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:04:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:04:28 - Secured GET /public/notices
+2026-03-26 15:04:28 - Secured GET /public/settings
+2026-03-26 15:04:28 - Securing GET /public/settings
+2026-03-26 15:04:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:04:28 - Secured GET /public/settings
+2026-03-26 15:04:28 - Securing GET /public/landing-slides
+2026-03-26 15:04:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:04:28 - Secured GET /public/landing-slides
+2026-03-26 15:04:28 - Securing GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 15:04:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:04:28 - Secured GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 15:04:28 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 15:04:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:04:28 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 15:04:28 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:04:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:04:28 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:05:23 - Securing GET /public/settings
+2026-03-26 15:05:23 - Securing GET /public/notices
+2026-03-26 15:05:23 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:05:23 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:05:23 - Secured GET /public/notices
+2026-03-26 15:05:23 - Secured GET /public/settings
+2026-03-26 15:06:09 - Securing GET /public/notices
+2026-03-26 15:06:09 - Securing GET /public/settings
+2026-03-26 15:06:09 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:09 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:09 - Secured GET /public/notices
+2026-03-26 15:06:09 - Secured GET /public/settings
+2026-03-26 15:06:09 - Securing GET /public/settings
+2026-03-26 15:06:09 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:09 - Secured GET /public/settings
+2026-03-26 15:06:09 - Securing GET /public/landing-slides
+2026-03-26 15:06:09 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:09 - Secured GET /public/landing-slides
+2026-03-26 15:06:09 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 15:06:09 - Securing GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 15:06:09 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:09 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 15:06:09 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:09 - Secured GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 15:06:09 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:06:09 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:09 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:06:26 - Securing GET /public/settings
+2026-03-26 15:06:26 - Securing GET /public/notices
+2026-03-26 15:06:26 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:26 - Secured GET /public/settings
+2026-03-26 15:06:26 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:26 - Secured GET /public/notices
+2026-03-26 15:06:30 - Securing GET /public/notices
+2026-03-26 15:06:30 - Securing GET /public/settings
+2026-03-26 15:06:30 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:30 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:30 - Secured GET /public/settings
+2026-03-26 15:06:30 - Secured GET /public/notices
+2026-03-26 15:06:32 - Securing GET /public/notices
+2026-03-26 15:06:32 - Securing GET /public/settings
+2026-03-26 15:06:32 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:32 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:32 - Secured GET /public/notices
+2026-03-26 15:06:32 - Secured GET /public/settings
+2026-03-26 15:06:33 - Securing GET /public/notices
+2026-03-26 15:06:33 - Securing GET /public/settings
+2026-03-26 15:06:33 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:33 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:33 - Secured GET /public/settings
+2026-03-26 15:06:33 - Secured GET /public/notices
+2026-03-26 15:06:47 - Securing GET /public/notices
+2026-03-26 15:06:47 - Securing GET /public/settings
+2026-03-26 15:06:47 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:47 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:47 - Secured GET /public/settings
+2026-03-26 15:06:47 - Secured GET /public/notices
+2026-03-26 15:06:51 - Securing GET /public/settings
+2026-03-26 15:06:51 - Securing GET /public/notices
+2026-03-26 15:06:51 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:51 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:51 - Secured GET /public/settings
+2026-03-26 15:06:51 - Secured GET /public/notices
+2026-03-26 15:06:52 - Securing GET /public/settings
+2026-03-26 15:06:52 - Securing GET /public/notices
+2026-03-26 15:06:52 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:52 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:06:52 - Secured GET /public/notices
+2026-03-26 15:06:52 - Secured GET /public/settings
+2026-03-26 15:07:23 - Securing GET /public/notices
+2026-03-26 15:07:23 - Securing GET /public/settings
+2026-03-26 15:07:23 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:07:23 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:07:23 - Secured GET /public/notices
+2026-03-26 15:07:23 - Secured GET /public/settings
+2026-03-26 15:07:23 - Securing GET /public/settings
+2026-03-26 15:07:23 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:07:23 - Secured GET /public/settings
+2026-03-26 15:07:23 - Securing GET /public/landing-slides
+2026-03-26 15:07:23 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:07:23 - Secured GET /public/landing-slides
+2026-03-26 15:07:23 - Securing GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 15:07:23 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:07:23 - Secured GET /uploads/fc4c942b-188c-47fe-bfdb-ae3326d52c68.svg
+2026-03-26 15:07:23 - Securing GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 15:07:23 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:07:23 - Secured GET /uploads/ff6e439b-a678-42ce-b046-8fa483e2f77d.jpg
+2026-03-26 15:07:23 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:07:23 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:07:23 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:09:35 - Securing GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4
+2026-03-26 15:09:35 - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-26 15:09:35 - Secured GET /uploads/bd2b1d0d-b41f-47eb-bc5d-94055c148e80.mp4

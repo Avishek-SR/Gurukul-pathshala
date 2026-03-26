@@ -157,9 +157,6 @@ const LoginPage = () => {
         <div className="login-form-container">
           <div className="login-header">
             <div className="gurukul-brand">
-              <div className="gurukul-logo">
-                <i className="fas fa-atom fa-2x"></i>
-              </div>
               <div className="gurukul-text">
                 <h1>GURUKUL</h1>
                 <p>Pathshala</p>

@@ -89,14 +89,12 @@ export default function MainLayout({ children }) {
         <div className="main-layout-logo-section">
           <Link to="/" className="main-layout-logo-link" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: 'inherit' }}>
             <div className="main-layout-logo">
-              {settings.site_logo ? (
-                <img 
-                  src={settings.site_logo.startsWith('http') ? settings.site_logo : `${(import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')}${settings.site_logo}`} 
-                  alt="Logo" 
-                  style={{ width: '40px', height: '40px', objectFit: 'contain' }} 
+              {settings.site_logo && (
+                <img
+                  src={settings.site_logo.startsWith('http') ? settings.site_logo : `${(import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')}${settings.site_logo}`}
+                  alt="Logo"
+                  style={{ width: '90px', height: '90px', objectFit: 'contain', display: 'block' }}
                 />
-              ) : (
-                <i className="fas fa-atom"></i>
               )}
             </div>
             <span className="main-layout-title">{settings.site_name || settings.site_logo_text}</span>
@@ -236,14 +234,12 @@ export default function MainLayout({ children }) {
           <div className="main-layout-footer-content">
             <div className="main-layout-footer-brand">
               <div className="main-layout-footer-logo">
-                {settings.site_logo ? (
-                  <img 
-                    src={settings.site_logo.startsWith('http') ? settings.site_logo : `${(import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')}${settings.site_logo}`} 
-                    alt="Logo" 
-                    style={{ width: '50px', height: '50px', objectFit: 'contain', marginBottom: '10px' }} 
+                {settings.site_logo && (
+                  <img
+                    src={settings.site_logo.startsWith('http') ? settings.site_logo : `${(import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')}${settings.site_logo}`}
+                    alt="Logo"
+                    style={{ width: '120px', height: '120px', objectFit: 'contain', display: 'block' }}
                   />
-                ) : (
-                  <i className="fas fa-atom"></i>
                 )}
               </div>
               <h3>{(settings.site_name || settings.site_logo_text).toUpperCase()}</h3>
