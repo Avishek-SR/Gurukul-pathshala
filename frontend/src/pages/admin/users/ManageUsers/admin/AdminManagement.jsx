@@ -5,6 +5,7 @@ import EditAdminForm from './components/EditAdminForm';
 import BulkUploadModal from '../../../../../components/BulkUploadModal';
 import PermissionsModal from './components/PermissionsModal';
 import './AdminManagement.css';
+import api from '../../../../../services/api';
 
 const AdminManagement = ({ currentUser }) => {
     const [admins, setAdmins] = useState([]);
@@ -23,14 +24,8 @@ const AdminManagement = ({ currentUser }) => {
     const fetchAdmins = async () => {
         setLoading(true);
         try {
-            const token = sessionStorage.getItem('token');
-            const response = await fetch('/api/admin/users/role/ADMIN', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setAdmins(data);
-            }
+            const data = await api.get('/admin/users/role/ADMIN').then(r => r.data);
+            setAdmins(data);
         } catch (error) {
             console.error('Error fetching admins:', error);
         } finally {
@@ -49,11 +44,7 @@ const AdminManagement = ({ currentUser }) => {
     const handleDeleteAdmin = async (adminId) => {
         if (window.confirm('Are you sure you want to delete this admin?')) {
             try {
-                const token = sessionStorage.getItem('token');
-                await fetch(`/api/admin/users/${adminId}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
+                await api.delete(`/admin/users/${adminId}`);
                 fetchAdmins();
             } catch (error) {
                 console.error('Error deleting admin:', error);
@@ -64,19 +55,9 @@ const AdminManagement = ({ currentUser }) => {
 
     const handleAddAdmin = async (adminData) => {
         try {
-            const token = sessionStorage.getItem('token');
-            const response = await fetch('/api/admin/users', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ ...adminData, role: 'ADMIN' })
-            });
-            if (response.ok) {
-                fetchAdmins();
-                setShowAddForm(false);
-            }
+            await api.post('/admin/users', { ...adminData, role: 'ADMIN' });
+            fetchAdmins();
+            setShowAddForm(false);
         } catch (error) {
             console.error('Error adding admin:', error);
             alert('Failed to add admin');
@@ -85,14 +66,7 @@ const AdminManagement = ({ currentUser }) => {
 
     const handleStatusChange = async (adminId, currentStatus) => {
         try {
-            const token = sessionStorage.getItem('token');
-            await fetch(
-                `/api/admin/users/${adminId}/status?active=${!currentStatus}`,
-                {
-                    method: 'PUT',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                }
-            );
+            await api.put(`/admin/users/${adminId}/status?active=${!currentStatus}`);
             fetchAdmins();
         } catch (error) {
             console.error('Error updating status:', error);
@@ -106,19 +80,10 @@ const AdminManagement = ({ currentUser }) => {
         formData.append('role', 'ADMIN');
 
         try {
-            const token = sessionStorage.getItem('token');
-            const response = await fetch('/api/admin/users/bulk-upload', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
+            await api.post('/admin/users/bulk-upload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
             });
-            if (response.ok) {
-                fetchAdmins();
-            } else {
-                throw new Error('Upload failed');
-            }
+            fetchAdmins();
         } catch (error) {
             console.error('Upload failed', error);
             throw new Error('Upload failed');
@@ -128,11 +93,7 @@ const AdminManagement = ({ currentUser }) => {
     const handleResetPassword = async (adminId) => {
         if (window.confirm('Are you sure you want to reset the password to default (FirstName@ddMM)?')) {
             try {
-                const token = sessionStorage.getItem('token');
-                await fetch(`/api/admin/users/${adminId}/reset-password`, {
-                    method: 'PUT',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
+                await api.put(`/admin/users/${adminId}/reset-password`);
                 alert('Password reset successfully');
             } catch (error) {
                 console.error('Error resetting password:', error);
@@ -153,15 +114,7 @@ const AdminManagement = ({ currentUser }) => {
 
     const handleSavePermissions = async (adminId, permissions) => {
         try {
-            const token = sessionStorage.getItem('token');
-            await fetch(`/api/admin/users/${adminId}/permissions`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(permissions)
-            });
+            await api.put(`/admin/users/${adminId}/permissions`, permissions);
             fetchAdmins(); // Refresh list to see updates
             alert('Permissions updated successfully');
         } catch (error) {
@@ -172,15 +125,7 @@ const AdminManagement = ({ currentUser }) => {
 
     const handleUpdateAdmin = async (updatedData) => {
         try {
-            const token = sessionStorage.getItem('token');
-            await fetch(`/api/admin/users/${updatedData.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updatedData)
-            });
+            await api.put(`/admin/users/${updatedData.id}`, updatedData);
             fetchAdmins();
             setShowEditForm(false);
         } catch (error) {
@@ -198,22 +143,15 @@ const AdminManagement = ({ currentUser }) => {
 
     const handleExport = async () => {
         try {
-            const token = sessionStorage.getItem('token');
-            const response = await fetch('/api/admin/export/users?role=ADMIN', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-
-            if (response.ok) {
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'admin_users.xlsx';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
-            }
+            const response = await api.get('/admin/export/users?role=ADMIN', { responseType: 'blob' });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'admin_users.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
         } catch (error) {
             console.error('Export failed:', error);
             alert('Export failed');

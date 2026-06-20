@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import '../../student/StudentManagement.css'; // Reusing student styles for consistency
 import ActivityTimeline from '../../../../../../components/ActivityTimeline';
+import api, { getImageUrl } from '../../../../../../services/api';
 
 const FacultyProfile = ({ faculty, isOpen, onClose }) => {
     const fileInputRef = useRef(null);
@@ -20,41 +21,25 @@ const FacultyProfile = ({ faculty, isOpen, onClose }) => {
         uploadData.append('file', file);
 
         try {
-            const token = sessionStorage.getItem('token');
-            const response = await fetch('/api/files/upload', {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
-                body: uploadData
+            const uploadResult = await api.post('/files/upload', uploadData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            }).then(r => r.data);
+
+            const newProfileUrl = uploadResult.fileUrl;
+
+            await api.put(`/admin/users/${currentFaculty.id}`, {
+                ...currentFaculty,
+                profilePictureUrl: newProfileUrl
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                const newProfileUrl = data.fileUrl;
-
-                await fetch(`/api/admin/users/${currentFaculty.id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        ...currentFaculty,
-                        profilePictureUrl: newProfileUrl
-                    })
-                });
-
-                setCurrentFaculty(prev => ({ ...prev, profilePictureUrl: newProfileUrl }));
-            }
-
+            setCurrentFaculty(prev => ({ ...prev, profilePictureUrl: newProfileUrl }));
         } catch (error) {
             console.error('Error uploading file:', error);
             alert('Error handling file upload.');
         }
     };
 
-    const profileSrc = currentFaculty.profilePictureUrl
-        ? `${currentFaculty.profilePictureUrl}`
-        : null;
+    const profileSrc = getImageUrl(currentFaculty.profilePictureUrl);
 
     return (
         <div className="student-modal-overlay">

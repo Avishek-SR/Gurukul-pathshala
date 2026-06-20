@@ -12,6 +12,7 @@ import EditStudentForm from './components/EditStudentForm';
 import StudentProfile from './components/StudentProfile';
 import FaceRegistrationModal from './components/FaceRegistrationModal';
 import BulkUploadModal from '../../../../../components/BulkUploadModal';
+import api from '../../../../../services/api';
 
 const StudentManagement = ({ currentUser }) => {
   // Data State
@@ -40,14 +41,8 @@ const StudentManagement = ({ currentUser }) => {
   const fetchStudents = async () => {
     setLoading(true);
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch('/api/admin/users/role/STUDENT', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setStudents(data);
-      }
+      const data = await api.get('/admin/users/role/STUDENT').then(r => r.data);
+      setStudents(data);
     } catch (error) {
       console.error('Error fetching students:', error);
     } finally {
@@ -95,19 +90,9 @@ const StudentManagement = ({ currentUser }) => {
   // Handlers
   const handleAddStudent = async (studentData) => {
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch('/api/admin/users', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ ...studentData, role: 'STUDENT' })
-      });
-      if (response.ok) {
-        fetchStudents();
-        setShowAddForm(false);
-      }
+      await api.post('/admin/users', { ...studentData, role: 'STUDENT' });
+      fetchStudents();
+      setShowAddForm(false);
     } catch (error) {
       console.error('Error adding student:', error);
     }
@@ -126,14 +111,7 @@ const StudentManagement = ({ currentUser }) => {
       };
 
       const token = sessionStorage.getItem('token');
-      await fetch(`/api/admin/users/${updatedStudent.id}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
+      await api.put(`/admin/users/${updatedStudent.id}`, payload);
       setShowEditForm(false);
       fetchStudents();
     } catch (error) {
@@ -146,10 +124,7 @@ const StudentManagement = ({ currentUser }) => {
     if (window.confirm('Are you sure you want to delete this student?')) {
       try {
         const token = sessionStorage.getItem('token');
-        await fetch(`/api/admin/users/${studentId}`, {
-          method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        await api.delete(`/admin/users/${studentId}`);
         fetchStudents();
       } catch (error) {
         console.error('Error deleting student:', error);
@@ -160,10 +135,7 @@ const StudentManagement = ({ currentUser }) => {
   const handleStatusChange = async (studentId, currentStatus) => {
     try {
       const token = sessionStorage.getItem('token');
-      await fetch(`/api/admin/users/${studentId}/status?active=${!currentStatus}`, {
-        method: 'PUT',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      await api.put(`/admin/users/${studentId}/status?active=${!currentStatus}`);
       fetchStudents();
     } catch (error) {
       console.error('Error updating status:', error);
@@ -173,11 +145,7 @@ const StudentManagement = ({ currentUser }) => {
   const handleResetPassword = async (studentId) => {
     if (window.confirm('Are you sure you want to reset the password to default (FirstName@ddMM)?')) {
       try {
-        const token = sessionStorage.getItem('token');
-        await fetch(`/api/admin/users/${studentId}/reset-password`, {
-          method: 'PUT',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        await api.put(`/admin/users/${studentId}/reset-password`);
         alert('Password reset successfully');
       } catch (error) {
         console.error('Error resetting password:', error);
@@ -191,32 +159,24 @@ const StudentManagement = ({ currentUser }) => {
     formData.append('file', file);
     formData.append('role', 'STUDENT');
 
-    const token = sessionStorage.getItem('token');
-    await fetch('/api/admin/users/bulk-upload', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` },
-      body: formData
+    await api.post('/admin/users/bulk-upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
     });
     fetchStudents();
   };
 
   const handleExport = async () => {
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch('/api/admin/export/users?role=STUDENT', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'students.xlsx';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-      }
+      const response = await api.get('/admin/export/users?role=STUDENT', { responseType: 'blob' });
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'students.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Export failed:', error);
       alert('Export failed');

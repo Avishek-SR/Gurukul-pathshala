@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import '../StudentManagement.css';
 import ActivityTimeline from '../../../../../../components/ActivityTimeline';
+import api, { getImageUrl } from '../../../../../../services/api';
 
 const StudentProfile = ({ student, isOpen, onClose }) => {
     const fileInputRef = useRef(null);
@@ -22,45 +23,27 @@ const StudentProfile = ({ student, isOpen, onClose }) => {
         uploadData.append('file', file);
 
         try {
-            const token = sessionStorage.getItem('token');
-            const response = await fetch('/api/files/upload', {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
-                body: uploadData
+            const uploadResult = await api.post('/files/upload', uploadData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            }).then(r => r.data);
+
+            const newProfileUrl = uploadResult.fileUrl;
+
+            // 1. Update backend user record
+            await api.put(`/admin/users/${currentStudent.id}`, {
+                ...currentStudent,
+                profilePictureUrl: newProfileUrl
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                const newProfileUrl = data.fileUrl;
-
-                // 1. Update backend user record
-                // Use PUT to update the user with new profile picture URL
-                const updateRes = await fetch(`/api/admin/users/${currentStudent.id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        ...currentStudent,
-                        profilePictureUrl: newProfileUrl
-                    })
-                });
-
-                if (updateRes.ok) {
-                    // 2. Update local UI
-                    setCurrentStudent(prev => ({ ...prev, profilePictureUrl: newProfileUrl }));
-                }
-            }
+            // 2. Update local UI
+            setCurrentStudent(prev => ({ ...prev, profilePictureUrl: newProfileUrl }));
         } catch (error) {
             console.error('Error uploading file:', error);
             alert('File upload failed');
         }
     };
 
-    const profileSrc = currentStudent.profilePictureUrl
-        ? `${currentStudent.profilePictureUrl}`
-        : null;
+    const profileSrc = getImageUrl(currentStudent.profilePictureUrl);
 
     return (
         <div className="student-modal-overlay">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './GlobalActivityLog.css';
+import api from '../../../../services/api';
 
 const GlobalActivityLog = () => {
     const [logs, setLogs] = useState([]);
@@ -9,14 +10,8 @@ const GlobalActivityLog = () => {
     useEffect(() => {
         const fetchLogs = async () => {
             try {
-                const token = sessionStorage.getItem('token');
-                const response = await fetch('/api/admin/activity-logs', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setLogs(data);
-                }
+                const data = await api.get('/admin/activity-logs').then(r => r.data);
+                setLogs(data);
             } catch (err) {
                 console.error(err);
                 setError('Failed to load activity logs');

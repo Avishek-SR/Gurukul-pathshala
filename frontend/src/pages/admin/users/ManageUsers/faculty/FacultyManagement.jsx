@@ -4,6 +4,7 @@ import EditFacultyForm from './components/EditFacultyForm';
 import FacultyProfile from './components/FacultyProfile';
 import FacultyStats from './components/FacultyStats';
 import BulkUploadModal from '../../../../../components/BulkUploadModal';
+import api from '../../../../../services/api';
 
 const FacultyManagement = ({ currentUser }) => {
   const [faculty, setFaculty] = useState([]);
@@ -36,15 +37,9 @@ const FacultyManagement = ({ currentUser }) => {
   // Fetch faculty from backend
   const fetchFaculty = async () => {
     try {
-      const token = sessionStorage.getItem('token');
       // FIXED: Endpoint changed to /api/admin/users/role/FACULTY
-      const response = await fetch('/api/admin/users/role/FACULTY', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setFaculty(data);
-      }
+      const data = await api.get('/admin/users/role/FACULTY').then(r => r.data);
+      setFaculty(data);
     } catch (error) {
       console.error('Error fetching faculty:', error);
     } finally {
@@ -65,25 +60,17 @@ const FacultyManagement = ({ currentUser }) => {
     }
 
     try {
-      const token = sessionStorage.getItem('token');
       // FIXED: Endpoint changed from /api/admin/faculty to /api/admin/users
-      await fetch('/api/admin/users', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: newFaculty.name,
-          dob: newFaculty.dob,
-          department: newFaculty.department,
-          designation: newFaculty.designation,
-          mobileNumber: newFaculty.mobileNumber,
-          citizenship: newFaculty.citizenship,
-          gender: newFaculty.gender,
-          personalEmail: newFaculty.personalEmail,
-          role: 'FACULTY'
-        })
+      await api.post('/admin/users', {
+        name: newFaculty.name,
+        dob: newFaculty.dob,
+        department: newFaculty.department,
+        designation: newFaculty.designation,
+        mobileNumber: newFaculty.mobileNumber,
+        citizenship: newFaculty.citizenship,
+        gender: newFaculty.gender,
+        personalEmail: newFaculty.personalEmail,
+        role: 'FACULTY'
       });
 
       fetchFaculty();
@@ -108,11 +95,7 @@ const FacultyManagement = ({ currentUser }) => {
   // Update faculty status
   const toggleFacultyStatus = async (facultyId, currentStatus) => {
     try {
-      const token = sessionStorage.getItem('token');
-      await fetch(`/api/admin/users/${facultyId}/status?active=${!currentStatus}`, {
-        method: 'PUT',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      await api.put(`/admin/users/${facultyId}/status?active=${!currentStatus}`);
       fetchFaculty();
     } catch (error) {
       console.error('Error updating faculty:', error);
@@ -122,11 +105,7 @@ const FacultyManagement = ({ currentUser }) => {
   const handleDeleteFaculty = async (facultyId) => {
     if (window.confirm('Are you sure you want to delete this faculty member?')) {
       try {
-        const token = sessionStorage.getItem('token');
-        await fetch(`/api/admin/users/${facultyId}`, {
-          method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        await api.delete(`/admin/users/${facultyId}`);
         fetchFaculty();
       } catch (error) {
         console.error('Error deleting faculty:', error);
@@ -138,11 +117,7 @@ const FacultyManagement = ({ currentUser }) => {
   const handleResetPassword = async (facultyId) => {
     if (window.confirm('Are you sure you want to reset the password to default (FirstName@ddMM)?')) {
       try {
-        const token = sessionStorage.getItem('token');
-        await fetch(`/api/admin/users/${facultyId}/reset-password`, {
-          method: 'PUT',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        await api.put(`/admin/users/${facultyId}/reset-password`);
         alert('Password reset successfully');
       } catch (error) {
         console.error('Error resetting password:', error);
@@ -157,18 +132,10 @@ const FacultyManagement = ({ currentUser }) => {
     formData.append('role', 'FACULTY');
 
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch('/api/admin/users/bulk-upload', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` },
-        body: formData
+      await api.post('/admin/users/bulk-upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
-
-      if (response.ok) {
-        fetchFaculty();
-      } else {
-        throw new Error('Upload failed');
-      }
+      fetchFaculty();
     } catch (e) {
       console.error("Upload failed", e);
       throw new Error('Upload failed');
@@ -187,15 +154,7 @@ const FacultyManagement = ({ currentUser }) => {
 
   const handleUpdateFaculty = async (updatedFaculty) => {
     try {
-      const token = sessionStorage.getItem('token');
-      await fetch(`/api/admin/users/${updatedFaculty.id}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedFaculty)
-      });
+      await api.put(`/admin/users/${updatedFaculty.id}`, updatedFaculty);
       fetchFaculty();
       setShowEditForm(false);
     } catch (error) {
@@ -214,21 +173,15 @@ const FacultyManagement = ({ currentUser }) => {
 
   const handleExport = async () => {
     try {
-      const token = sessionStorage.getItem('token');
-      const response = await fetch('/api/admin/export/users?role=FACULTY', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'faculty_users.xlsx';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-      }
+      const response = await api.get('/admin/export/users?role=FACULTY', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'faculty_users.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Export failed:', error);
       alert('Export failed');

@@ -114,6 +114,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Lightweight helper — merges partial data into the user state and sessionStorage.
+  // Use after a successful profile update so the navbar/sidebar avatar refreshes.
+  const updateUser = (partialData) => {
+    setUser(prev => {
+      const merged = { ...prev, ...partialData };
+      sessionStorage.setItem('user', JSON.stringify(merged));
+      return merged;
+    });
+  };
+
   const value = {
     user,
     token,
@@ -121,6 +131,7 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     updateProfile,
+    updateUser,
     isAuthenticated: !!token,
     isAdmin: user?.role === 'ADMIN',
     isTeacher: user?.role === 'FACULTY', // Backend uses FACULTY, not TEACHER

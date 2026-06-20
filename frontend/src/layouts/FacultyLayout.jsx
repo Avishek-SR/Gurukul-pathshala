@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, Outlet, useNavigate, useLocation, NavLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import logo from '../assets/logo.svg';
 import './FacultyLayout.css';
+import { getImageUrl } from '../services/api';
 
 const FacultyLayout = () => {
   const { user, logout } = useAuth();
@@ -75,7 +77,7 @@ const FacultyLayout = () => {
       <div className={`faculty-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
         <div className="sidebar-header">
           <div className="faculty-logo">
-            <i className="fas fa-chalkboard-teacher"></i>
+            <img src={logo} alt="Logo" style={{ width: '40px', height: '40px', objectFit: 'contain', marginRight: '10px' }} />
             <h2>Faculty Portal</h2>
           </div>
           <button
@@ -106,7 +108,7 @@ const FacultyLayout = () => {
             <div className="mini-avatar">
               {user?.profilePictureUrl ? (
                 <img
-                  src={user.profilePictureUrl}
+                  src={getImageUrl(user.profilePictureUrl)}
                   alt={user?.name}
                   style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                 />
@@ -149,11 +151,7 @@ const FacultyLayout = () => {
                 <div className="profile-avatar">
                   {user?.profilePictureUrl ? (
                     <img
-                      src={
-                        user.profilePictureUrl.startsWith('http')
-                          ? user.profilePictureUrl
-                          : `${user.profilePictureUrl}`
-                      }
+                      src={getImageUrl(user.profilePictureUrl)}
                       alt="Profile"
                       style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                     />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './student/StudentManagement.css'; // Keep reusing base styles if needed, but load specific CSS after
 import './AllUsersManagement.css';
+import api, { getImageUrl } from '../../../../services/api';
 
 const AllUsersManagement = () => {
     const [users, setUsers] = useState([]);
@@ -12,14 +13,8 @@ const AllUsersManagement = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const token = sessionStorage.getItem('token');
-                const response = await fetch('/api/admin/users', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setUsers(data);
-                }
+                const data = await api.get('/admin/users').then(r => r.data);
+                setUsers(data);
             } catch (err) {
                 console.error(err);
                 setError('Failed to load users');
@@ -60,25 +55,18 @@ const AllUsersManagement = () => {
     const handleExport = async () => {
         try {
             const endpoint = roleFilter !== 'ALL'
-                ? `/api/admin/export/users?role=${roleFilter}`
-                : '/api/admin/export/users';
+                ? `/admin/export/users?role=${roleFilter}`
+                : '/admin/export/users';
 
-            const token = sessionStorage.getItem('token');
-            const response = await fetch(endpoint, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-
-            if (response.ok) {
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = (roleFilter !== 'ALL' ? roleFilter.toLowerCase() : 'all') + '_users.xlsx';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
-            }
+            const response = await api.get(endpoint, { responseType: 'blob' });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = (roleFilter !== 'ALL' ? roleFilter.toLowerCase() : 'all') + '_users.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
         } catch (error) {
             console.error('Export failed:', error);
             alert('Export failed');
@@ -150,7 +138,7 @@ const AllUsersManagement = () => {
                                 <td>
                                     <div className="student-name">
                                         {user.profilePictureUrl ? (
-                                            <img src={`${user.profilePictureUrl}`} alt="" className="avatar-small" />
+                                            <img src={getImageUrl(user.profilePictureUrl)} alt="" className="avatar-small" />
                                         ) : (
                                             <div className="avatar-placeholder-small">{user.name.charAt(0)}</div>
                                         )}

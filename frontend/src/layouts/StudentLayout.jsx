@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, Outlet, useNavigate, useLocation, NavLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import logo from '../assets/logo.svg';
 import './StudentLayout.css';
+import api, { getImageUrl } from '../services/api';
 
 const StudentLayout = ({ onLogout }) => { // onLogout prop kept for compatibility
   const { logout } = useAuth();
@@ -45,28 +47,10 @@ const StudentLayout = ({ onLogout }) => { // onLogout prop kept for compatibilit
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
-        const token = sessionStorage.getItem('token');
-        if (!token) {
-          navigate('/login');
-          return;
-        }
-
-        const res = await fetch('/api/student/profile', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!res.ok) {
-          throw new Error('Failed to load student profile');
-        }
-
-        const data = await res.json();
+        const data = await api.get('/student/profile').then(r => r.data);
         setStudent(data);
       } catch (error) {
         console.error('Error fetching student data:', error);
-        // navigate('/login'); // Optional: redirect if fetch fails
       } finally {
         setLoading(false);
       }
@@ -119,7 +103,7 @@ const StudentLayout = ({ onLogout }) => { // onLogout prop kept for compatibilit
       <div className={`student-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
         <div className="sidebar-header">
           <div className="student-logo">
-            <i className="fas fa-graduation-cap"></i>
+            <img src={logo} alt="Logo" style={{ width: '40px', height: '40px', objectFit: 'contain', marginRight: '10px' }} />
             <h2>Student Portal</h2>
           </div>
           <button
@@ -150,7 +134,7 @@ const StudentLayout = ({ onLogout }) => { // onLogout prop kept for compatibilit
             <div className="mini-avatar">
               {student?.profilePictureUrl ? (
                 <img
-                  src={student.profilePictureUrl}
+                  src={getImageUrl(student.profilePictureUrl)}
                   alt={student?.name}
                   style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                 />
@@ -193,11 +177,7 @@ const StudentLayout = ({ onLogout }) => { // onLogout prop kept for compatibilit
                 <div className="profile-avatar">
                   {student?.profilePictureUrl ? (
                     <img
-                      src={
-                        student.profilePictureUrl?.startsWith('http')
-                          ? student.profilePictureUrl
-                          : `${student.profilePictureUrl}`
-                      }
+                      src={getImageUrl(student.profilePictureUrl)}
                       alt="Profile"
                       style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                     />

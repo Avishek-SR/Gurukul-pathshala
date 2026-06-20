@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiGet, settingsAPI } from '../../../services/api';
+import { apiGet, settingsAPI, getImageUrl } from '../../../services/api';
 import './PublicPages.css';
 
 const FacultyPage = () => {
@@ -59,7 +59,7 @@ const FacultyPage = () => {
                             >
                                 <div className="faculty-img-container">
                                     <img
-                                        src={member.profilePictureUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=e0e0e0&color=888888&size=300`}
+                                        src={getImageUrl(member.profilePictureUrl) || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=e0e0e0&color=888888&size=300`}
                                         alt={member.name}
                                         onError={(e) => {
                                             e.target.onerror = null;
@@ -96,7 +96,7 @@ const FacultyPage = () => {
                         <div className="faculty-modal-content">
                             <div className="faculty-modal-left">
                                 <img
-                                    src={selectedFaculty.profilePictureUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedFaculty.name)}&background=e0e0e0&color=888888&size=300`}
+                                    src={getImageUrl(selectedFaculty.profilePictureUrl) || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedFaculty.name)}&background=e0e0e0&color=888888&size=300`}
                                     alt={selectedFaculty.name}
                                     onError={(e) => {
                                         e.target.onerror = null;

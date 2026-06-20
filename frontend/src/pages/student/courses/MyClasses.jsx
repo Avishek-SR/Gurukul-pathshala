@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './StudentCourses.css';
+import api from '../../../services/api';
 
 const MyClasses = () => {
     const [courses, setCourses] = useState([]);
@@ -10,14 +11,8 @@ const MyClasses = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const token = sessionStorage.getItem('token');
-                const res = await fetch('/api/student/courses', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    setCourses(data);
-                }
+                const data = await api.get('/student/courses').then(r => r.data);
+                setCourses(data);
             } catch (error) {
                 console.error("Error fetching courses", error);
             } finally {

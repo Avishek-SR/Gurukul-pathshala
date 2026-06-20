@@ -1,6 +1,21 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
+/**
+ * Converts a server-returned relative image path (e.g. "/api/uploads/xyz.png")
+ * into a fully-qualified URL pointing to the correct backend domain.
+ * Safe to call with null/undefined — returns null in that case.
+ */
+export const getImageUrl = (path) => {
+  if (!path) return null;
+  // Already an absolute URL — return as-is
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  // path is like "/api/uploads/xyz.png"; base is like "https://host.com/api"
+  // Strip the leading "/api" prefix from path before appending to base
+  const normalized = path.replace(/^\/api\//, '/');
+  return `${API_BASE_URL}${normalized}`;
+};
 
 const api = axios.create({
   baseURL: API_BASE_URL,

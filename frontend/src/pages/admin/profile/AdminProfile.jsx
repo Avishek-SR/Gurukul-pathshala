@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './AdminProfile.css';
 import ActivityTimeline from '../../../components/ActivityTimeline';
+import api, { getImageUrl } from '../../../services/api';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const AdminProfile = () => {
+    const { updateUser } = useAuth();
     const [admin, setAdmin] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({});
@@ -12,15 +15,9 @@ const AdminProfile = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const token = sessionStorage.getItem('token');
-                const response = await fetch('/api/auth/profile', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setAdmin(data);
-                    setFormData(data);
-                }
+                const data = await api.get('/auth/profile').then(r => r.data);
+                setAdmin(data);
+                setFormData(data);
             } catch (error) {
                 console.error('Error fetching profile:', error);
             }
@@ -40,25 +37,19 @@ const AdminProfile = () => {
         uploadData.append('file', file);
 
         try {
-            const token = sessionStorage.getItem('token');
-            const response = await fetch('/api/files/upload', {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` }, // fetch handles boundary
-                body: uploadData
-            });
+            const data = await api.post('/files/upload', uploadData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            }).then(r => r.data);
 
-            if (response.ok) {
-                const data = await response.json();
-                const newProfileUrl = data.fileUrl;
+            const newProfileUrl = data.fileUrl;
 
-                // Update local state temporarily
-                setFormData(prev => ({ ...prev, profilePictureUrl: newProfileUrl }));
-                setAdmin(prev => ({ ...prev, profilePictureUrl: newProfileUrl }));
+            // Update local state immediately for instant preview
+            setFormData(prev => ({ ...prev, profilePictureUrl: newProfileUrl }));
+            setAdmin(prev => ({ ...prev, profilePictureUrl: newProfileUrl }));
 
-                // If not in edit mode, save immediately
-                if (!isEditing) {
-                    await saveProfile({ ...admin, profilePictureUrl: newProfileUrl });
-                }
+            // If not in edit mode, persist immediately
+            if (!isEditing) {
+                await saveProfile({ ...admin, profilePictureUrl: newProfileUrl });
             }
         } catch (error) {
             console.error('Error uploading file:', error);
@@ -68,25 +59,11 @@ const AdminProfile = () => {
 
     const saveProfile = async (dataToSave) => {
         try {
-            const token = sessionStorage.getItem('token');
-            // Assuming we use the generic update user endpoint
-            const response = await fetch(`/api/admin/users/${admin.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(dataToSave)
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setAdmin(data);
-                setIsEditing(false);
-                // Update local storage if needed to reflect name changes in header
-                const currentUser = JSON.parse(sessionStorage.getItem('user'));
-                sessionStorage.setItem('user', JSON.stringify({ ...currentUser, ...data }));
-            }
+            const data = await api.put(`/admin/users/${admin.id}`, dataToSave).then(r => r.data);
+            setAdmin(data);
+            setIsEditing(false);
+            // Sync changes back into the global auth context so navbar avatar updates
+            if (updateUser) updateUser(data);
         } catch (error) {
             console.error('Error updating profile:', error);
             alert('Error updating profile.');
@@ -100,9 +77,7 @@ const AdminProfile = () => {
 
     if (!admin) return <div className="p-4">Loading profile...</div>;
 
-    const profileSrc = admin.profilePictureUrl
-        ? `${admin.profilePictureUrl}`
-        : null;
+    const profileSrc = getImageUrl(admin.profilePictureUrl);
 
     return (
         <div className="admin-profile-container">

@@ -1,47 +1,29 @@
-const API_URL = '/api/faculty';
-
-const getHeaders = () => {
-    const token = sessionStorage.getItem('token');
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    };
-};
+import api from './api';
 
 const getDashboardStats = async () => {
-    const response = await fetch(`${API_URL}/dashboard`, { headers: getHeaders() });
-    if (!response.ok) throw new Error('Failed to fetch dashboard stats');
-    return response.json();
+    const response = await api.get('/faculty/dashboard');
+    return response.data;
 };
 
 const getProfile = async () => {
-    const response = await fetch(`${API_URL}/profile`, { headers: getHeaders() });
-    if (!response.ok) throw new Error('Failed to fetch profile');
-    return response.json();
+    const response = await api.get('/faculty/profile');
+    return response.data;
 };
 
 const updateProfile = async (data) => {
-    const response = await fetch(`${API_URL}/profile`, {
-        method: 'PUT',
-        headers: getHeaders(),
-        body: JSON.stringify(data)
-    });
-    if (!response.ok) throw new Error('Failed to update profile');
-    return response.json();
+    const response = await api.put('/faculty/profile', data);
+    return response.data;
 };
 
 const getCourses = async () => {
-    const response = await fetch(`${API_URL}/courses`, { headers: getHeaders() });
-    if (!response.ok) throw new Error('Failed to fetch courses');
-    return response.json();
+    const response = await api.get('/faculty/courses');
+    return response.data;
 };
 
 // Keep these for now to avoid breaking existing code
 const getRecentCourses = async () => {
-    const response = await fetch(`${API_URL}/courses`, { headers: getHeaders() });
-    if (!response.ok) throw new Error('Failed to fetch recent courses');
-    const data = await response.json();
-    return { courses: data };
+    const response = await api.get('/faculty/courses');
+    return { courses: response.data };
 };
 
 const getUpcomingDeadlines = async () => {

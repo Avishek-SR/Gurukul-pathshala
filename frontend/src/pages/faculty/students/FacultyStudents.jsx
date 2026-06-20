@@ -8,6 +8,7 @@ import {
     ExternalLink, BookOpen, Award, Layers, ChevronRight
 } from 'lucide-react';
 import './FacultyStudents.css';
+import { getImageUrl } from '../../../services/api';
 
 /* ─── Status helpers ─── */
 const STATUS_META = {
@@ -202,7 +203,7 @@ const FacultyStudents = () => {
                                         <div className="fss-avatar">
                                         {student.profilePictureUrl ? (
                                             <img
-                                                src={student.profilePictureUrl}
+                                                src={getImageUrl(student.profilePictureUrl)}
                                                 alt={student.name}
                                                 className="fss-avatar-img"
                                             />
@@ -253,7 +254,7 @@ const FacultyStudents = () => {
                             <div className="fss-detail-avatar">
                                 {selectedStudent.profilePictureUrl ? (
                                     <img
-                                        src={selectedStudent.profilePictureUrl}
+                                        src={getImageUrl(selectedStudent.profilePictureUrl)}
                                         alt={selectedStudent.name}
                                         className="fss-detail-avatar-img"
                                     />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from '../../../contexts/AuthContext';
 import axios from '../../../api/axiosConfig'; // Import configured axios instance for Captcha
+import logo from '../../../assets/logo.svg';
 import './LoginPage.css';
 
 const LoginPage = () => {
@@ -156,7 +157,8 @@ const LoginPage = () => {
       <div className="login-section">
         <div className="login-form-container">
           <div className="login-header">
-            <div className="gurukul-brand">
+            <div className="gurukul-brand" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src={logo} alt="Gurukul Logo" style={{ width: '60px', height: '60px', marginRight: '15px' }} />
               <div className="gurukul-text">
                 <h1>GURUKUL</h1>
                 <p>Pathshala</p>

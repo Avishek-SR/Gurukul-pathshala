@@ -1,6 +1,7 @@
 import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 import './StudentProfile.css'; // Premium Vanilla CSS
+import { getImageUrl } from '../../../services/api';
 
 const StudentProfile = () => {
   const { student } = useOutletContext();
@@ -29,7 +30,7 @@ const StudentProfile = () => {
           <div className="sp-avatar-wrapper">
             {student.profilePictureUrl ? (
               <img
-                src={student.profilePictureUrl}
+                src={getImageUrl(student.profilePictureUrl)}
                 alt={student.name}
                 style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
               />

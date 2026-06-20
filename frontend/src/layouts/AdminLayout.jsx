@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext'; // Import useAuth
+import logo from '../assets/logo.svg';
 import './AdminLayout.css';
+import { getImageUrl } from '../services/api';
 import StudentManagement from '../pages/admin/users/ManageUsers/student/StudentManagement';
 import FacultyManagement from '../pages/admin/users/ManageUsers/faculty/FacultyManagement';
 
@@ -103,7 +105,7 @@ const AdminLayout = ({ onLogout }) => {
       <div className={`admin-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
         <div className="sidebar-header">
           <div className="admin-logo">
-            <i className="fas fa-crown"></i>
+            <img src={logo} alt="Logo" style={{ width: '40px', height: '40px', objectFit: 'contain', marginRight: '10px' }} />
             <h2>Admin Panel</h2>
           </div>
           <button
@@ -240,7 +242,7 @@ const AdminLayout = ({ onLogout }) => {
             <div className="mini-avatar">
               {admin?.profilePictureUrl ? (
                 <img
-                  src={admin.profilePictureUrl}
+                  src={getImageUrl(admin.profilePictureUrl)}
                   alt={admin?.name}
                   style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                 />
@@ -285,11 +287,7 @@ const AdminLayout = ({ onLogout }) => {
                 <div className="profile-avatar">
                   {admin?.profilePictureUrl ? (
                     <img
-                      src={
-                        admin.profilePictureUrl?.startsWith('http')
-                          ? admin.profilePictureUrl
-                          : `${admin.profilePictureUrl}`
-                      }
+                      src={getImageUrl(admin.profilePictureUrl)}
                       alt="Profile"
                       style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                     />

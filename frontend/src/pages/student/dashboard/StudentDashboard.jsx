@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
 import './StudentDashboard.css';
+import api, { getImageUrl } from '../../../services/api';
 
 const SUBJECT_COLORS = [
   { bg: '#e0f2fe', icon: '#0284c7', border: '#bae6fd' },
@@ -39,15 +40,11 @@ const StudentDashboard = () => {
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const token = sessionStorage.getItem('token');
-        const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
-        const [dashRes, subjectsRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/student/dashboard`, { headers: { Authorization: `Bearer ${token}` } }),
-          fetch(`${API_BASE_URL}/student/courses`,   { headers: { Authorization: `Bearer ${token}` } }),
+        const [dashData, subjects] = await Promise.all([
+          api.get('/student/dashboard').then(r => r.data).catch(() => ({})),
+          api.get('/student/courses').then(r => r.data).catch(() => []),
         ]);
-        const data = dashRes.ok ? await dashRes.json() : {};
-        const subjects = subjectsRes.ok ? await subjectsRes.json() : [];
-        setDashboardData({ ...data, subjects });
+        setDashboardData({ ...dashData, subjects });
       } catch (err) {
         console.error('Dashboard fetch error', err);
       } finally {
@@ -95,7 +92,7 @@ const StudentDashboard = () => {
         <div className="sd-hero-right">
           <div className="sd-avatar-big">
             {student?.profilePictureUrl
-              ? <img src={student.profilePictureUrl} alt="avatar" />
+              ? <img src={getImageUrl(student.profilePictureUrl)} alt="avatar" />
               : <span>{student?.name?.charAt(0) || 'S'}</span>}
           </div>
         </div>

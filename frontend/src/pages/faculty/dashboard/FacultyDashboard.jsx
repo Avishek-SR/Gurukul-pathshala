@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import facultyService from '../../../services/faculty.service';
+import api from '../../../services/api';
 import {
   BookOpen,
   Users,
@@ -56,12 +57,8 @@ const FacultyDashboard = () => {
   const { data: timetableData } = useQuery({
     queryKey: ['facultyTimetable'],
     queryFn: async () => {
-      const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
-      const response = await fetch(`${API_BASE_URL}/faculty/timetable`, {
-        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
-      });
-      if (!response.ok) throw new Error('Failed to fetch timetable');
-      return response.json();
+      const response = await api.get('/faculty/timetable');
+      return response.data;
     }
   });
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './ActivityTimeline.css';
+import api from '../services/api';
 
 const ActivityTimeline = ({ userId }) => {
     const [activities, setActivities] = useState([]);
@@ -10,15 +11,8 @@ const ActivityTimeline = ({ userId }) => {
 
         const fetchActivities = async () => {
             try {
-                const token = sessionStorage.getItem('token');
-                const response = await fetch(`/api/admin/users/${userId}/activity`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setActivities(data);
-                }
+                const data = await api.get(`/admin/users/${userId}/activity`).then(r => r.data);
+                setActivities(data);
             } catch (error) {
                 console.error('Error fetching activities:', error);
             } finally {

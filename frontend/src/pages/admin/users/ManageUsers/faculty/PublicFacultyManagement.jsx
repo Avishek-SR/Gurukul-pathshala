@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api, { getImageUrl } from '../../../../../services/api';
 import './PublicFacultyManagement.css';
 
 const PublicFacultyManagement = ({ currentUser }) => {
@@ -16,14 +16,8 @@ const PublicFacultyManagement = ({ currentUser }) => {
     const fetchFaculty = async () => {
         try {
             setLoading(true);
-            const token = sessionStorage.getItem('token');
-            const response = await fetch('/api/admin/users/role/FACULTY', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setFacultyMembers(data.filter(f => f.active)); // Only show active on public 
-            }
+            const data = await api.get('/admin/users/role/FACULTY').then(r => r.data);
+            setFacultyMembers(data.filter(f => f.active)); // Only show active on public
         } catch (error) {
             console.error('Error fetching faculty:', error);
         } finally {
@@ -51,30 +45,15 @@ const PublicFacultyManagement = ({ currentUser }) => {
 
         try {
             setUploadingImage(true);
-            const token = sessionStorage.getItem('token');
             const formData = new FormData();
             formData.append('file', file);
 
-            const uploadResponse = await fetch('/api/files/upload', {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
-                body: formData
-            });
+            const result = await api.post('/files/upload', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            }).then(r => r.data);
 
-            if (uploadResponse.ok) {
-                const result = await uploadResponse.json();
-                let url = result.fileUrl;
-
-                if (url && url.startsWith('/api/uploads')) {
-                    const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
-                    const baseUrl = API_BASE_URL.replace(/\/api$/, '');
-                    url = `${baseUrl}${url}`;
-                }
-
-                setEditingFaculty(prev => ({ ...prev, profilePictureUrl: url }));
-            } else {
-                alert('Failed to upload image. Please try again.');
-            }
+            // Store path as-is; getImageUrl() will resolve it at render time
+            setEditingFaculty(prev => ({ ...prev, profilePictureUrl: result.fileUrl }));
         } catch (error) {
             console.error("Image upload error:", error);
             alert('Error connecting to upload service.');
@@ -86,23 +65,10 @@ const PublicFacultyManagement = ({ currentUser }) => {
     const handleSave = async (e) => {
         e.preventDefault();
         try {
-            const token = sessionStorage.getItem('token');
-            const response = await fetch(`/api/admin/users/${editingFaculty.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(editingFaculty)
-            });
-
-            if (response.ok) {
-                alert('Public Profile Updated Successfully!');
-                setShowEditModal(false);
-                fetchFaculty(); // Refresh the grid
-            } else {
-                alert('Failed to update profile details.');
-            }
+            await api.put(`/admin/users/${editingFaculty.id}`, editingFaculty);
+            alert('Public Profile Updated Successfully!');
+            setShowEditModal(false);
+            fetchFaculty(); // Refresh the grid
         } catch (error) {
             console.error("Save error:", error);
             alert("An error occurred while saving.");
@@ -126,7 +92,7 @@ const PublicFacultyManagement = ({ currentUser }) => {
                         <div key={member.id} className="pf-faculty-card">
                             <div className="pf-img-container">
                                 <img
-                                    src={member.profilePictureUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=e0e0e0&color=888888&size=300`}
+                                    src={getImageUrl(member.profilePictureUrl) || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=e0e0e0&color=888888&size=300`}
                                     alt={member.name}
                                     onError={(e) => {
                                         e.target.onerror = null;
@@ -171,7 +137,7 @@ const PublicFacultyManagement = ({ currentUser }) => {
                             <div className="pf-form-group pf-image-upload-section">
                                 <div className="pf-current-image-preview">
                                     <img
-                                        src={editingFaculty.profilePictureUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(editingFaculty.name || 'Faculty')}&background=e0e0e0&color=888888&size=150`}
+                                        src={getImageUrl(editingFaculty.profilePictureUrl) || `https://ui-avatars.com/api/?name=${encodeURIComponent(editingFaculty.name || 'Faculty')}&background=e0e0e0&color=888888&size=150`}
                                         alt="Preview"
                                     />
                                     {uploadingImage && <div className="pf-uploading-overlay"><i className="fas fa-spinner fa-spin"></i></div>}
