@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { settingsAPI } from "../../../services/api";
+import { apiGet, settingsAPI, getImageUrl } from "../../../services/api";
 import "./AcademicPage.css";
 
 export default function AcademicPage() {
   const [activeSection, setActiveSection] = useState("curriculum");
+  const [facultyMembers, setFacultyMembers] = useState([]);
+  const [facultyLoading, setFacultyLoading] = useState(true);
   const [pageContent, setPageContent] = useState({
     academics_hero_title: 'Academic Excellence at Gurukul Pathshala',
-    academics_hero_subtitle: 'Nurturing minds, shaping futures through a holistic and innovative curriculum',
+    academics_hero_subtitle: 'Providing quality education from Nursery to Class 10 — shaping the minds of tomorrow',
     academics_stat_board: '98%',
     academics_stat_faculty: '50+',
     academics_stat_years: '15+',
     academics_stat_alumni: '1000+',
   });
 
+  // Fetch page content settings
   useEffect(() => {
     const fetchContent = async () => {
       try {
@@ -20,7 +23,7 @@ export default function AcademicPage() {
         if (settings) {
           setPageContent({
             academics_hero_title: settings['academics_hero_title'] || 'Academic Excellence at Gurukul Pathshala',
-            academics_hero_subtitle: settings['academics_hero_subtitle'] || 'Nurturing minds, shaping futures through a holistic and innovative curriculum',
+            academics_hero_subtitle: settings['academics_hero_subtitle'] || 'Providing quality education from Nursery to Class 10 — shaping the minds of tomorrow',
             academics_stat_board: settings['academics_stat_board'] || '98%',
             academics_stat_faculty: settings['academics_stat_faculty'] || '50+',
             academics_stat_years: settings['academics_stat_years'] || '15+',
@@ -34,9 +37,24 @@ export default function AcademicPage() {
     fetchContent();
   }, []);
 
+  // Fetch faculty from backend API
+  useEffect(() => {
+    const fetchFaculty = async () => {
+      try {
+        const data = await apiGet('/public/faculty');
+        setFacultyMembers(data);
+      } catch (error) {
+        console.error('Error fetching faculty data:', error);
+      } finally {
+        setFacultyLoading(false);
+      }
+    };
+    fetchFaculty();
+  }, []);
+
   const sections = [
     { id: "curriculum", label: "Curriculum", icon: "📚" },
-    { id: "programs", label: "Programs", icon: "🎓" },
+    { id: "programs", label: "Classes", icon: "🎓" },
     { id: "faculty", label: "Faculty", icon: "👨‍🏫" },
     { id: "achievements", label: "Achievements", icon: "🏆" }
   ];
@@ -46,6 +64,11 @@ export default function AcademicPage() {
       {/* Hero Section */}
       <section className="academic-hero">
         <div className="hero-content">
+          {/* School Registration Badge */}
+          <div className="neb-affiliation-badge">
+            <span className="neb-flag">🇳🇵</span>
+            Nursery to Class 10 — Registered School, Nepal
+          </div>
           <h1>{pageContent.academics_hero_title}</h1>
           <p className="hero-subtitle">
             {pageContent.academics_hero_subtitle}
@@ -53,7 +76,7 @@ export default function AcademicPage() {
           <div className="academic-stats">
             <div className="stat-item">
               <div className="stat-number">{pageContent.academics_stat_board}</div>
-              <div className="stat-label">Board Results</div>
+              <div className="stat-label">Pass Rate</div>
             </div>
             <div className="stat-item">
               <div className="stat-number">{pageContent.academics_stat_faculty}</div>
@@ -61,7 +84,7 @@ export default function AcademicPage() {
             </div>
             <div className="stat-item">
               <div className="stat-number">{pageContent.academics_stat_years}</div>
-              <div className="stat-label">Years Excellence</div>
+              <div className="stat-label">Years of Excellence</div>
             </div>
             <div className="stat-item">
               <div className="stat-number">{pageContent.academics_stat_alumni}</div>
@@ -90,11 +113,12 @@ export default function AcademicPage() {
 
       {/* Main Content */}
       <main className="academic-content">
+
         {/* Curriculum Section */}
         <section className={`academic-section ${activeSection === 'curriculum' ? 'active' : ''}`}>
           <div className="section-header">
             <h2>Our Comprehensive Curriculum</h2>
-            <p>Designed to meet CBSE standards while fostering holistic development</p>
+            <p>Structured learning from Nursery through Class 10 following the Nepal Government's national curriculum</p>
           </div>
 
           <div className="curriculum-overview">
@@ -107,14 +131,60 @@ export default function AcademicPage() {
             ))}
           </div>
 
-          {/* Add your curriculum content here */}
+          {/* School Level Structure */}
+          <div className="section-header" style={{ marginTop: '3rem' }}>
+            <h2>School Levels</h2>
+            <p>A nurturing academic journey from early childhood to Secondary Education Examination (SEE)</p>
+          </div>
+          <div className="neb-grade-structure">
+            <div className="neb-grade-card">
+              <div className="neb-grade-title">🌱 Early Childhood</div>
+              <div className="neb-grade-subtitle">Nursery · LKG · UKG</div>
+              <ul className="neb-grade-list">
+                <li>Play-based learning environment</li>
+                <li>Language &amp; communication skills</li>
+                <li>Basic numeracy &amp; literacy</li>
+                <li>Creative arts &amp; physical activity</li>
+              </ul>
+            </div>
+            <div className="neb-grade-card">
+              <div className="neb-grade-title">📗 Primary Level</div>
+              <div className="neb-grade-subtitle">Class 1 to Class 5</div>
+              <ul className="neb-grade-list">
+                <li>Nepali, English, Mathematics</li>
+                <li>Science &amp; Social Studies</li>
+                <li>Moral Education &amp; Health</li>
+                <li>Co-curricular &amp; sports activities</li>
+              </ul>
+            </div>
+            <div className="neb-grade-card">
+              <div className="neb-grade-title">📘 Lower Secondary</div>
+              <div className="neb-grade-subtitle">Class 6 to Class 8</div>
+              <ul className="neb-grade-list">
+                <li>Core subjects + Optional subjects</li>
+                <li>Science &amp; Mathematics in depth</li>
+                <li>Computer &amp; ICT education</li>
+                <li>Project-based &amp; practical work</li>
+              </ul>
+            </div>
+            <div className="neb-grade-card neb-grade-card--accent">
+              <div className="neb-grade-title">📙 Secondary Level</div>
+              <div className="neb-grade-subtitle">Class 9 to Class 10 (SEE)</div>
+              <ul className="neb-grade-list">
+                <li>SEE (Secondary Education Exam) prep</li>
+                <li>Compulsory &amp; Optional subjects</li>
+                <li>Model exams &amp; revision classes</li>
+                <li>Career guidance &amp; counselling</li>
+              </ul>
+            </div>
+          </div>
         </section>
 
-        {/* Programs Section */}
+        {/* Classes / Programs Section */}
         <section className={`academic-section ${activeSection === 'programs' ? 'active' : ''}`}>
           <div className="section-header">
-            <h2>Academic Programs</h2>
-            <p>Specialized learning pathways for every stage of development</p>
+            <h2>Academic Classes Offered</h2>
+            <p>From Nursery to Class 10 — every stage designed for holistic growth and learning</p>
           </div>
 
           <div className="cards-grid">
@@ -133,54 +203,78 @@ export default function AcademicPage() {
           </div>
         </section>
 
-        {/* Faculty Section */}
+        {/* Faculty Section — loaded from API */}
         <section className={`academic-section ${activeSection === 'faculty' ? 'active' : ''}`}>
           <div className="section-header">
             <h2>Our Distinguished Faculty</h2>
-            <p>Experienced educators dedicated to student success</p>
+            <p>Experienced educators dedicated to nurturing every student from Nursery to Class 10</p>
           </div>
 
-          <div className="cards-grid">
-            {facultyMembers.map((faculty, index) => (
-              <div key={index} className="card faculty-card">
-                <div className="faculty-avatar">
-                  {faculty.name.split(' ').map(n => n[0]).join('')}
-                </div>
-                <h3>{faculty.name}</h3>
-                <p>{faculty.qualification}</p>
-                <div className="faculty-details">
-                  <div className="detail-item">
-                    <span className="detail-label">Subject:</span>
-                    <span className="detail-value">{faculty.subject}</span>
+          {facultyLoading ? (
+            <div className="faculty-loading">
+              <div className="faculty-loading-spinner"></div>
+              <p>Loading faculty...</p>
+            </div>
+          ) : facultyMembers.length === 0 ? (
+            <div className="faculty-empty">
+              <span>👨‍🏫</span>
+              <p>Faculty details will be available soon.</p>
+            </div>
+          ) : (
+            <div className="cards-grid">
+              {facultyMembers.map((faculty) => (
+                <div key={faculty.id} className="card faculty-card">
+                  <div className="faculty-avatar-img">
+                    <img
+                      src={
+                        getImageUrl(faculty.profilePictureUrl) ||
+                        `https://ui-avatars.com/api/?name=${encodeURIComponent(faculty.name)}&background=1a73e8&color=ffffff&size=200`
+                      }
+                      alt={faculty.name}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(faculty.name)}&background=1a73e8&color=ffffff&size=200`;
+                      }}
+                    />
                   </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Experience:</span>
-                    <span className="detail-value">{faculty.experience}</span>
+                  <h3>{faculty.name}</h3>
+                  <p className="faculty-designation">{faculty.designation || faculty.role}</p>
+                  <div className="faculty-details">
+                    {faculty.department && (
+                      <div className="detail-item">
+                        <span className="detail-label">Department:</span>
+                        <span className="detail-value">{faculty.department}</span>
+                      </div>
+                    )}
                   </div>
+                  {faculty.bio && <p className="faculty-bio">{faculty.bio}</p>}
                 </div>
-                <p className="faculty-bio">Passionate educator with expertise in innovative teaching methodologies</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* Achievements Section */}
         <section className={`academic-section ${activeSection === 'achievements' ? 'active' : ''}`}>
           <div className="section-header">
-            <h2>Academic Achievements & Recognition</h2>
-            <p>Celebrating excellence in education and student accomplishments</p>
+            <h2>Academic Achievements &amp; Recognition</h2>
+            <p>Celebrating our school's excellence from Nursery to Class 10 over the years</p>
           </div>
 
-          <div className="timeline">
-            {achievements.map((achievement, index) => (
-              <div key={index} className="timeline-item">
-                <div className="timeline-year">{achievement.year}</div>
-                <div className="timeline-content">
-                  <h4>{achievement.title}</h4>
-                  <p>{achievement.description}</p>
+          <div className="timeline-wrapper">
+            <div className="timeline">
+              {achievements.map((achievement, index) => (
+                <div key={index} className="timeline-item">
+                  <div className="timeline-dot"></div>
+                  <div className="timeline-year-badge">{achievement.year}</div>
+                  <div className="timeline-content">
+                    <div className="timeline-content-icon">{achievement.icon}</div>
+                    <h4>{achievement.title}</h4>
+                    <p>{achievement.description}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
       </main>
@@ -189,10 +283,10 @@ export default function AcademicPage() {
       <section className="academic-cta">
         <div className="cta-content">
           <h2>Want to Learn More About Our Academic Programs?</h2>
-          <p>Schedule a campus visit or consultation with our academic advisors</p>
+          <p>Schedule a campus visit or speak with our academic advisors about admissions from Nursery to Class 10</p>
           <div className="cta-buttons">
             <button className="cta-btn primary">📞 Contact Academic Office</button>
-            <button className="cta-btn secondary">📋 Download Prospectus</button>
+            <button className="cta-btn secondary">📋 Download School Prospectus</button>
           </div>
         </div>
       </section>
@@ -200,43 +294,115 @@ export default function AcademicPage() {
   );
 }
 
-// Sample data arrays
+// ─── Data Arrays (Nursery to Class 10) ───────────────────────────────────────
+
 const curriculumOverview = [
-  { icon: "🎯", title: "CBSE Aligned", description: "Following the latest CBSE guidelines and syllabus updates" },
-  { icon: "🧠", title: "Holistic Approach", description: "Balancing academics with co-curricular activities" },
-  { icon: "💡", title: "Innovative Methods", description: "Blended learning with technology integration" },
-  { icon: "🌟", title: "Value-Based", description: "Integrating ethics and life skills in education" }
+  {
+    icon: "🇳🇵",
+    title: "Nepal Govt. Curriculum",
+    description: "Following the national curriculum set by the Government of Nepal for all levels from Nursery to Class 10"
+  },
+  {
+    icon: "🧠",
+    title: "Holistic Development",
+    description: "Balancing academics with sports, arts, moral education & life skills for all-round growth"
+  },
+  {
+    icon: "💡",
+    title: "Modern Teaching Methods",
+    description: "Interactive, activity-based and ICT-integrated learning for every level of schooling"
+  },
+  {
+    icon: "🌟",
+    title: "SEE Preparation",
+    description: "Focused preparation for Secondary Education Examination (SEE) for Class 9 & 10 students"
+  }
 ];
 
 const academicPrograms = [
   {
-    icon: "🎨",
-    title: "Pre-Primary",
-    description: "Foundational learning through play and exploration",
-    features: ["Montessori-inspired learning", "Language development", "Creative arts"]
+    icon: "🌱",
+    title: "Early Childhood (Nursery–UKG)",
+    description: "Foundational learning through play, exploration and creativity",
+    features: [
+      "Play-based Montessori approach",
+      "Early literacy & numeracy",
+      "Creative arts & storytelling",
+      "Social skills & hygiene habits"
+    ]
   },
   {
-    icon: "📚",
-    title: "Primary School",
-    description: "Building strong academic foundations",
-    features: ["Integrated curriculum", "Focus on core subjects", "Computer literacy"]
+    icon: "📗",
+    title: "Primary Level (Class 1–5)",
+    description: "Building strong academic foundations in core subjects",
+    features: [
+      "Nepali, English, Mathematics",
+      "Science & Social Studies",
+      "Moral Education & Health",
+      "Computer basics & drawing"
+    ]
   },
   {
-    icon: "🔬",
-    title: "Middle School",
-    description: "Developing critical thinking skills",
-    features: ["Subject specialization", "Science & Math focus", "Project-based learning"]
+    icon: "📘",
+    title: "Lower Secondary (Class 6–8)",
+    description: "Developing critical thinking and subject specialisation",
+    features: [
+      "Core + Optional subjects",
+      "Science, Mathematics in depth",
+      "Computer & ICT education",
+      "Project work & practicals"
+    ]
+  },
+  {
+    icon: "📙",
+    title: "Secondary Level (Class 9–10)",
+    description: "Preparing students for the SEE and future education",
+    features: [
+      "Compulsory & optional subjects as per curriculum",
+      "SEE model exams & revision",
+      "Career guidance sessions",
+      "Extra classes & doubt clearance"
+    ]
   }
 ];
 
-const facultyMembers = [
-  { name: "Dr. Anil Sharma", qualification: "Ph.D. in Physics", subject: "Science", experience: "15+ years" },
-  { name: "Mrs. Priya Mehta", qualification: "M.Sc., B.Ed.", subject: "Mathematics", experience: "12+ years" },
-  { name: "Mr. Rajesh Kumar", qualification: "M.A. English, NET", subject: "English", experience: "10+ years" }
-];
+// Faculty is fetched from API — no hardcoded data
 
 const achievements = [
-  { year: "2023", title: "100% Board Results", description: "All students passed with distinction" },
-  { year: "2022", title: "CBSE Excellence Award", description: "Top performing school in district" },
-  { year: "2021", title: "Science Olympiad", description: "3 Gold medals at National level" }
+  {
+    icon: "🏆",
+    year: "2081 BS",
+    title: "100% SEE Pass Rate",
+    description: "All Class 10 students successfully cleared the SEE examination with excellent grades"
+  },
+  {
+    icon: "🥇",
+    year: "2080 BS",
+    title: "District Topper in SEE",
+    description: "Our student ranked 1st in the district in the Secondary Education Examination"
+  },
+  {
+    icon: "🔬",
+    year: "2080 BS",
+    title: "National Science Exhibition",
+    description: "Students from Class 8 & 9 won the Gold medal at the National Science Exhibition"
+  },
+  {
+    icon: "🎨",
+    year: "2079 BS",
+    title: "Inter-School Art Competition",
+    description: "First prize in the zonal inter-school drawing and painting competition"
+  },
+  {
+    icon: "⚽",
+    year: "2079 BS",
+    title: "District Sports Championship",
+    description: "School football team won the district-level championship for two consecutive years"
+  },
+  {
+    icon: "📖",
+    year: "2078 BS",
+    title: "Best School Award",
+    description: "Recognized by the district education office as the best performing school in the region"
+  }
 ];

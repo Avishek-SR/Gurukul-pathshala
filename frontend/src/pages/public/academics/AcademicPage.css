@@ -410,59 +410,99 @@
   font-weight: 600;
 }
 
-/* Timeline */
+/* ─── Achievements Timeline ─────────────────────────────────────────── */
+.timeline-wrapper {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
 .timeline {
   position: relative;
-  max-width: 800px;
-  margin: 0 auto;
-  padding-left: 30px;
+  padding-left: 0;
 }
 
 .timeline::before {
   content: '';
   position: absolute;
-  left: 0;
+  left: 16px;
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(to bottom, var(--primary-medium), var(--primary-accent));
+  background: linear-gradient(to bottom, var(--primary-medium, #1a73e8), var(--primary-accent, #34a853));
+  border-radius: 2px;
 }
 
 .timeline-item {
   position: relative;
-  margin-bottom: 3rem;
-  padding-left: 30px;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+  padding-left: 50px;
 }
 
-.timeline-year {
+.timeline-dot {
   position: absolute;
-  left: -30px;
-  top: 0;
-  background: var(--primary-medium);
-  color: white;
-  width: 60px;
-  height: 60px;
+  left: 7px;
+  top: 14px;
+  width: 18px;
+  height: 18px;
+  background: var(--primary-medium, #1a73e8);
+  border: 3px solid #fff;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 1.1rem;
-  box-shadow: 0 4px 15px var(--shadow-medium);
+  box-shadow: 0 0 0 3px var(--primary-medium, #1a73e8);
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.timeline-year-badge {
+  background: var(--primary-medium, #1a73e8);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  align-self: flex-start;
+  margin-top: 0.7rem;
+  flex-shrink: 0;
+  letter-spacing: 0.03em;
+  box-shadow: 0 3px 10px rgba(26, 115, 232, 0.3);
 }
 
 .timeline-content {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px var(--shadow-light);
-  margin-left: 40px;
+  background: #fff;
+  padding: 1.25rem 1.5rem;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  border: 1px solid #e5e7eb;
+  flex: 1;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.timeline-content:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.11);
+  transform: translateY(-2px);
+}
+
+.timeline-content-icon {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
 }
 
 .timeline-content h4 {
-  color: var(--text-medium);
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
+  color: var(--text-medium, #1f2937);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem 0;
+}
+
+.timeline-content p {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.55;
 }
 
 /* Feature List */
@@ -557,6 +597,171 @@
 
 .cta-btn.secondary:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+/* ─── NEB Affiliation Badge ─────────────────────────────────────────── */
+.neb-affiliation-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+
+.neb-flag {
+  font-size: 1.1rem;
+}
+
+/* ─── Grade Structure Cards ──────────────────────────────────────────── */
+.neb-grade-structure {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.neb-grade-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  border-top: 5px solid var(--primary-medium, #1a73e8);
+}
+
+.neb-grade-card--accent {
+  border-top-color: #9b2226;
+  background: linear-gradient(160deg, #fff9f9, #fff);
+}
+
+.neb-grade-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+}
+
+.neb-grade-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+}
+
+.neb-grade-subtitle {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-bottom: 1.25rem;
+  font-style: italic;
+}
+
+.neb-grade-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.neb-grade-list li {
+  padding: 0.5rem 0 0.5rem 1.6rem;
+  position: relative;
+  color: #374151;
+  font-size: 0.98rem;
+  border-bottom: 1px dashed #f3f4f6;
+}
+
+.neb-grade-list li:last-child {
+  border-bottom: none;
+}
+
+.neb-grade-list li::before {
+  content: '🎯';
+  position: absolute;
+  left: 0;
+  font-size: 0.85rem;
+}
+
+.neb-grade-card--accent .neb-grade-list li::before {
+  content: '📝';
+}
+
+/* ─── Faculty Bio in Faculty Cards ───────────────────────────────────── */
+.faculty-bio {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-style: italic;
+  line-height: 1.5;
+  margin-top: 0.5rem;
+}
+
+/* Faculty avatar image (from API) */
+.faculty-avatar-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: 0 auto 1.25rem;
+  overflow: hidden;
+  border: 3px solid #e0e7ff;
+  box-shadow: 0 4px 14px rgba(26, 115, 232, 0.2);
+}
+
+.faculty-avatar-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.faculty-designation {
+  font-size: 0.95rem;
+  color: var(--primary-medium, #1a73e8);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+/* Faculty loading & empty states */
+.faculty-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 4rem 2rem;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.faculty-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(26, 115, 232, 0.15);
+  border-left-color: var(--primary-medium, #1a73e8);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.faculty-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #9ca3af;
+  font-size: 1rem;
+}
+
+.faculty-empty span {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.75rem;
 }
 
 /* Responsive Design */

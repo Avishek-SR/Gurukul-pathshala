@@ -32,9 +32,14 @@ public class AuthController {
         } catch (IllegalArgumentException | SecurityException e) {
             System.err.println("Login error: " + e.getMessage());
             return ResponseEntity.badRequest().body(new ErrorResponse("Login failed: " + e.getMessage()));
+        } catch (RuntimeException e) {
+            System.err.println("Login validation failure: " + e.getMessage());
+            if ("Invalid CAPTCHA".equals(e.getMessage())) {
+                return ResponseEntity.status(400).body(new ErrorResponse(e.getMessage()));
+            }
+            return ResponseEntity.status(401).body(new ErrorResponse(e.getMessage()));
         } catch (Exception e) {
             System.err.println("Unexpected login error: " + e.getMessage());
-            e.printStackTrace();
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(new ErrorResponse("Internal Error: " + e.toString()));
         }

@@ -1,10 +1,13 @@
 com/lms/model/enums/SubmissionStatus.class
 com/lms/model/Attendance.class
+com/lms/repository/AssignmentSubmissionRepository.class
+com/lms/model/GalleryItem.class
 com/lms/service/CaptchaService.class
 com/lms/service/AttendanceService.class
 com/lms/service/FacultyService.class
 com/lms/exception/AuthenticationException.class
 com/lms/config/JwtAuthenticationEntryPoint.class
+com/lms/model/AssignmentSubmission.class
 com/lms/repository/CourseRepository.class
 com/lms/dto/AdminDashboardDTO.class
 com/lms/dto/ClassroomActivityDTO.class
@@ -18,6 +21,7 @@ com/lms/service/EmailService.class
 com/lms/controller/AuthController$ErrorResponse.class
 com/lms/controller/admin/AdminAttendanceController.class
 com/lms/service/UserService.class
+com/lms/model/GalleryAlbum.class
 com/lms/model/AdmissionInfo.class
 com/lms/repository/FacultyRepository.class
 com/lms/service/StudentService.class
@@ -27,6 +31,7 @@ com/lms/service/AuthService.class
 com/lms/service/QRCodeService.class
 com/lms/repository/AdmissionInfoRepository.class
 com/lms/dto/ClassroomActivityDTO$ClassroomActivityDTOBuilder.class
+com/lms/repository/GalleryItemRepository.class
 com/lms/model/Timetable.class
 com/lms/service/ActivityLogService.class
 com/lms/dto/LoginResponse.class
@@ -37,6 +42,7 @@ com/lms/dto/CreateUserRequest.class
 com/lms/controller/common/FileUploadController.class
 com/lms/controller/CourseController.class
 com/lms/model/User.class
+com/lms/service/GalleryService.class
 com/lms/security/JwtAuthenticationFilter.class
 com/lms/controller/admin/AdminCourseController.class
 com/lms/controller/TimetableController.class
@@ -68,6 +74,7 @@ com/lms/repository/TimetableRepository.class
 com/lms/repository/EnrollmentRepository.class
 com/lms/service/EnrollmentService.class
 com/lms/service/JwtService.class
+com/lms/model/AdmissionApplication.class
 com/lms/service/TokenService$TokenData.class
 com/lms/repository/AttendanceRepository.class
 com/lms/dto/ActivityTopicDTO$ActivityTopicDTOBuilder.class
@@ -96,15 +103,18 @@ com/lms/repository/AssignmentRepository.class
 com/lms/model/ClassroomActivity.class
 com/lms/controller/EnrollmentController.class
 com/lms/repository/StudentRepository.class
+com/lms/repository/GalleryAlbumRepository.class
 com/lms/config/DataInitializer.class
 com/lms/model/Assignment.class
 com/lms/model/LandingPageSlide.class
+com/lms/service/AdmissionApplicationService.class
 com/lms/repository/UserRepository.class
 com/lms/controller/AuthController.class
 com/lms/dto/StatsDTO.class
 com/lms/controller/FacultyController.class
 com/lms/dto/UpdateUserRequest.class
 com/lms/dto/BatchAttendanceDTO.class
+com/lms/repository/AdmissionApplicationRepository.class
 com/lms/controller/admin/AdminExportController.class
 com/lms/service/BulkUploadService.class
 com/lms/service/impl/NoticeServiceImpl.class
