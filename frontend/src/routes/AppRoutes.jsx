@@ -25,6 +25,7 @@ import TimetableManagement from '../pages/admin/timetable/TimetableManagement';
 import NoticeManagement from '../pages/admin/notices/NoticeManagement';
 import AdminSettings from '../pages/admin/settings/AdminSettings';
 import AdminGradeSheets from '../pages/admin/reports/AdminGradeSheets';
+import AdminCertificates from '../pages/admin/certificates/AdminCertificates';
 
 // Faculty pages
 import FacultyDashboard from '../pages/faculty/dashboard/FacultyDashboard';
@@ -45,6 +46,8 @@ import StudentAssignments from '../pages/student/assignments/StudentAssignments'
 import StudentAttendance from '../pages/student/attendance/StudentAttendance';
 import StudentFees from '../pages/student/payments/StudentFees';
 import StudentTimetable from '../pages/student/timetable/StudentTimetable';
+import GradesOverview from '../pages/student/GradesOverview/GradesOverview';
+import StudentCertificates from '../pages/student/certificates/StudentCertificates';
 
 // Shared pages
 import Notices from '../pages/shared/Notices';
@@ -158,6 +161,7 @@ const AppRoutes = () => {
         <Route path="notices" element={<NoticeManagement />} />
         <Route path="settings" element={<AdminSettings />} />
         <Route path="grade-sheets" element={<AdminGradeSheets />} />
+        <Route path="certificates" element={<AdminCertificates />} />
       </Route>
 
       {/* Faculty Layout + Routes */}
@@ -192,6 +196,8 @@ const AppRoutes = () => {
         <Route index element={<StudentDashboard />} />
         <Route path="profile" element={<StudentProfile />} />
         <Route path="courses" element={<MyClasses />} />
+        <Route path="grades" element={<GradesOverview />} />
+        <Route path="certificates" element={<StudentCertificates />} />
         <Route path="assignments" element={<StudentAssignments />} />
         <Route path="attendance" element={<StudentAttendance />} />
         <Route path="timetable" element={<StudentTimetable />} />

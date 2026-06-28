@@ -270,3 +270,34 @@ textarea {
     font-size: var(--text-sm);  /* 12px on tiny screens — fits table */
   }
 }
+
+/* ===================================================
+   GLOBAL PRINT NORMALIZE
+   Hides all portal shells (sidebar, navbar, footer)
+   when printing from any page across all portals.
+   =================================================== */
+@media print {
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background: #fff !important;
+  }
+  .admin-sidebar, .faculty-sidebar, .student-sidebar,
+  .admin-header, .faculty-header, .student-header,
+  .admin-footer, .faculty-footer, .student-footer,
+  .sidebar-overlay, .mobile-menu-btn {
+    display: none !important;
+  }
+  .admin-container, .faculty-container, .student-container,
+  .admin-main, .faculty-main, .student-main,
+  .admin-content, .faculty-content, .student-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    position: static !important;
+    background: #fff !important;
+  }
+}

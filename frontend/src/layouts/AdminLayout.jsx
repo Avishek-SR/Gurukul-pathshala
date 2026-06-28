@@ -22,6 +22,7 @@ import TimetableManagement from '../pages/admin/timetable/TimetableManagement';
 import NoticeManagement from '../pages/admin/notices/NoticeManagement';
 import AdmissionsManagement from '../pages/admin/admissions/AdmissionsManagement';
 import AdminGradeSheets from '../pages/admin/reports/AdminGradeSheets';
+import AdminCertificates from '../pages/admin/certificates/AdminCertificates';
 
 const AdminLayout = ({ onLogout }) => {
   const { user: admin, loading: authLoading, logout } = useAuth(); // Use global auth context
@@ -238,6 +239,14 @@ const AdminLayout = ({ onLogout }) => {
           </div>
 
           <div
+            className={`menu-item ${activeTab === 'certificates' ? 'active' : ''}`}
+            onClick={() => handleMenuClick('certificates')}
+          >
+            <i className="fas fa-certificate"></i>
+            <span>Certifications</span>
+          </div>
+
+          <div
             className={`menu-item ${activeTab === 'profile' ? 'active' : ''}`}
             onClick={() => handleMenuClick('profile')}
           >
@@ -355,6 +364,7 @@ const AdminLayout = ({ onLogout }) => {
           {activeTab === 'activities' && <AdminActivities />}
           {activeTab === 'notices' && <NoticeManagement />}
           {activeTab === 'grade-sheets' && <AdminGradeSheets />}
+          {activeTab === 'certificates' && <AdminCertificates />}
         </main>
 
         {/* Footer */}

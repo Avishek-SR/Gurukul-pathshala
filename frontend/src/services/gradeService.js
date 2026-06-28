@@ -57,11 +57,12 @@ const saveGrades = (userId, data) => localStorage.setItem(GRADE_KEY(userId), JSO
 
 // ─── Merge DB student + locally-saved grades ────────────────────────────────
 export const mergeStudentWithGrades = (dbStudent) => {
-  const stored = loadGrades(dbStudent.userId);
+  const uid = dbStudent.userId || dbStudent.username || dbStudent.id;
+  const stored = loadGrades(uid);
   return enrichStudentGradeData({
-    id:               dbStudent.id,
-    userId:           dbStudent.userId,
-    rollNo:           dbStudent.userId,
+    id:               dbStudent.id || uid,
+    userId:           uid,
+    rollNo:           uid,
     name:             dbStudent.name,
     email:            dbStudent.email,
     program:          dbStudent.program || 'General',
@@ -70,10 +71,15 @@ export const mergeStudentWithGrades = (dbStudent) => {
     dob:              dbStudent.dob     || '',
     profilePictureUrl: dbStudent.profilePictureUrl || null,
     status:           stored?.status    || 'Pending',
+    accessGranted:    stored?.accessGranted !== undefined ? stored?.accessGranted : (stored?.subjects?.length > 0),
     remarks:          stored?.remarks   || '',
     subjects:         stored?.subjects  || [],
     academicYear:     stored?.academicYear || '',
     semester:         stored?.semester  || '',
+    certificateIssued: stored?.certificateIssued || false,
+    certificateType:  stored?.certificateType || 'Course Completion Certificate',
+    certificateDate:  stored?.certificateDate || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+    certificateNo:    stored?.certificateNo || `CERT-${dbStudent.userId || Math.floor(10000 + Math.random()*90000)}`,
   });
 };
 
@@ -122,9 +128,23 @@ export const getCurrentUserRole = () => {
 
 export const gradeService = {
   saveStudentGrades: (userId, subjects, status = 'Evaluated', remarks = '', academicYear = '', semester = '') => {
-    const data = { subjects, status, remarks, academicYear, semester, updatedAt: new Date().toISOString() };
+    const existing = loadGrades(userId) || {};
+    const data = { ...existing, subjects, status, remarks, academicYear, semester, accessGranted: true, updatedAt: new Date().toISOString() };
     saveGrades(userId, data);
     return data;
   },
   getStudentGrades: (userId) => loadGrades(userId),
+  publishStudentAccess: (userId, accessGranted = true) => {
+    const existing = loadGrades(userId) || {};
+    const data = { ...existing, accessGranted, status: accessGranted ? 'Published' : 'Evaluated', updatedAt: new Date().toISOString() };
+    saveGrades(userId, data);
+    return data;
+  },
+  issueCertificate: (userId, certDetails) => {
+    const existing = loadGrades(userId) || {};
+    const data = { ...existing, ...certDetails, certificateIssued: true, accessGranted: true, status: 'Published', updatedAt: new Date().toISOString() };
+    saveGrades(userId, data);
+    return data;
+  }
 };
+

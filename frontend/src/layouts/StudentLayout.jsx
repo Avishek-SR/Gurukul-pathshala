@@ -72,6 +72,8 @@ const StudentLayout = ({ onLogout }) => { // onLogout prop kept for compatibilit
   const navItems = [
     { path: '/student', label: 'Dashboard', icon: 'fa-home', end: true },
     { path: '/student/courses', label: 'My Subjects', icon: 'fa-book' },
+    { path: '/student/grades', label: 'Grades & Results', icon: 'fa-award' },
+    { path: '/student/certificates', label: 'Certificates', icon: 'fa-certificate' },
     { path: '/student/assignments', label: 'Assignments', icon: 'fa-tasks' },
     { path: '/student/attendance', label: 'Attendance', icon: 'fa-calendar-check' },
     { path: '/student/timetable', label: 'Time Table', icon: 'fa-calendar-alt' },
