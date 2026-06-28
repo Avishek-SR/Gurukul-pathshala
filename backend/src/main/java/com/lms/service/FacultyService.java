@@ -2,6 +2,7 @@ package com.lms.service;
 
 import com.lms.dto.FacultyDashboardDTO;
 import com.lms.model.Course;
+import com.lms.model.Role;
 import com.lms.model.User;
 import com.lms.repository.CourseRepository;
 import com.lms.repository.EnrollmentRepository;
@@ -90,5 +91,14 @@ public class FacultyService {
     public List<Course> getMyCourses() {
         User faculty = getCurrentFaculty();
         return courseRepository.findByFaculty(faculty);
+    }
+
+    /**
+     * Returns all active students - used by faculty for grading purposes.
+     * Accessible via /faculty/students endpoint.
+     */
+    @Transactional(readOnly = true)
+    public List<User> getAllStudents() {
+        return userRepository.findByRoleAndActiveTrue(Role.STUDENT);
     }
 }

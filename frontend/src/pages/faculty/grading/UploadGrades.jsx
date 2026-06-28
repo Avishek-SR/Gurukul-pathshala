@@ -3,16 +3,19 @@ import {
   fetchStudentsFromDB,
   mergeStudentWithGrades,
   calculateGradeMetrics,
-  enrichStudentGradeData,
+  getCurrentUserRole,
   gradeService
 } from '../../../services/gradeService';
 import toast from 'react-hot-toast';
 import './UploadGrades.css';
 
 const UploadGrades = () => {
+  const userRole = getCurrentUserRole();
+
   const [students, setStudents]           = useState([]);
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [searchQuery, setSearchQuery]     = useState('');
+  const [selectedStudent, setSelected]    = useState(null);
+  const [searchQuery, setSearch]          = useState('');
+  const [activeClass, setActiveClass]     = useState('All');
   const [loading, setLoading]             = useState(true);
   const [saving, setSaving]               = useState(false);
 
@@ -29,55 +32,47 @@ const UploadGrades = () => {
   const loadStudents = useCallback(async () => {
     setLoading(true);
     try {
-      const dbStudents = await fetchStudentsFromDB();
-      const enriched   = dbStudents.map(mergeStudentWithGrades);
-      setStudents(enriched);
+      const dbStudents = await fetchStudentsFromDB(userRole);
+      setStudents(dbStudents.map(mergeStudentWithGrades));
     } catch (err) {
       console.error(err);
-      toast.error('Failed to load students. Check your connection.');
+      toast.error('Failed to load students. Check backend connection.');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [userRole]);
 
   useEffect(() => { loadStudents(); }, [loadStudents]);
 
   const handleSelectStudent = (student) => {
-    setSelectedStudent(student);
+    setSelected(student);
     setEditableSubjects(JSON.parse(JSON.stringify(student.subjects || [])));
     setRemarks(student.remarks || '');
     setAcademicYear(student.academicYear || '2081-2082');
     setSemester(student.semester || '');
   };
 
-  const handleMarkChange = (index, val) => {
-    const updated = [...editableSubjects];
-    updated[index].score = Math.min(updated[index].maxScore || 100, Math.max(0, Number(val) || 0));
-    setEditableSubjects(updated);
+  const handleMarkChange = (i, val) => {
+    const u = [...editableSubjects];
+    u[i].score = Math.min(u[i].maxScore || 100, Math.max(0, Number(val) || 0));
+    setEditableSubjects(u);
   };
-
-  const handleMaxScoreChange = (index, val) => {
-    const updated = [...editableSubjects];
-    updated[index].maxScore = Math.max(1, Number(val) || 100);
-    if (updated[index].score > updated[index].maxScore) {
-      updated[index].score = updated[index].maxScore;
-    }
-    setEditableSubjects(updated);
+  const handleMaxChange = (i, val) => {
+    const u = [...editableSubjects];
+    u[i].maxScore = Math.max(1, Number(val) || 100);
+    if (u[i].score > u[i].maxScore) u[i].score = u[i].maxScore;
+    setEditableSubjects(u);
   };
-
-  const handleCreditChange = (index, val) => {
-    const updated = [...editableSubjects];
-    updated[index].credit = Math.max(1, Number(val) || 1);
-    setEditableSubjects(updated);
+  const handleCreditChange = (i, val) => {
+    const u = [...editableSubjects];
+    u[i].credit = Math.max(1, Number(val) || 1);
+    setEditableSubjects(u);
   };
 
   const handleAddSubject = (e) => {
     e.preventDefault();
-    if (!newSubName.trim() || !newSubCode.trim()) {
-      toast.error('Subject code and name are required');
-      return;
-    }
-    setEditableSubjects(prev => [...prev, {
+    if (!newSubName.trim() || !newSubCode.trim()) { toast.error('Code and name required'); return; }
+    setEditableSubjects(p => [...p, {
       code: newSubCode.toUpperCase().trim(),
       subject: newSubName.trim(),
       credit: Number(newSubCredit) || 3,
@@ -88,132 +83,113 @@ const UploadGrades = () => {
     toast.success('Subject added');
   };
 
-  const handleRemoveSubject = (index) => {
-    setEditableSubjects(prev => prev.filter((_, i) => i !== index));
-  };
+  const handleRemove = (i) => setEditableSubjects(p => p.filter((_, idx) => idx !== i));
 
-  const handleSaveGrades = async () => {
+  const handleSave = async () => {
     if (!selectedStudent) return;
     setSaving(true);
     try {
       gradeService.saveStudentGrades(
-        selectedStudent.userId,
-        editableSubjects,
-        'Evaluated',
-        remarks,
-        academicYear,
-        semester
+        selectedStudent.userId, editableSubjects, 'Evaluated', remarks, academicYear, semester
       );
-      toast.success(`Grades saved for ${selectedStudent.name}!`);
+      toast.success(`Grades saved for ${selectedStudent.name}`);
       await loadStudents();
-      // Refresh selected student
-      const refreshed = (await fetchStudentsFromDB()).find(s => s.userId === selectedStudent.userId);
-      if (refreshed) setSelectedStudent(mergeStudentWithGrades(refreshed));
-    } catch (err) {
-      toast.error('Failed to save grades.');
-    } finally {
-      setSaving(false);
-    }
+    } catch { toast.error('Save failed.'); }
+    finally { setSaving(false); }
   };
 
-  // Live preview GPA
+  // Live stats
+  const livePct = () => {
+    if (!editableSubjects.length) return 0;
+    const t = editableSubjects.reduce((a, s) => a + (Number(s.score)||0), 0);
+    const m = editableSubjects.reduce((a, s) => a + (Number(s.maxScore)||100), 0);
+    return m > 0 ? Math.round((t / m) * 100) : 0;
+  };
   const liveGPA = () => {
     if (!editableSubjects.length) return '0.00';
-    let wSum = 0, cSum = 0;
+    let w = 0, c = 0;
     editableSubjects.forEach(s => {
       const { gpa4 } = calculateGradeMetrics(s.score, s.maxScore || 100);
-      wSum += gpa4 * (Number(s.credit) || 0);
-      cSum += Number(s.credit) || 0;
+      w += gpa4 * (Number(s.credit)||0); c += Number(s.credit)||0;
     });
-    return cSum > 0 ? (wSum / cSum).toFixed(2) : '0.00';
+    return c > 0 ? (w/c).toFixed(2) : '0.00';
   };
 
-  const livePercentage = () => {
-    if (!editableSubjects.length) return 0;
-    const total = editableSubjects.reduce((a, s) => a + (Number(s.score) || 0), 0);
-    const max   = editableSubjects.reduce((a, s) => a + (Number(s.maxScore) || 100), 0);
-    return max > 0 ? Math.round((total / max) * 100) : 0;
-  };
+  // Group by class/program for filter tabs
+  const classes = ['All', ...Array.from(new Set(students.map(s => s.program || 'General').filter(Boolean))).sort()];
 
   const filtered = students.filter(s => {
     const q = searchQuery.toLowerCase();
-    return s.name.toLowerCase().includes(q) ||
-           s.userId.toLowerCase().includes(q) ||
-           (s.program || '').toLowerCase().includes(q);
+    const matchClass = activeClass === 'All' || s.program === activeClass;
+    const matchQ = s.name.toLowerCase().includes(q) || s.userId.toLowerCase().includes(q) || (s.section||'').toLowerCase().includes(q);
+    return matchClass && matchQ;
   });
 
-  const statusBadge = (status) => {
-    const map = { Evaluated: '#10B981', Pending: '#F59E0B', Draft: '#6B7280' };
-    return { background: map[status] || '#6B7280', color: '#fff', padding: '2px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: 700 };
-  };
-
-  const pct = livePercentage();
-  const gpa = liveGPA();
+  const pct = livePct();
 
   return (
     <div className="upload-grades-container">
-      {/* ─── Left Panel: Student List ─── */}
+      {/* ─── Left Panel ─── */}
       <div className="grades-left-panel">
         <div className="grades-panel-header">
-          <h2><i className="fas fa-clipboard-list"></i> Students</h2>
+          <h2><i className="fas fa-users"></i> Students</h2>
           <span className="student-count-badge">{students.length}</span>
         </div>
 
         <div className="grades-search">
           <i className="fas fa-search"></i>
-          <input
-            type="text"
-            placeholder="Search by name, ID or class..."
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-          />
+          <input type="text" placeholder="Search name, ID, section..." value={searchQuery} onChange={e => setSearch(e.target.value)} />
         </div>
+
+        {/* Class filter tabs */}
+        {classes.length > 1 && (
+          <div className="grades-class-tabs">
+            {classes.map(c => (
+              <button key={c} className={`class-tab ${activeClass === c ? 'active' : ''}`} onClick={() => setActiveClass(c)}>
+                {c === 'All' ? 'All Classes' : c}
+              </button>
+            ))}
+          </div>
+        )}
 
         <div className="student-list-scroll">
           {loading ? (
-            <div className="grades-loading">
-              <i className="fas fa-spinner fa-spin"></i>
-              <span>Loading students...</span>
-            </div>
+            <div className="grades-loading"><i className="fas fa-spinner fa-spin"></i><span>Loading...</span></div>
           ) : filtered.length === 0 ? (
-            <div className="grades-empty">
-              <i className="fas fa-user-slash"></i>
-              <p>No students found</p>
-            </div>
-          ) : filtered.map(student => (
+            <div className="grades-empty"><i className="fas fa-user-slash"></i><p>No students found</p></div>
+          ) : filtered.map(s => (
             <div
-              key={student.userId}
-              className={`student-list-item ${selectedStudent?.userId === student.userId ? 'active' : ''}`}
-              onClick={() => handleSelectStudent(student)}
+              key={s.userId}
+              className={`student-list-item ${selectedStudent?.userId === s.userId ? 'active' : ''}`}
+              onClick={() => handleSelectStudent(s)}
             >
               <div className="student-item-avatar">
-                {student.profilePictureUrl
-                  ? <img src={student.profilePictureUrl} alt={student.name} />
-                  : <span>{student.name?.charAt(0).toUpperCase()}</span>
+                {s.profilePictureUrl
+                  ? <img src={s.profilePictureUrl} alt={s.name} />
+                  : <span>{s.name?.charAt(0).toUpperCase()}</span>
                 }
               </div>
               <div className="student-item-info">
-                <strong>{student.name}</strong>
-                <small>{student.userId} • {student.program || 'N/A'}</small>
-                {student.section && <small>Section: {student.section}</small>}
+                <strong>{s.name}</strong>
+                <small>{s.userId} • {s.program || 'N/A'}{s.section ? ` (${s.section})` : ''}</small>
               </div>
-              <span style={statusBadge(student.status)}>{student.status}</span>
+              <span className={`status-dot ${s.status === 'Evaluated' ? 'done' : 'pending'}`}></span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ─── Right Panel: Grade Editor ─── */}
+      {/* ─── Right Panel ─── */}
       <div className="grades-right-panel">
         {!selectedStudent ? (
           <div className="grades-placeholder">
-            <i className="fas fa-hand-pointer" style={{ fontSize: '3rem', color: '#CBD5E1' }}></i>
-            <h3>Select a Student</h3>
-            <p>Click on any student from the list to enter or edit their marks.</p>
+            <div className="placeholder-icon"><i className="fas fa-clipboard-list"></i></div>
+            <h3>Select a Student to Grade</h3>
+            <p>Choose any student from the list to enter or update their marks.</p>
           </div>
         ) : (
           <>
-            {/* Student Header */}
+            {/* Student Header Card */}
             <div className="grade-editor-header">
               <div className="grade-student-meta">
                 <div className="grade-student-avatar-lg">
@@ -225,9 +201,10 @@ const UploadGrades = () => {
                 <div>
                   <h2>{selectedStudent.name}</h2>
                   <p>
-                    <strong>ID:</strong> {selectedStudent.userId} &nbsp;|&nbsp;
-                    <strong>Class/Program:</strong> {selectedStudent.program || 'N/A'} &nbsp;|&nbsp;
-                    <strong>Section:</strong> {selectedStudent.section || '—'}
+                    <i className="fas fa-id-card" style={{marginRight:4,color:'#94A3B8'}}></i>
+                    {selectedStudent.userId} &nbsp;|&nbsp;
+                    <i className="fas fa-graduation-cap" style={{marginRight:4,color:'#94A3B8'}}></i>
+                    {selectedStudent.program || 'N/A'} {selectedStudent.section ? `· Sec ${selectedStudent.section}` : ''}
                   </p>
                 </div>
               </div>
@@ -239,8 +216,12 @@ const UploadGrades = () => {
                   <span className="live-stat-label">Overall</span>
                 </div>
                 <div className="live-stat">
-                  <span className="live-stat-val">{gpa}</span>
+                  <span className="live-stat-val">{liveGPA()}</span>
                   <span className="live-stat-label">GPA (4.0)</span>
+                </div>
+                <div className="live-stat">
+                  <span className="live-stat-val">{editableSubjects.length}</span>
+                  <span className="live-stat-label">Subjects</span>
                 </div>
               </div>
             </div>
@@ -248,80 +229,55 @@ const UploadGrades = () => {
             {/* Term Info */}
             <div className="grade-term-row">
               <div className="grade-term-field">
-                <label>Academic Year</label>
+                <label><i className="fas fa-calendar-alt"></i> Academic Year</label>
                 <input type="text" value={academicYear} onChange={e => setAcademicYear(e.target.value)} placeholder="e.g. 2081-2082" />
               </div>
               <div className="grade-term-field">
-                <label>Semester / Term</label>
-                <input type="text" value={semester} onChange={e => setSemester(e.target.value)} placeholder="e.g. Term 1, Semester 2" />
+                <label><i className="fas fa-layer-group"></i> Term / Semester</label>
+                <input type="text" value={semester} onChange={e => setSemester(e.target.value)} placeholder="e.g. Term 1 / Semester 2" />
               </div>
             </div>
 
-            {/* Subject Table */}
+            {/* Marks Table */}
             <div className="grade-subjects-table-wrap">
+              <div className="table-header-bar">
+                <span><i className="fas fa-table"></i> Subject Marks</span>
+                <span className="table-count">{editableSubjects.length} subjects</span>
+              </div>
               <table className="grade-subjects-table">
                 <thead>
                   <tr>
-                    <th>#</th>
+                    <th style={{width:'32px'}}>#</th>
                     <th>Code</th>
-                    <th>Subject / Module</th>
+                    <th style={{textAlign:'left'}}>Subject Name</th>
                     <th>Credit</th>
                     <th>Full Marks</th>
                     <th>Obtained</th>
                     <th>Grade</th>
                     <th>GP</th>
-                    <th></th>
+                    <th style={{width:'36px'}}></th>
                   </tr>
                 </thead>
                 <tbody>
                   {editableSubjects.length === 0 ? (
                     <tr>
-                      <td colSpan={9} style={{ textAlign: 'center', padding: '2rem', color: '#94A3B8' }}>
-                        No subjects yet. Add subjects below.
+                      <td colSpan={9} className="empty-table-msg">
+                        <i className="fas fa-plus-circle"></i> No subjects yet — add them below
                       </td>
                     </tr>
                   ) : editableSubjects.map((sub, i) => {
                     const m = calculateGradeMetrics(sub.score, sub.maxScore || 100);
                     return (
-                      <tr key={i}>
+                      <tr key={i} className={m.grade === 'F' ? 'fail-row' : ''}>
                         <td>{i + 1}</td>
                         <td><span className="sub-code-badge">{sub.code}</span></td>
-                        <td>{sub.subject}</td>
-                        <td>
-                          <input
-                            type="number" min={1} max={10}
-                            className="grade-num-input"
-                            value={sub.credit}
-                            onChange={e => handleCreditChange(i, e.target.value)}
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="number" min={1} max={1000}
-                            className="grade-num-input"
-                            value={sub.maxScore || 100}
-                            onChange={e => handleMaxScoreChange(i, e.target.value)}
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="number" min={0} max={sub.maxScore || 100}
-                            className={`grade-num-input mark-input ${m.grade === 'F' ? 'fail' : ''}`}
-                            value={sub.score}
-                            onChange={e => handleMarkChange(i, e.target.value)}
-                          />
-                        </td>
-                        <td>
-                          <span className="grade-badge" style={{ background: m.color }}>
-                            {m.grade}
-                          </span>
-                        </td>
-                        <td>{m.gradePoint.toFixed(1)}</td>
-                        <td>
-                          <button className="remove-sub-btn" onClick={() => handleRemoveSubject(i)} title="Remove">
-                            <i className="fas fa-trash-alt"></i>
-                          </button>
-                        </td>
+                        <td style={{textAlign:'left'}}>{sub.subject}</td>
+                        <td><input type="number" min={1} max={10} className="grade-num-input" value={sub.credit} onChange={e => handleCreditChange(i, e.target.value)} /></td>
+                        <td><input type="number" min={1} className="grade-num-input" value={sub.maxScore || 100} onChange={e => handleMaxChange(i, e.target.value)} /></td>
+                        <td><input type="number" min={0} max={sub.maxScore || 100} className={`grade-num-input mark-input ${m.grade === 'F' ? 'fail' : ''}`} value={sub.score} onChange={e => handleMarkChange(i, e.target.value)} /></td>
+                        <td><span className="grade-badge" style={{ background: m.color }}>{m.grade}</span></td>
+                        <td style={{fontWeight:700}}>{m.gradePoint.toFixed(1)}</td>
+                        <td><button className="remove-sub-btn" onClick={() => handleRemove(i)} title="Remove subject"><i className="fas fa-times"></i></button></td>
                       </tr>
                     );
                   })}
@@ -329,36 +285,32 @@ const UploadGrades = () => {
               </table>
             </div>
 
-            {/* Add Subject Row */}
+            {/* Add Subject */}
             <form className="add-subject-form" onSubmit={handleAddSubject}>
-              <h4><i className="fas fa-plus-circle"></i> Add Subject</h4>
+              <div className="add-sub-title"><i className="fas fa-plus-circle"></i> Add Subject</div>
               <div className="add-sub-fields">
-                <input placeholder="Code (e.g. ENG101)" value={newSubCode} onChange={e => setNewSubCode(e.target.value)} />
-                <input placeholder="Subject Name" value={newSubName} onChange={e => setNewSubName(e.target.value)} style={{ flex: 2 }} />
-                <input type="number" min={1} max={10} placeholder="Credit" value={newSubCredit} onChange={e => setNewSubCredit(e.target.value)} style={{ width: '80px' }} />
-                <input type="number" min={1} placeholder="Full Marks" value={newSubMax} onChange={e => setNewSubMax(e.target.value)} style={{ width: '100px' }} />
-                <button type="submit" className="add-sub-btn">+ Add</button>
+                <input placeholder="Code" value={newSubCode} onChange={e => setNewSubCode(e.target.value)} style={{width:'100px'}} />
+                <input placeholder="Subject Name" value={newSubName} onChange={e => setNewSubName(e.target.value)} style={{flex:2}} />
+                <input type="number" min={1} max={10} placeholder="Credit" value={newSubCredit} onChange={e => setNewSubCredit(e.target.value)} style={{width:'80px'}} />
+                <input type="number" min={1} placeholder="Full Marks" value={newSubMax} onChange={e => setNewSubMax(e.target.value)} style={{width:'110px'}} />
+                <button type="submit" className="add-sub-btn"><i className="fas fa-plus"></i> Add</button>
               </div>
             </form>
 
             {/* Remarks */}
             <div className="grade-remarks-section">
-              <label>Remarks / Comments</label>
-              <textarea
-                rows={2}
-                placeholder="Optional teacher remarks for this student..."
-                value={remarks}
-                onChange={e => setRemarks(e.target.value)}
-              />
+              <label><i className="fas fa-comment-alt"></i> Remarks</label>
+              <textarea rows={2} placeholder="Optional teacher remarks..." value={remarks} onChange={e => setRemarks(e.target.value)} />
             </div>
 
-            {/* Save Button */}
+            {/* Save */}
             <div className="grade-save-row">
-              <button className="grade-save-btn" onClick={handleSaveGrades} disabled={saving}>
-                {saving
-                  ? <><i className="fas fa-spinner fa-spin"></i> Saving...</>
-                  : <><i className="fas fa-save"></i> Save &amp; Publish Grades</>
-                }
+              <div className="save-hint">
+                <i className="fas fa-info-circle"></i>
+                Changes are saved locally and visible to admin for printing.
+              </div>
+              <button className="grade-save-btn" onClick={handleSave} disabled={saving}>
+                {saving ? <><i className="fas fa-spinner fa-spin"></i> Saving...</> : <><i className="fas fa-check-circle"></i> Save & Publish Grades</>}
               </button>
             </div>
           </>

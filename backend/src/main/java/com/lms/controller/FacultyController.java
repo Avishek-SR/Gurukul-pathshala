@@ -55,6 +55,15 @@ public class FacultyController {
         return ResponseEntity.ok(enrollmentService.getStudentsByCourse(courseId));
     }
 
+    /**
+     * Returns all students — accessible to FACULTY for grading purposes.
+     * Sorted by program (class) then name.
+     */
+    @GetMapping("/students")
+    public ResponseEntity<java.util.List<com.lms.model.User>> getAllStudents() {
+        return ResponseEntity.ok(facultyService.getAllStudents());
+    }
+
     @PostMapping("/attendance/batch")
     public ResponseEntity<Void> markBatchAttendance(@RequestBody com.lms.dto.BatchAttendanceDTO batchDTO) {
         attendanceService.markBatchAttendance(batchDTO);

@@ -110,3 +110,60 @@
 2026-06-28 10:55:25 - Securing GET /error
 2026-06-28 10:55:25 - Secured GET /error
 2026-06-28 10:55:25 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:58:28 - Securing GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 10:58:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:58:28 - Secured GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 10:58:29 - Securing GET /error
+2026-06-28 10:58:29 - Secured GET /error
+2026-06-28 10:58:29 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 11:07:50 - Securing GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 11:07:50 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 11:07:50 - Secured GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 11:07:50 - Securing GET /error
+2026-06-28 11:07:50 - Secured GET /error
+2026-06-28 11:07:50 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 11:08:23 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-28 11:08:23 - HikariPool-1 - Shutdown initiated...
+2026-06-28 11:08:23 - HikariPool-1 - Shutdown completed.
+2026-06-28 11:08:25 - Starting SchoolManagementApplication v1.0.0 using Java 17.0.13 with PID 8306 (/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/target/school-management-1.0.0.jar started by abishek in /Volumes/Macbook-1/Gurukul/React/Gurukul/backend)
+2026-06-28 11:08:25 - Running with Spring Boot v3.2.6, Spring v6.1.8
+2026-06-28 11:08:25 - No active profile set, falling back to 1 default profile: "default"
+2026-06-28 11:08:27 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-28 11:08:28 - Finished Spring Data repository scanning in 216 ms. Found 21 JPA repository interfaces.
+2026-06-28 11:08:29 - Tomcat initialized with port 8080 (http)
+2026-06-28 11:08:29 - Starting service [Tomcat]
+2026-06-28 11:08:29 - Starting Servlet engine: [Apache Tomcat/10.1.24]
+2026-06-28 11:08:29 - Initializing Spring embedded WebApplicationContext
+2026-06-28 11:08:29 - Root WebApplicationContext: initialization completed in 3044 ms
+2026-06-28 11:08:29 - Filter 'jwtAuthenticationFilter' configured for use
+2026-06-28 11:08:29 - HikariPool-1 - Starting...
+2026-06-28 11:08:29 - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@661e1399
+2026-06-28 11:08:29 - HikariPool-1 - Start completed.
+2026-06-28 11:08:29 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-28 11:08:29 - HHH000412: Hibernate ORM core version 6.4.8.Final
+2026-06-28 11:08:30 - HHH000026: Second-level cache disabled
+2026-06-28 11:08:30 - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-28 11:08:30 - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-28 11:08:32 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-28 11:08:33 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-28 11:08:34 - === AdminFacultyController INITIALIZED ===
+2026-06-28 11:08:34 - Controller mapped to: /admin/faculty
+2026-06-28 11:08:34 - Full URL will be: /api/admin/faculty (context-path adds /api)
+2026-06-28 11:08:34 - Available endpoints:
+2026-06-28 11:08:34 -   GET  /admin/faculty
+2026-06-28 11:08:34 -   GET  /admin/faculty/test
+2026-06-28 11:08:34 -   POST /admin/faculty
+2026-06-28 11:08:34 -   PUT  /admin/faculty/{id}/status
+2026-06-28 11:08:34 - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-28 11:08:37 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@6a3b205, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@77b1ba0b, org.springframework.security.web.context.SecurityContextHolderFilter@e0500bc, org.springframework.security.web.header.HeaderWriterFilter@711df813, org.springframework.web.filter.CorsFilter@1c057fc8, org.springframework.security.web.authentication.logout.LogoutFilter@2d0a7a6, com.lms.security.JwtAuthenticationFilter@7d30007d, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@35634653, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@626542d3, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6fb1dd9d, org.springframework.security.web.session.SessionManagementFilter@7e522994, org.springframework.security.web.access.ExceptionTranslationFilter@59b7e853, org.springframework.security.web.access.intercept.AuthorizationFilter@67ee3b1]
+2026-06-28 11:08:37 - Tomcat started on port 8080 (http) with context path '/api'
+2026-06-28 11:08:37 - Started SchoolManagementApplication in 12.768 seconds (process running for 13.741)
+2026-06-28 11:11:27 - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-28 11:11:27 - Initializing Servlet 'dispatcherServlet'
+2026-06-28 11:11:27 - Completed initialization in 9 ms
+2026-06-28 11:11:27 - Securing GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 11:11:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 11:11:28 - Secured GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 11:11:28 - Securing GET /error
+2026-06-28 11:11:28 - Secured GET /error
+2026-06-28 11:11:28 - Set SecurityContextHolder to anonymous SecurityContext
