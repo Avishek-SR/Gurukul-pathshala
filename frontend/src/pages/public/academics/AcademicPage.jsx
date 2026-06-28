@@ -6,6 +6,12 @@ export default function AcademicPage() {
   const [activeSection, setActiveSection] = useState("curriculum");
   const [facultyMembers, setFacultyMembers] = useState([]);
   const [facultyLoading, setFacultyLoading] = useState(true);
+  
+  // Dynamic Lists State
+  const [curriculumList, setCurriculumList] = useState(curriculumOverview);
+  const [programsList, setProgramsList] = useState(academicPrograms);
+  const [achievementsList, setAchievementsList] = useState(achievements);
+
   const [pageContent, setPageContent] = useState({
     academics_hero_title: 'Academic Excellence at Gurukul Pathshala',
     academics_hero_subtitle: 'Providing quality education from Nursery to Class 10 — shaping the minds of tomorrow',
@@ -29,6 +35,16 @@ export default function AcademicPage() {
             academics_stat_years: settings['academics_stat_years'] || '15+',
             academics_stat_alumni: settings['academics_stat_alumni'] || '1000+',
           });
+
+          if (settings['academics_curriculum']) {
+            try { setCurriculumList(JSON.parse(settings['academics_curriculum'])); } catch (e) { console.error('Failed to parse curriculum', e); }
+          }
+          if (settings['academics_programs']) {
+            try { setProgramsList(JSON.parse(settings['academics_programs'])); } catch (e) { console.error('Failed to parse programs', e); }
+          }
+          if (settings['academics_achievements']) {
+            try { setAchievementsList(JSON.parse(settings['academics_achievements'])); } catch (e) { console.error('Failed to parse achievements', e); }
+          }
         }
       } catch (err) {
         console.error('Failed to fetch academic page settings', err);
@@ -122,7 +138,7 @@ export default function AcademicPage() {
           </div>
 
           <div className="curriculum-overview">
-            {curriculumOverview.map((item, index) => (
+            {curriculumList.map((item, index) => (
               <div key={index} className="card overview-card">
                 <div className="card-icon">{item.icon}</div>
                 <h3>{item.title}</h3>
@@ -188,15 +204,19 @@ export default function AcademicPage() {
           </div>
 
           <div className="cards-grid">
-            {academicPrograms.map((program, index) => (
+            {programsList.map((program, index) => (
               <div key={index} className="card">
                 <div className="card-icon">{program.icon}</div>
                 <h3>{program.title}</h3>
                 <p>{program.description}</p>
                 <ul className="feature-list">
-                  {program.features.map((feature, idx) => (
-                    <li key={idx}>{feature}</li>
-                  ))}
+                  {typeof program.features === 'string' 
+                    ? program.features.split('\n').filter(f => f.trim() !== '').map((feature, idx) => (
+                        <li key={idx}>{feature}</li>
+                      ))
+                    : Array.isArray(program.features) ? program.features.map((feature, idx) => (
+                        <li key={idx}>{feature}</li>
+                      )) : null}
                 </ul>
               </div>
             ))}
@@ -263,7 +283,7 @@ export default function AcademicPage() {
 
           <div className="timeline-wrapper">
             <div className="timeline">
-              {achievements.map((achievement, index) => (
+              {achievementsList.map((achievement, index) => (
                 <div key={index} className="timeline-item">
                   <div className="timeline-dot"></div>
                   <div className="timeline-year-badge">{achievement.year}</div>

@@ -3,12 +3,44 @@ import api, { authAPI, settingsAPI, landingSlidesAPI, galleryAPI } from '../../.
 import { useAuth } from "../../../contexts/AuthContext";
 import './AdminSettings.css';
 
+// Default Arrays for Academics Page
+const defaultCurriculum = [
+  { icon: "🇳🇵", title: "Nepal Govt. Curriculum", description: "Following the national curriculum set by the Government of Nepal for all levels from Nursery to Class 10" },
+  { icon: "🧠", title: "Holistic Development", description: "Balancing academics with sports, arts, moral education & life skills for all-round growth" },
+  { icon: "💡", title: "Modern Teaching Methods", description: "Interactive, activity-based and ICT-integrated learning for every level of schooling" },
+  { icon: "🌟", title: "SEE Preparation", description: "Focused preparation for Secondary Education Examination (SEE) for Class 9 & 10 students" }
+];
+
+const defaultPrograms = [
+  { icon: "🌱", title: "Early Childhood (Nursery–UKG)", description: "Foundational learning through play, exploration and creativity", features: "Play-based Montessori approach\nEarly literacy & numeracy\nCreative arts & storytelling\nSocial skills & hygiene habits" },
+  { icon: "📗", title: "Primary Level (Class 1–5)", description: "Building strong academic foundations in core subjects", features: "Nepali, English, Mathematics\nScience & Social Studies\nMoral Education & Health\nComputer basics & drawing" },
+  { icon: "📘", title: "Lower Secondary (Class 6–8)", description: "Developing critical thinking and subject specialisation", features: "Core + Optional subjects\nScience, Mathematics in depth\nComputer & ICT education\nProject work & practicals" },
+  { icon: "📙", title: "Secondary Level (Class 9–10)", description: "Preparing students for the SEE and future education", features: "Compulsory & optional subjects as per curriculum\nSEE model exams & revision\nCareer guidance sessions\nExtra classes & doubt clearance" }
+];
+
+const defaultAchievements = [
+  { icon: "🏆", year: "2081 BS", title: "100% SEE Pass Rate", description: "All Class 10 students successfully cleared the SEE examination with excellent grades" },
+  { icon: "🥇", year: "2080 BS", title: "District Topper in SEE", description: "Our student ranked 1st in the district in the Secondary Education Examination" },
+  { icon: "🔬", year: "2080 BS", title: "National Science Exhibition", description: "Students from Class 8 & 9 won the Gold medal at the National Science Exhibition" },
+  { icon: "🎨", year: "2079 BS", title: "Inter-School Art Competition", description: "First prize in the zonal inter-school drawing and painting competition" },
+  { icon: "⚽", year: "2079 BS", title: "District Sports Championship", description: "School football team won the district-level championship for two consecutive years" },
+  { icon: "📖", year: "2078 BS", title: "Best School Award", description: "Recognized by the district education office as the best performing school in the region" }
+];
+
 const AdminSettings = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('general');
   const [settings, setSettings] = useState({});
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ text: '', type: '' });
+
+  // Academic Dynamic Lists
+  const [curriculumList, setCurriculumList] = useState([]);
+  const [programsList, setProgramsList] = useState([]);
+  const [achievementsList, setAchievementsList] = useState([]);
+  // Accordion open/close state for academic list sections
+  const [openSections, setOpenSections] = useState({ curriculum: true, programs: false, achievements: false });
+  const toggleSection = (key) => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
 
   // Gallery-specific state
   const [galleryAlbums, setGalleryAlbums] = useState([]);
@@ -21,6 +53,7 @@ const AdminSettings = () => {
   const [galleryUploading, setGalleryUploading] = useState(false);
   const [galleryMsg, setGalleryMsg] = useState('');
   const [logoUploading, setLogoUploading] = useState(false);
+  const [knowGurukulImgUploading, setKnowGurukulImgUploading] = useState(false);
 
   // Map of setting keys to their form fields
   const [formData, setFormData] = useState({
@@ -41,6 +74,7 @@ const AdminSettings = () => {
     stat_satisfaction: '',
     know_gurukul_desc: '',
     know_gurukul_mission: '',
+    know_gurukul_image: '',
     admissions_open: 'true',
     // Admissions Page
     admissions_hero_title: '',
@@ -150,14 +184,15 @@ const AdminSettings = () => {
         stat_satisfaction: settingsMap['stat_satisfaction'] || '100%',
         know_gurukul_desc: settingsMap['know_gurukul_desc'] || 'Founded in 1980, Gurukul Pathshala stands at the intersection of discipline, innovation, and holistic education.',
         know_gurukul_mission: settingsMap['know_gurukul_mission'] || 'Our mission is to provide quality education that nurtures intellectual curiosity, critical thinking, and ethical values.',
+        know_gurukul_image: settingsMap['know_gurukul_image'] || '',
         admissions_open: settingsMap['admissions_open'] || 'true',
         // Admissions Page
         admissions_hero_title: settingsMap['admissions_hero_title'] || 'Admissions Open for 2024-25',
         admissions_hero_subtitle: settingsMap['admissions_hero_subtitle'] || 'Join Gurukul Pathshala and shape a brighter future for your child',
-        admissions_open_date: settingsMap['admissions_open_date'] || '1st December 2023',
-        admissions_last_date: settingsMap['admissions_last_date'] || '31st March 2024',
-        admissions_session_date: settingsMap['admissions_session_date'] || 'April 2024',
-        admissions_year_begins: settingsMap['admissions_year_begins'] || '1st June 2024',
+        admissions_open_date: settingsMap['admissions_open_date'] || '1st Falgun 2080',
+        admissions_last_date: settingsMap['admissions_last_date'] || '30th Chaitra 2080',
+        admissions_session_date: settingsMap['admissions_session_date'] || '1st Week of Baisakh 2081',
+        admissions_year_begins: settingsMap['admissions_year_begins'] || '15th Baisakh 2081',
         // Academics Page
         academics_hero_title: settingsMap['academics_hero_title'] || 'Academic Excellence at Gurukul Pathshala',
         academics_hero_subtitle: settingsMap['academics_hero_subtitle'] || 'Nurturing minds, shaping futures through a holistic and innovative curriculum',
@@ -183,6 +218,20 @@ const AdminSettings = () => {
         notices_page_subtitle: settingsMap['notices_page_subtitle'] || 'Stay updated with the latest news and announcements from our school.',
         site_logo: settingsMap['site_logo'] || ''
       });
+
+      // Parse JSON arrays for Academics page
+      try {
+        setCurriculumList(settingsMap['academics_curriculum'] ? JSON.parse(settingsMap['academics_curriculum']) : defaultCurriculum);
+      } catch (e) { setCurriculumList(defaultCurriculum); }
+      
+      try {
+        setProgramsList(settingsMap['academics_programs'] ? JSON.parse(settingsMap['academics_programs']) : defaultPrograms);
+      } catch (e) { setProgramsList(defaultPrograms); }
+      
+      try {
+        setAchievementsList(settingsMap['academics_achievements'] ? JSON.parse(settingsMap['academics_achievements']) : defaultAchievements);
+      } catch (e) { setAchievementsList(defaultAchievements); }
+
     } catch (error) {
       console.error("Failed to fetch settings", error);
     } finally {
@@ -219,6 +268,27 @@ const AdminSettings = () => {
     for (const field of fields) {
       await handleSave(field.key, formData[field.key], groupName, field.desc);
     }
+  };
+
+  const saveListSetting = async (key, list, groupName, desc) => {
+    await handleSave(key, JSON.stringify(list), groupName, desc);
+  };
+
+  // Academic List Handlers
+  const handleListChange = (setter, index, field, value) => {
+    setter(prev => {
+      const newList = [...prev];
+      newList[index] = { ...newList[index], [field]: value };
+      return newList;
+    });
+  };
+
+  const addListItem = (setter, emptyItem) => {
+    setter(prev => [...prev, emptyItem]);
+  };
+
+  const removeListItem = (setter, index) => {
+    setter(prev => prev.filter((_, i) => i !== index));
   };
 
   // Gallery helper functions
@@ -333,6 +403,36 @@ const AdminSettings = () => {
     }
   };
 
+  const handleKnowGurukulImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setKnowGurukulImgUploading(true);
+    try {
+      const updatedSetting = await settingsAPI.uploadImage('know_gurukul_image', file);
+      setFormData(prev => ({ ...prev, know_gurukul_image: updatedSetting.settingValue }));
+      setMessage({ text: 'Image uploaded successfully!', type: 'success' });
+      setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+    } catch (e) {
+      console.error('Image upload failed', e);
+      setMessage({ text: 'Image upload failed.', type: 'error' });
+    } finally {
+      setKnowGurukulImgUploading(false);
+    }
+  };
+
+  const deleteKnowGurukulImage = async () => {
+    if (!window.confirm('Are you sure you want to remove the image?')) return;
+    try {
+      await settingsAPI.delete('know_gurukul_image');
+      setFormData(prev => ({ ...prev, know_gurukul_image: '' }));
+      setMessage({ text: 'Image removed.', type: 'success' });
+      setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+    } catch (e) {
+      console.error('Image delete failed', e);
+      setMessage({ text: 'Failed to remove image.', type: 'error' });
+    }
+  };
+
   useEffect(() => {
     if (activeTab === 'gallery') fetchGalleryAlbums();
   }, [activeTab]);
@@ -351,80 +451,30 @@ const AdminSettings = () => {
       )}
 
       <div className="settings-container">
-        <aside className="settings-sidebar">
-          <button
-            className={activeTab === 'general' ? 'active' : ''}
-            onClick={() => setActiveTab('general')}
-          >
-            General
-          </button>
-          <button
-            className={activeTab === 'branding' ? 'active' : ''}
-            onClick={() => setActiveTab('branding')}
-          >
-            Branding & Contact
-          </button>
-          <button
-            className={activeTab === 'landing' ? 'active' : ''}
-            onClick={() => setActiveTab('landing')}
-          >
-            Landing Page
-          </button>
-          <button
-            className={activeTab === 'homepage' ? 'active' : ''}
-            onClick={() => setActiveTab('homepage')}
-          >
-            🏠 Home Page
-          </button>
-          <button
-            className={activeTab === 'admissions' ? 'active' : ''}
-            onClick={() => setActiveTab('admissions')}
-          >
-            🎓 Admissions Page
-          </button>
-          <button
-            className={activeTab === 'academics' ? 'active' : ''}
-            onClick={() => setActiveTab('academics')}
-          >
-            📚 Academics Page
-          </button>
-          <button
-            className={activeTab === 'faculty' ? 'active' : ''}
-            onClick={() => setActiveTab('faculty')}
-          >
-            👨‍🏫 Faculty Page
-          </button>
-          <button
-            className={activeTab === 'gallery' ? 'active' : ''}
-            onClick={() => setActiveTab('gallery')}
-          >
-            🖼️ Gallery Page
-          </button>
-          <button
-            className={activeTab === 'about' ? 'active' : ''}
-            onClick={() => setActiveTab('about')}
-          >
-            ℹ️ About Page
-          </button>
-          <button
-            className={activeTab === 'contact' ? 'active' : ''}
-            onClick={() => setActiveTab('contact')}
-          >
-            📞 Contact Page
-          </button>
-          <button
-            className={activeTab === 'notices' ? 'active' : ''}
-            onClick={() => setActiveTab('notices')}
-          >
-            📢 Notices Page
-          </button>
-          <button
-            className={activeTab === 'security' ? 'active' : ''}
-            onClick={() => setActiveTab('security')}
-          >
-            Security
-          </button>
-        </aside>
+        <nav className="settings-tabs">
+          {[
+            { id: 'general',    label: 'General' },
+            { id: 'branding',   label: '🎨 Branding' },
+            { id: 'landing',    label: '🖼 Landing' },
+            { id: 'homepage',   label: '🏠 Home' },
+            { id: 'admissions', label: '🎓 Admissions' },
+            { id: 'academics',  label: '📚 Academics' },
+            { id: 'faculty',    label: '👨‍🏫 Faculty' },
+            { id: 'gallery',    label: '🖼️ Gallery' },
+            { id: 'about',      label: 'ℹ️ About' },
+            { id: 'contact',    label: '📞 Contact' },
+            { id: 'notices',    label: '📢 Notices' },
+            { id: 'security',   label: '🔒 Security' },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              className={`settings-tab-btn ${activeTab === tab.id ? 'active' : ''}`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </nav>
 
         <section className="settings-content">
           {loading ? <div className="spinner">Loading settings...</div> : (
@@ -622,6 +672,43 @@ const AdminSettings = () => {
                     <label>Mission Statement</label>
                     <textarea name="know_gurukul_mission" value={formData.know_gurukul_mission} onChange={handleChange} rows={3} />
                   </div>
+                  <div className="form-group">
+                    <label>Section Image</label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: '10px' }}>
+                      {formData.know_gurukul_image ? (
+                        <div style={{ position: 'relative', width: '200px', height: '120px' }}>
+                          <div style={{ width: '200px', height: '120px', overflow: 'hidden', border: '1px solid #ddd', borderRadius: '4px' }}>
+                            <img 
+                              src={formData.know_gurukul_image.startsWith('http') ? formData.know_gurukul_image : `${(import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')}${formData.know_gurukul_image}`} 
+                              alt="Know Gurukul" 
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                            />
+                          </div>
+                          <button 
+                            onClick={deleteKnowGurukulImage}
+                            style={{ position: 'absolute', top: '5px', right: '5px', background: 'rgba(255,0,0,0.7)', color: 'white', border: 'none', borderRadius: '50%', width: '22px', height: '22px', cursor: 'pointer', fontSize: '12px' }}
+                          >✕</button>
+                        </div>
+                      ) : (
+                        <div style={{ width: '200px', height: '120px', border: '2px dashed #ccc', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888', fontSize: '12px', textAlign: 'center' }}>
+                          No Image
+                        </div>
+                      )}
+                      <div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleKnowGurukulImageUpload}
+                          style={{ display: 'none' }}
+                          id="kg-image-upload"
+                        />
+                        <label htmlFor="kg-image-upload" className="primary-btn" style={{ cursor: 'pointer', padding: '8px 15px', display: 'inline-block' }}>
+                          {knowGurukulImgUploading ? 'Uploading...' : formData.know_gurukul_image ? 'Change Image' : 'Upload Image'}
+                        </label>
+                        <p style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}>Recommended size: 600x400px</p>
+                      </div>
+                    </div>
+                  </div>
 
                   <h3 style={{marginTop:'20px',marginBottom:'10px',color:'#20b2aa'}}>Admissions Toggle</h3>
                   <div className="form-group">
@@ -663,19 +750,19 @@ const AdminSettings = () => {
                   <h3 style={{marginTop:'20px',marginBottom:'10px',color:'#20b2aa'}}>Important Dates</h3>
                   <div className="form-group">
                     <label>Admissions Open Date</label>
-                    <input type="text" name="admissions_open_date" value={formData.admissions_open_date} onChange={handleChange} placeholder="1st December 2023" />
+                    <input type="text" name="admissions_open_date" value={formData.admissions_open_date} onChange={handleChange} placeholder="1st Falgun 2080" />
                   </div>
                   <div className="form-group">
                     <label>Last Date for Submission</label>
-                    <input type="text" name="admissions_last_date" value={formData.admissions_last_date} onChange={handleChange} placeholder="31st March 2024" />
+                    <input type="text" name="admissions_last_date" value={formData.admissions_last_date} onChange={handleChange} placeholder="30th Chaitra 2080" />
                   </div>
                   <div className="form-group">
                     <label>Interaction Sessions</label>
-                    <input type="text" name="admissions_session_date" value={formData.admissions_session_date} onChange={handleChange} placeholder="April 2024" />
+                    <input type="text" name="admissions_session_date" value={formData.admissions_session_date} onChange={handleChange} placeholder="1st Week of Baisakh 2081" />
                   </div>
                   <div className="form-group">
                     <label>Academic Year Begins</label>
-                    <input type="text" name="admissions_year_begins" value={formData.admissions_year_begins} onChange={handleChange} placeholder="1st June 2024" />
+                    <input type="text" name="admissions_year_begins" value={formData.admissions_year_begins} onChange={handleChange} placeholder="15th Baisakh 2081" />
                   </div>
 
                   <button className="primary-btn" onClick={() => saveGroup('AdmissionsPage', [
@@ -729,6 +816,143 @@ const AdminSettings = () => {
                     { key: 'academics_stat_years', desc: 'Years of excellence stat' },
                     { key: 'academics_stat_alumni', desc: 'Successful alumni stat' }
                   ])}>Save Academics Page Settings</button>
+
+                  {/* ── Curriculum Accordion ── */}
+                  <div className="acad-section">
+                    <div
+                      className={`acad-section-header ${openSections.curriculum ? 'open' : ''}`}
+                      onClick={() => toggleSection('curriculum')}
+                    >
+                      <span className="acad-section-title">
+                        📚 Curriculum Overview
+                        <span className="acad-item-count">{curriculumList.length} items</span>
+                      </span>
+                      <span className={`acad-section-chevron ${openSections.curriculum ? 'open' : ''}`}>▼</span>
+                    </div>
+                    {openSections.curriculum && (
+                      <div className="acad-section-body">
+                        {curriculumList.map((item, index) => (
+                          <div key={index} className="acad-list-item">
+                            <div className="acad-list-item-header">
+                              <div className="form-group">
+                                <label>Icon</label>
+                                <input type="text" value={item.icon} onChange={(e) => handleListChange(setCurriculumList, index, 'icon', e.target.value)} />
+                              </div>
+                              <div className="form-group">
+                                <label>Title</label>
+                                <input type="text" value={item.title} onChange={(e) => handleListChange(setCurriculumList, index, 'title', e.target.value)} />
+                              </div>
+                            </div>
+                            <div className="form-group">
+                              <label>Description</label>
+                              <textarea rows="2" value={item.description} onChange={(e) => handleListChange(setCurriculumList, index, 'description', e.target.value)}></textarea>
+                            </div>
+                            <div className="acad-list-item-footer">
+                              <button className="danger-btn" onClick={() => removeListItem(setCurriculumList, index)}>🗑 Remove</button>
+                            </div>
+                          </div>
+                        ))}
+                        <div className="acad-list-actions">
+                          <button className="secondary-btn" onClick={() => addListItem(setCurriculumList, { icon: '📚', title: 'New Curriculum', description: '' })}>+ Add Item</button>
+                          <button className="primary-btn" onClick={() => saveListSetting('academics_curriculum', curriculumList, 'AcademicsPage', 'Curriculum List')}>💾 Save Curriculum</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* ── Classes/Programs Accordion ── */}
+                  <div className="acad-section">
+                    <div
+                      className={`acad-section-header ${openSections.programs ? 'open' : ''}`}
+                      onClick={() => toggleSection('programs')}
+                    >
+                      <span className="acad-section-title">
+                        🎓 Classes / Programs
+                        <span className="acad-item-count">{programsList.length} items</span>
+                      </span>
+                      <span className={`acad-section-chevron ${openSections.programs ? 'open' : ''}`}>▼</span>
+                    </div>
+                    {openSections.programs && (
+                      <div className="acad-section-body">
+                        {programsList.map((item, index) => (
+                          <div key={index} className="acad-list-item">
+                            <div className="acad-list-item-header">
+                              <div className="form-group">
+                                <label>Icon</label>
+                                <input type="text" value={item.icon} onChange={(e) => handleListChange(setProgramsList, index, 'icon', e.target.value)} />
+                              </div>
+                              <div className="form-group">
+                                <label>Title</label>
+                                <input type="text" value={item.title} onChange={(e) => handleListChange(setProgramsList, index, 'title', e.target.value)} />
+                              </div>
+                            </div>
+                            <div className="form-group">
+                              <label>Description</label>
+                              <textarea rows="2" value={item.description} onChange={(e) => handleListChange(setProgramsList, index, 'description', e.target.value)}></textarea>
+                            </div>
+                            <div className="form-group">
+                              <label>Features <span style={{fontSize:'11px',color:'#64748b'}}>(one feature per line)</span></label>
+                              <textarea rows="4" value={item.features} onChange={(e) => handleListChange(setProgramsList, index, 'features', e.target.value)} placeholder="Nepali, English, Mathematics&#10;Science & Social Studies"></textarea>
+                            </div>
+                            <div className="acad-list-item-footer">
+                              <button className="danger-btn" onClick={() => removeListItem(setProgramsList, index)}>🗑 Remove</button>
+                            </div>
+                          </div>
+                        ))}
+                        <div className="acad-list-actions">
+                          <button className="secondary-btn" onClick={() => addListItem(setProgramsList, { icon: '🏫', title: 'New Class', description: '', features: '' })}>+ Add Class</button>
+                          <button className="primary-btn" onClick={() => saveListSetting('academics_programs', programsList, 'AcademicsPage', 'Classes List')}>💾 Save Classes</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* ── Achievements Accordion ── */}
+                  <div className="acad-section">
+                    <div
+                      className={`acad-section-header ${openSections.achievements ? 'open' : ''}`}
+                      onClick={() => toggleSection('achievements')}
+                    >
+                      <span className="acad-section-title">
+                        🏆 Achievements
+                        <span className="acad-item-count">{achievementsList.length} items</span>
+                      </span>
+                      <span className={`acad-section-chevron ${openSections.achievements ? 'open' : ''}`}>▼</span>
+                    </div>
+                    {openSections.achievements && (
+                      <div className="acad-section-body">
+                        {achievementsList.map((item, index) => (
+                          <div key={index} className="acad-list-item">
+                            <div className="acad-list-item-header with-year">
+                              <div className="form-group">
+                                <label>Icon</label>
+                                <input type="text" value={item.icon} onChange={(e) => handleListChange(setAchievementsList, index, 'icon', e.target.value)} />
+                              </div>
+                              <div className="form-group">
+                                <label>Year (e.g. 2081 BS)</label>
+                                <input type="text" value={item.year} onChange={(e) => handleListChange(setAchievementsList, index, 'year', e.target.value)} />
+                              </div>
+                              <div className="form-group">
+                                <label>Title</label>
+                                <input type="text" value={item.title} onChange={(e) => handleListChange(setAchievementsList, index, 'title', e.target.value)} />
+                              </div>
+                            </div>
+                            <div className="form-group">
+                              <label>Description</label>
+                              <textarea rows="2" value={item.description} onChange={(e) => handleListChange(setAchievementsList, index, 'description', e.target.value)}></textarea>
+                            </div>
+                            <div className="acad-list-item-footer">
+                              <button className="danger-btn" onClick={() => removeListItem(setAchievementsList, index)}>🗑 Remove</button>
+                            </div>
+                          </div>
+                        ))}
+                        <div className="acad-list-actions">
+                          <button className="secondary-btn" onClick={() => addListItem(setAchievementsList, { icon: '🏅', year: '2081 BS', title: 'New Achievement', description: '' })}>+ Add Achievement</button>
+                          <button className="primary-btn" onClick={() => saveListSetting('academics_achievements', achievementsList, 'AcademicsPage', 'Achievements List')}>💾 Save Achievements</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 

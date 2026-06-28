@@ -1,33 +1,35 @@
-2026-06-22 17:44:58 - Starting SchoolManagementApplication using Java 17.0.13 with PID 3760 (/Volumes/Macbook-1/Gurukul/React/Gurukul/backend/target/classes started by abishek in /Volumes/Macbook-1/Gurukul/React/Gurukul/backend)
-2026-06-22 17:44:58 - Running with Spring Boot v3.2.6, Spring v6.1.8
-2026-06-22 17:44:58 - No active profile set, falling back to 1 default profile: "default"
-2026-06-22 17:44:59 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-06-22 17:44:59 - Finished Spring Data repository scanning in 97 ms. Found 21 JPA repository interfaces.
-2026-06-22 17:45:00 - Tomcat initialized with port 8080 (http)
-2026-06-22 17:45:00 - Starting service [Tomcat]
-2026-06-22 17:45:00 - Starting Servlet engine: [Apache Tomcat/10.1.24]
-2026-06-22 17:45:00 - Initializing Spring embedded WebApplicationContext
-2026-06-22 17:45:00 - Root WebApplicationContext: initialization completed in 1629 ms
-2026-06-22 17:45:00 - Filter 'jwtAuthenticationFilter' configured for use
-2026-06-22 17:45:00 - HikariPool-1 - Starting...
-2026-06-22 17:45:01 - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@74a820bf
-2026-06-22 17:45:01 - HikariPool-1 - Start completed.
-2026-06-22 17:45:01 - HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-06-22 17:45:01 - HHH000412: Hibernate ORM core version 6.4.8.Final
-2026-06-22 17:45:01 - HHH000026: Second-level cache disabled
-2026-06-22 17:45:02 - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-06-22 17:45:02 - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-06-22 17:45:03 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-06-22 17:45:03 - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-06-22 17:45:04 - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-06-22 17:45:05 - === AdminFacultyController INITIALIZED ===
-2026-06-22 17:45:05 - Controller mapped to: /admin/faculty
-2026-06-22 17:45:05 - Full URL will be: /api/admin/faculty (context-path adds /api)
-2026-06-22 17:45:05 - Available endpoints:
-2026-06-22 17:45:05 -   GET  /admin/faculty
-2026-06-22 17:45:05 -   GET  /admin/faculty/test
-2026-06-22 17:45:05 -   POST /admin/faculty
-2026-06-22 17:45:05 -   PUT  /admin/faculty/{id}/status
-2026-06-22 17:45:05 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@23bc053c, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5d947961, org.springframework.security.web.context.SecurityContextHolderFilter@24e95bd4, org.springframework.security.web.header.HeaderWriterFilter@d12009f, org.springframework.web.filter.CorsFilter@2d0d357b, org.springframework.security.web.authentication.logout.LogoutFilter@6c8fa6b3, com.lms.security.JwtAuthenticationFilter@237add, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5590d10f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@230fbdf5, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3840b4e6, org.springframework.security.web.session.SessionManagementFilter@6ffbae2e, org.springframework.security.web.access.ExceptionTranslationFilter@78513ad9, org.springframework.security.web.access.intercept.AuthorizationFilter@4e260e04]
-2026-06-22 17:45:05 - Tomcat started on port 8080 (http) with context path '/api'
-2026-06-22 17:45:05 - Started SchoolManagementApplication in 8.005 seconds (process running for 8.503)
+2026-06-28 00:44:02 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=50m6s877ms).
+2026-06-28 00:45:47 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m44s602ms).
+2026-06-28 01:04:50 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=19m3s518ms).
+2026-06-28 01:24:07 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=19m16s940ms).
+2026-06-28 01:25:51 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m44s402ms).
+2026-06-28 01:31:34 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m42s579ms).
+2026-06-28 01:45:40 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=14m5s526ms).
+2026-06-28 01:47:49 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m9s358ms).
+2026-06-28 02:06:26 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=18m37s52ms).
+2026-06-28 03:09:24 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h2m58s251ms).
+2026-06-28 03:11:34 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m9s370ms).
+2026-06-28 03:29:46 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=18m12s334ms).
+2026-06-28 03:31:31 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m44s540ms).
+2026-06-28 03:48:46 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m15s107ms).
+2026-06-28 03:50:55 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m9s358ms).
+2026-06-28 04:08:00 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m4s613ms).
+2026-06-28 04:09:44 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m44s543ms).
+2026-06-28 04:26:43 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m59s102ms).
+2026-06-28 04:28:53 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m9s335ms).
+2026-06-28 04:46:49 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m55s960ms).
+2026-06-28 04:48:33 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m44s527ms).
+2026-06-28 05:35:49 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=47m16s386ms).
+2026-06-28 06:05:13 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=29m23s391ms).
+2026-06-28 06:45:06 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=39m53s498ms).
+2026-06-28 07:36:55 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=51m48s666ms).
+2026-06-28 07:55:07 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=18m12s456ms).
+2026-06-28 08:37:52 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=42m44s751ms).
+2026-06-28 08:40:02 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m9s399ms).
+2026-06-28 08:56:59 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m57s54ms).
+2026-06-28 09:13:26 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m27s147ms).
+2026-06-28 09:29:14 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m47s727ms).
+2026-06-28 09:44:27 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m13s189ms).
+2026-06-28 09:53:13 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=8m46s128ms).
+2026-06-28 10:24:44 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=31m31s648ms).
+2026-06-28 10:33:54 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=6m39s649ms).

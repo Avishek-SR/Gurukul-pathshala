@@ -4,9 +4,11 @@ import com.lms.model.AdmissionInfo;
 import com.lms.model.AdmissionApplication;
 import com.lms.repository.AdmissionInfoRepository;
 import com.lms.service.AdmissionApplicationService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin/admissions")
@@ -15,10 +17,13 @@ public class AdminAdmissionController {
     private final AdmissionInfoRepository repository;
     private final AdmissionApplicationService applicationService;
 
-    public AdminAdmissionController(AdmissionInfoRepository repository, AdmissionApplicationService applicationService) {
+    public AdminAdmissionController(AdmissionInfoRepository repository,
+                                    AdmissionApplicationService applicationService) {
         this.repository = repository;
         this.applicationService = applicationService;
     }
+
+    // ── Admission Info (open/close dates, etc.) ──────────────────────────
 
     @GetMapping
     public List<AdmissionInfo> getAll() {
@@ -51,25 +56,60 @@ public class AdminAdmissionController {
         repository.deleteById(id);
     }
 
-    // --- Application Endpoints ---
+    // ── Application Pipeline Endpoints ──────────────────────────────────
 
     @GetMapping("/applications")
     public List<AdmissionApplication> getAllApplications() {
         return applicationService.getAllApplications();
     }
 
-    @PutMapping("/applications/{id}/approve")
-    public AdmissionApplication approveApplication(@PathVariable Long id) {
-        return applicationService.approveApplication(id);
+    /**
+     * STEP 1 — Accept: review passed, send entrance exam email.
+     * Body: { "examDate": "...", "examVenue": "...", "examNotes": "..." }
+     */
+    @PutMapping("/applications/{id}/accept")
+    public ResponseEntity<AdmissionApplication> acceptApplication(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> payload) {
+        return ResponseEntity.ok(applicationService.acceptApplication(id, payload));
     }
 
+    /**
+     * STEP 2 — Mark Exam Done: student appeared for entrance exam.
+     */
+    @PutMapping("/applications/{id}/mark-exam-done")
+    public ResponseEntity<AdmissionApplication> markExamDone(@PathVariable Long id) {
+        return ResponseEntity.ok(applicationService.markExamScheduled(id));
+    }
+
+    /**
+     * STEP 3 — Admit: evaluation passed, create student account and send credentials.
+     */
+    @PutMapping("/applications/{id}/admit")
+    public ResponseEntity<AdmissionApplication> admitApplication(@PathVariable Long id) {
+        return ResponseEntity.ok(applicationService.admitApplication(id));
+    }
+
+    /**
+     * Reject at any active stage (PENDING, ACCEPTED, EXAM_SCHEDULED).
+     * Sends rejection email to parent.
+     */
     @PutMapping("/applications/{id}/reject")
-    public AdmissionApplication rejectApplication(@PathVariable Long id) {
-        return applicationService.rejectApplication(id);
+    public ResponseEntity<AdmissionApplication> rejectApplication(@PathVariable Long id) {
+        return ResponseEntity.ok(applicationService.rejectApplication(id));
+    }
+
+    /**
+     * Legacy approve endpoint — kept for backward compatibility, maps to admit.
+     */
+    @PutMapping("/applications/{id}/approve")
+    public ResponseEntity<AdmissionApplication> approveApplication(@PathVariable Long id) {
+        return ResponseEntity.ok(applicationService.admitApplication(id));
     }
 
     @DeleteMapping("/applications/{id}")
-    public void deleteApplication(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteApplication(@PathVariable Long id) {
         applicationService.deleteApplication(id);
+        return ResponseEntity.noContent().build();
     }
 }

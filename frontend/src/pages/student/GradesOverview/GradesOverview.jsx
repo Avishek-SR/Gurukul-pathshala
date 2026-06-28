@@ -1,48 +1,61 @@
 // GradesOverview.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { gradeService } from '../../../services/gradeService';
 import './GradesOverview.css';
 
 const GradesOverview = () => {
-  const grades = [
-    { subject: 'Mathematics', grade: 'A+', score: 95, credit: 4 },
-    { subject: 'Physics', grade: 'A', score: 88, credit: 3 },
-    { subject: 'Computer Science', grade: 'A+', score: 96, credit: 4 },
-    { subject: 'English', grade: 'B+', score: 82, credit: 3 },
-    { subject: 'Chemistry', grade: 'A-', score: 85, credit: 3 },
-    { subject: 'Data Structures', grade: 'A', score: 89, credit: 4 },
-  ];
+  const [studentData, setStudentData] = useState(null);
 
-  const getGradeColor = (grade) => {
-    if (grade.includes('A+')) return '#4CAF50';
-    if (grade.includes('A')) return '#8BC34A';
-    if (grade.includes('B+')) return '#FFC107';
-    if (grade.includes('B')) return '#FF9800';
-    return '#F44336';
-  };
+  useEffect(() => {
+    // Fetch from gradeService (defaults to first student Avishek Sharma or current student)
+    const allStudents = gradeService.getStudents();
+    const storedUser = sessionStorage.getItem('user');
+    let targetStudent = allStudents[0];
+    
+    if (storedUser) {
+      try {
+        const u = JSON.parse(storedUser);
+        const match = allStudents.find(s => s.email === u.email || s.name.includes(u.name));
+        if (match) targetStudent = match;
+      } catch (e) {}
+    }
+    setStudentData(targetStudent || allStudents[0]);
+  }, []);
+
+  if (!studentData) return null;
+
+  const grades = studentData.subjects || [];
+
+  // Stats calculation
+  const scores = grades.map(g => Number(g.score) || 0);
+  const highestScore = scores.length > 0 ? Math.max(...scores) : 0;
+  const lowestScore = scores.length > 0 ? Math.min(...scores) : 0;
+  const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+  const totalCredits = studentData.totalCredits || grades.reduce((acc, curr) => acc + (Number(curr.credit) || 0), 0);
 
   return (
     <div className="grades-overview">
       <div className="dashboard-header">
         <i className="fas fa-chart-line"></i>
-        <h3>Grades Overview</h3>
-        <span className="gpa-display">GPA: 3.78</span>
+        <h3>Grades Overview ({studentData.name})</h3>
+        <span className="gpa-display">GPA: {studentData.gpa}</span>
       </div>
       
       <div className="grades-stats">
         <div className="stat-item">
-          <div className="stat-value">95%</div>
+          <div className="stat-value">{highestScore}%</div>
           <div className="stat-label">Highest Score</div>
         </div>
         <div className="stat-item">
-          <div className="stat-value">82%</div>
+          <div className="stat-value">{lowestScore}%</div>
           <div className="stat-label">Lowest Score</div>
         </div>
         <div className="stat-item">
-          <div className="stat-value">89%</div>
+          <div className="stat-value">{avgScore}%</div>
           <div className="stat-label">Average</div>
         </div>
         <div className="stat-item">
-          <div className="stat-value">21</div>
+          <div className="stat-value">{totalCredits}</div>
           <div className="stat-label">Credit Hours</div>
         </div>
       </div>
@@ -51,7 +64,7 @@ const GradesOverview = () => {
         <table>
           <thead>
             <tr>
-              <th>Subject</th>
+              <th>Subject Module</th>
               <th>Grade</th>
               <th>Score</th>
               <th>Credit</th>
@@ -65,12 +78,15 @@ const GradesOverview = () => {
                   <div className="subject-icon">
                     <i className="fas fa-book"></i>
                   </div>
-                  {item.subject}
+                  <div>
+                    <div style={{ fontWeight: 600 }}>{item.subject}</div>
+                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{item.code}</div>
+                  </div>
                 </td>
                 <td>
                   <span 
                     className="grade-badge"
-                    style={{ backgroundColor: getGradeColor(item.grade) }}
+                    style={{ backgroundColor: item.color || '#3B82F6' }}
                   >
                     {item.grade}
                   </span>
@@ -83,11 +99,11 @@ const GradesOverview = () => {
                       className="status-dot"
                       style={{ 
                         backgroundColor: item.score >= 90 ? '#4CAF50' : 
-                                       item.score >= 80 ? '#FFC107' : '#F44336'
+                                       item.score >= 75 ? '#FFC107' : '#F44336'
                       }}
                     ></div>
                     <span>{item.score >= 90 ? 'Excellent' : 
-                          item.score >= 80 ? 'Good' : 'Needs Improvement'}</span>
+                          item.score >= 75 ? 'Good' : 'Needs Improvement'}</span>
                   </div>
                 </td>
               </tr>

@@ -17,24 +17,39 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Check if user is logged in on mount
     const checkAuth = async () => {
-      const token = sessionStorage.getItem('token');
+      const storedToken = sessionStorage.getItem('token');
+      const storedUser = sessionStorage.getItem('user');
 
-      // If no token, do NOT call backend
-      if (!token) {
+      // If no token, clear state and stop
+      if (!storedToken) {
         setUser(null);
         setLoading(false);
         return;
       }
 
+      // If we already have user data in sessionStorage, use it immediately
+      // so the UI doesn't flash or redirect before the profile call completes
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+        setToken(storedToken);
+        setLoading(false);
+        return; // Skip profile re-fetch to prevent logout flash
+      }
+
+      // No cached user — try fetching from backend
       try {
         const userData = await authApi.getProfile();
         setUser(userData);
       } catch (error) {
         console.error('Auth check failed:', error);
-        sessionStorage.removeItem('token');
-        sessionStorage.removeItem('user');
-        setToken(null);
-        setUser(null);
+        // Only clear session on explicit 401 (token truly invalid), not network errors
+        if (error?.response?.status === 401) {
+          sessionStorage.removeItem('token');
+          sessionStorage.removeItem('user');
+          setToken(null);
+          setUser(null);
+        }
+        // For any other error (backend offline, 500, etc.) keep existing session
       } finally {
         setLoading(false);
       }
@@ -45,20 +60,15 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      // FIX: authApi.login ALREADY returns response.data
-      // So 'data' variable holds the actual payload.
       const data = await authApi.login(credentials);
 
       if (!data) {
         throw new Error('Invalid response from server');
       }
 
-      // Backend returns accessToken and user fields separately
-      // ROBUST CHECK: Check all possible token field names
       const token = data.accessToken || data.token || data.jwt;
 
       if (!token) {
-        console.error('Missing token in response:', data);
         throw new Error('No access token received from server');
       }
 
@@ -82,7 +92,6 @@ export const AuthProvider = ({ children }) => {
       return { success: true, user };
     } catch (error) {
       console.error('Login failed:', error);
-      // Handle axios error vs standard error
       const errorMessage = error.response?.data?.message || error.message || 'Login failed';
       return { success: false, error: errorMessage };
     }

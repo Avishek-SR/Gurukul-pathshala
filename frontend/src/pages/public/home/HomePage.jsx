@@ -16,6 +16,7 @@ export default function HomePage() {
     stat_satisfaction: '100%',
     know_gurukul_desc: 'Founded in 1980, stands at the intersection of discipline, innovation, and holistic education. We shape future-ready citizens through values, skills, and knowledge.',
     know_gurukul_mission: 'Our mission is to provide quality education that nurtures intellectual curiosity, critical thinking, and ethical values in every student.',
+    know_gurukul_image: '',
     site_name: 'Gurukul Pathshala'
   });
 
@@ -39,6 +40,7 @@ export default function HomePage() {
             stat_satisfaction: settings['stat_satisfaction'] || '100%',
             know_gurukul_desc: settings['know_gurukul_desc'] || `Founded in 1980, ${settings['site_name'] || 'Gurukul Pathshala'} stands at the intersection of discipline, innovation, and holistic education. We shape future-ready citizens through values, skills, and knowledge.`,
             know_gurukul_mission: settings['know_gurukul_mission'] || 'Our mission is to provide quality education that nurtures intellectual curiosity, critical thinking, and ethical values in every student.',
+            know_gurukul_image: settings['know_gurukul_image'] || '',
             site_name: settings['site_name'] || 'Gurukul Pathshala'
           });
         }
@@ -61,7 +63,6 @@ export default function HomePage() {
         } else {
           // Fallback to defaults if no slides found
           setSchoolImages([
-            { url: "/images/Avishek.JPG", type: "IMAGE" },
             { url: "/images/Home.jpg", type: "IMAGE" },
             { url: "/images/know-gurukul.jpg", type: "IMAGE" }
           ]);
@@ -70,7 +71,6 @@ export default function HomePage() {
         console.error("Failed to fetch data", error);
         // Fallback defaults
         setSchoolImages([
-          { url: "/images/Avishek.JPG", type: "IMAGE" },
           { url: "/images/Home.jpg", type: "IMAGE" },
           { url: "/images/know-gurukul.jpg", type: "IMAGE" }
         ]);
@@ -217,7 +217,7 @@ export default function HomePage() {
               </div>
               <h2>Modern Classrooms</h2>
               <p>Smart technology-enabled education environment with digital learning tools.</p>
-              <button className="btn-small">Virtual Tour</button>
+              <button className="btn-small" onClick={() => navigate ('/gallery')}>Virtual Tour</button>
             </div>
 
             <div className="highlight-card">
@@ -226,7 +226,7 @@ export default function HomePage() {
               </div>
               <h2>Experienced Faculty</h2>
               <p>Dedicated educators with a passion for teaching and student success.</p>
-              <button className="btn-small">Meet Faculty</button>
+              <button className="btn-small" onClick={() => navigate('/our-faculty')}>Meet Faculty</button>
             </div>
           </div>
         </div>
@@ -247,20 +247,24 @@ export default function HomePage() {
               <a
                 href="#about"
                 className="btn-outline"
-                onClick={(e) => {
-                  e.preventDefault();
-                  alert('About section coming soon!');
-                }}
-              >
+                onClick={() => navigate('about')}>
                 Discover More
               </a>
             </div>
 
             <div className="know-gurukul-image">
-              <div className="image-placeholder">
-                <i className="fas fa-university"></i>
-                <span>{pageContent.site_name.toUpperCase()} Campus View</span>
-              </div>
+              {pageContent.know_gurukul_image ? (
+                <img 
+                  src={pageContent.know_gurukul_image.startsWith('http') ? pageContent.know_gurukul_image : `${(import.meta.env.VITE_API_URL || '').replace(/\/api$/, '')}${pageContent.know_gurukul_image}`} 
+                  alt={`${pageContent.site_name} Campus View`} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }} 
+                />
+              ) : (
+                <div className="image-placeholder">
+                  <i className="fas fa-university"></i>
+                  <span>{pageContent.site_name.toUpperCase()} Campus View</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

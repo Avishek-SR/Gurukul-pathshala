@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import GlobalActivityLog from '../dashboard/components/GlobalActivityLog';
+import AdminGradeSheets from './AdminGradeSheets';
 import './Reports.css';
 
 const Reports = () => {
@@ -13,7 +14,13 @@ const Reports = () => {
       icon: 'fas fa-history',
       color: '#3498db'
     },
-    // Future reports can be added here, e.g., 'attendance-report', 'performance-report'
+    {
+      id: 'grade-sheets',
+      title: 'Student Grade Sheets & Transcripts',
+      description: 'Search students, verify subject marks, and print official university academic transcripts.',
+      icon: 'fas fa-graduation-cap',
+      color: '#10b981'
+    }
   ];
 
   if (activeReport === 'global-activity') {
@@ -23,6 +30,17 @@ const Reports = () => {
           <i className="fas fa-arrow-left"></i> Back to Reports
         </button>
         <GlobalActivityLog />
+      </div>
+    );
+  }
+
+  if (activeReport === 'grade-sheets') {
+    return (
+      <div className="reports-page-wrapper">
+        <button className="back-to-reports-btn" onClick={() => setActiveReport(null)} style={{ marginBottom: '1rem', padding: '0.5rem 1rem', background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>
+          <i className="fas fa-arrow-left"></i> Back to Reports
+        </button>
+        <AdminGradeSheets />
       </div>
     );
   }

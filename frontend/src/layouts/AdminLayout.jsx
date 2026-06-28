@@ -21,6 +21,7 @@ import AdminActivities from '../pages/admin/activities/AdminActivities';
 import TimetableManagement from '../pages/admin/timetable/TimetableManagement';
 import NoticeManagement from '../pages/admin/notices/NoticeManagement';
 import AdmissionsManagement from '../pages/admin/admissions/AdmissionsManagement';
+import AdminGradeSheets from '../pages/admin/reports/AdminGradeSheets';
 
 const AdminLayout = ({ onLogout }) => {
   const { user: admin, loading: authLoading, logout } = useAuth(); // Use global auth context
@@ -229,6 +230,14 @@ const AdminLayout = ({ onLogout }) => {
           </div>
 
           <div
+            className={`menu-item ${activeTab === 'grade-sheets' ? 'active' : ''}`}
+            onClick={() => handleMenuClick('grade-sheets')}
+          >
+            <i className="fas fa-graduation-cap"></i>
+            <span>Grade Sheets</span>
+          </div>
+
+          <div
             className={`menu-item ${activeTab === 'profile' ? 'active' : ''}`}
             onClick={() => handleMenuClick('profile')}
           >
@@ -345,6 +354,7 @@ const AdminLayout = ({ onLogout }) => {
           {activeTab === 'timetable' && <TimetableManagement />}
           {activeTab === 'activities' && <AdminActivities />}
           {activeTab === 'notices' && <NoticeManagement />}
+          {activeTab === 'grade-sheets' && <AdminGradeSheets />}
         </main>
 
         {/* Footer */}

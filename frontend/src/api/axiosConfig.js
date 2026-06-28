@@ -30,11 +30,9 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
+      // Token expired or invalid - clear session
       sessionStorage.removeItem('token');
       sessionStorage.removeItem('user');
-
-      // Notify app to redirect using router (no hard reload)
       window.dispatchEvent(new CustomEvent('auth:logout'));
     }
     return Promise.reject(error);

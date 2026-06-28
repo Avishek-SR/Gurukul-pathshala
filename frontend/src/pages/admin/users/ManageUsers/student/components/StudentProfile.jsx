@@ -35,8 +35,11 @@ const StudentProfile = ({ student, isOpen, onClose }) => {
                 profilePictureUrl: newProfileUrl
             });
 
-            // 2. Update local UI
+            // 2. Update local UI immediately
             setCurrentStudent(prev => ({ ...prev, profilePictureUrl: newProfileUrl }));
+
+            // 3. Notify student portal to re-fetch profile (if open in same browser)
+            window.dispatchEvent(new CustomEvent('student:profileUpdated'));
         } catch (error) {
             console.error('Error uploading file:', error);
             alert('File upload failed');

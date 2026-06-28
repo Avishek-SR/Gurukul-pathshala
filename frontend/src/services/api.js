@@ -6,15 +6,36 @@ export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
  * Converts a server-returned relative image path (e.g. "/api/uploads/xyz.png")
  * into a fully-qualified URL pointing to the correct backend domain.
  * Safe to call with null/undefined — returns null in that case.
+ *
+ * The backend stores paths as "/api/uploads/<filename>".
+ * The resource is served at: <backend-origin>/api/uploads/<filename>
+ * e.g. https://gurukul-pathshala.onrender.com/api/uploads/<filename>
+ *
+ * So we just prepend the API_BASE_URL origin and keep the full path.
  */
 export const getImageUrl = (path) => {
   if (!path) return null;
   // Already an absolute URL — return as-is
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
-  // path is like "/api/uploads/xyz.png"; base is like "https://host.com/api"
-  // Strip the leading "/api" prefix from path before appending to base
-  const normalized = path.replace(/^\/api\//, '/');
-  return `${API_BASE_URL}${normalized}`;
+
+  // path is like "/api/uploads/xyz.png"
+  // API_BASE_URL is like "https://gurukul-pathshala.onrender.com/api" or "/api"
+  try {
+    if (API_BASE_URL.startsWith('http')) {
+      // Extract the origin (e.g. "https://gurukul-pathshala.onrender.com")
+      const url = new URL(API_BASE_URL);
+      const origin = url.origin; // e.g. "https://gurukul-pathshala.onrender.com"
+      // path already has the /api/uploads/... prefix, so just attach to origin
+      return `${origin}${path}`;
+    } else {
+      // Relative API base ("/api") — just return the path as-is (same origin)
+      return path;
+    }
+  } catch {
+    // Fallback: strip /api prefix and attach to API_BASE_URL
+    const normalized = path.replace(/^\/api\//, '/');
+    return `${API_BASE_URL}${normalized}`;
+  }
 };
 
 const api = axios.create({
@@ -71,7 +92,13 @@ export const publicAdmission = {
 
 export const adminAdmissions = {
   getAllApplications: () => api.get('/admin/admissions/applications').then(res => res.data),
-  approveApplication: (id) => api.put(`/admin/admissions/applications/${id}/approve`).then(res => res.data),
+  // Stage 1: Accept → sends entrance exam email
+  acceptApplication: (id, payload) => api.put(`/admin/admissions/applications/${id}/accept`, payload).then(res => res.data),
+  // Stage 2: Mark exam as done
+  markExamDone: (id) => api.put(`/admin/admissions/applications/${id}/mark-exam-done`).then(res => res.data),
+  // Stage 3: Final admit → creates student account + sends credentials email
+  admitApplication: (id) => api.put(`/admin/admissions/applications/${id}/admit`).then(res => res.data),
+  // Reject at any active stage
   rejectApplication: (id) => api.put(`/admin/admissions/applications/${id}/reject`).then(res => res.data),
   deleteApplication: (id) => api.delete(`/admin/admissions/applications/${id}`).then(res => res.data),
 };

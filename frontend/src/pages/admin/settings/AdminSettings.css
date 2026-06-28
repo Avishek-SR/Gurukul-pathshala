@@ -21,46 +21,67 @@
 
 .settings-container {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   overflow: hidden;
 }
 
-.settings-sidebar {
-  width: 220px;
-  background: #f1f5f9;
-  padding: 12px;
+/* Horizontal scrollable tab bar */
+.settings-tabs {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 4px;
+  padding: 12px 16px;
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+  flex-shrink: 0;
 }
 
-.settings-sidebar button {
+.settings-tabs::-webkit-scrollbar {
+  height: 4px;
+}
+.settings-tabs::-webkit-scrollbar-track {
+  background: transparent;
+}
+.settings-tabs::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.settings-tab-btn {
+  flex-shrink: 0;
   border: none;
   background: transparent;
-  padding: 12px 14px;
-  text-align: left;
+  padding: 8px 14px;
   border-radius: 6px;
-  font-size: 14px;
-  color: #374151;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
+  white-space: nowrap;
 }
 
-.settings-sidebar button:hover {
-  background: #e5e7eb;
+.settings-tab-btn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
 }
 
-.settings-sidebar button.active {
+.settings-tab-btn.active {
   background: #2563eb;
   color: #ffffff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
 }
 
 .settings-content {
   flex: 1;
   padding: 24px;
+  overflow-y: auto;
 }
 
 .settings-panel h2 {
@@ -99,19 +120,145 @@
 }
 
 .primary-btn {
-  margin-top: 12px;
   background: #2563eb;
   color: #ffffff;
   border: none;
-  padding: 10px 18px;
+  padding: 9px 18px;
   border-radius: 6px;
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
+  transition: background 0.2s;
+}
+.primary-btn:hover { background: #1d4ed8; }
+
+.secondary-btn {
+  background: #f1f5f9;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 9px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.secondary-btn:hover { background: #e2e8f0; border-color: #94a3b8; }
+
+.danger-btn {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.danger-btn:hover { background: #dc2626; color: #fff; border-color: #dc2626; }
+
+/* ── Academic List Manager ─────────────────────── */
+.acad-section {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  margin-top: 24px;
+  overflow: hidden;
 }
 
-.primary-btn:hover {
-  background: #1d4ed8;
+.acad-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: #f8fafc;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  transition: background 0.2s;
+  user-select: none;
 }
+.acad-section-header:hover { background: #f1f5f9; }
+.acad-section-header.open { border-bottom-color: #e5e7eb; }
+
+.acad-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.acad-section-chevron {
+  font-size: 12px;
+  color: #64748b;
+  transition: transform 0.25s;
+}
+.acad-section-chevron.open { transform: rotate(180deg); }
+
+.acad-section-body {
+  padding: 16px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.acad-list-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px;
+  position: relative;
+}
+
+.acad-list-item-header {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.acad-list-item-header.with-year {
+  grid-template-columns: 70px 120px 1fr;
+}
+
+.acad-list-item .form-group {
+  max-width: 100%;
+  margin-bottom: 8px;
+}
+
+.acad-list-item .form-group:last-child { margin-bottom: 0; }
+
+.acad-list-item-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.acad-list-actions {
+  display: flex;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.acad-item-count {
+  font-size: 12px;
+  color: #64748b;
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 2px 8px;
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 13px;
+  font-family: inherit;
+  resize: vertical;
+  line-height: 1.5;
+}
+
 
 /* Landing Page Image Styles */
 .landing-images-grid {

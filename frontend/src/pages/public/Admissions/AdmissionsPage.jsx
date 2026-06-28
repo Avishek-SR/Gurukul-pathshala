@@ -20,12 +20,15 @@ export default function AdmissionsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [admissionsOpen, setAdmissionsOpen] = useState(true); // Default to true while loading
   const [pageContent, setPageContent] = useState({
-    admissions_hero_title: 'Admissions Open for 2024-25',
+    admissions_hero_title: 'Admissions Open for 2081',
     admissions_hero_subtitle: 'Join Gurukul Pathshala and shape a brighter future for your child',
-    admissions_open_date: '1st December 2023',
-    admissions_last_date: '31st March 2024',
-    admissions_session_date: 'April 2024',
-    admissions_year_begins: '1st June 2024',
+    admissions_open_date: '1st Falgun 2080',
+    admissions_last_date: '30th Chaitra 2080',
+    admissions_session_date: '1st Week of Baisakh 2081',
+    admissions_year_begins: '15th Baisakh 2081',
+    contact_phone: '+977-9819782671',
+    contact_email: 'gurukulpathshala76@gmail.com',
+    contact_address: 'Lahan-8, Nepal',
   });
 
   useEffect(() => {
@@ -35,12 +38,15 @@ export default function AdmissionsPage() {
         if (settings) {
           if (settings['admissions_open'] === 'false') setAdmissionsOpen(false);
           setPageContent({
-            admissions_hero_title: settings['admissions_hero_title'] || 'Admissions Open for 2024-25',
+            admissions_hero_title: settings['admissions_hero_title'] || 'Admissions Open for 2081',
             admissions_hero_subtitle: settings['admissions_hero_subtitle'] || 'Join Gurukul Pathshala and shape a brighter future for your child',
-            admissions_open_date: settings['admissions_open_date'] || '1st December 2023',
-            admissions_last_date: settings['admissions_last_date'] || '31st March 2024',
-            admissions_session_date: settings['admissions_session_date'] || 'April 2024',
-            admissions_year_begins: settings['admissions_year_begins'] || '1st June 2024',
+            admissions_open_date: settings['admissions_open_date'] || '1st Falgun 2080',
+            admissions_last_date: settings['admissions_last_date'] || '30th Chaitra 2080',
+            admissions_session_date: settings['admissions_session_date'] || '1st Week of Baisakh 2081',
+            admissions_year_begins: settings['admissions_year_begins'] || '15th Baisakh 2081',
+            contact_phone: settings['contact_phone'] || '+977-9819782671',
+            contact_email: settings['contact_email'] || 'gurukulpathshala76@gmail.com',
+            contact_address: settings['contact_address'] || 'Lahan-8, Nepal',
           });
         }
       } catch (err) {
@@ -392,21 +398,21 @@ export default function AdmissionsPage() {
                 <div className="contact-icon">📞</div>
                 <div>
                   <h4>Phone</h4>
-                  <p>+91 98765 43210</p>
+                  <p>{pageContent.contact_phone}</p>
                 </div>
               </div>
               <div className="contact-item">
                 <div className="contact-icon">📧</div>
                 <div>
                   <h4>Email</h4>
-                  <p>admissions@gurukulpathshala.edu</p>
+                  <p>{pageContent.contact_email}</p>
                 </div>
               </div>
               <div className="contact-item">
                 <div className="contact-icon">🏫</div>
                 <div>
                   <h4>Visit Campus</h4>
-                  <p>9:00 AM - 4:00 PM, Monday to Saturday</p>
+                  <p>{pageContent.contact_address}<br/>9:00 AM - 4:00 PM, Monday to Saturday</p>
                 </div>
               </div>
             </div>

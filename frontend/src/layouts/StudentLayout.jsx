@@ -43,7 +43,7 @@ const StudentLayout = ({ onLogout }) => { // onLogout prop kept for compatibilit
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Fetch Student Data
+  // Fetch Student Data — re-run on location change so admin updates reflect
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
@@ -57,7 +57,12 @@ const StudentLayout = ({ onLogout }) => { // onLogout prop kept for compatibilit
     };
 
     fetchStudentData();
-  }, [navigate]);
+
+    // Also listen for explicit profile-update events (e.g. fired by admin portal)
+    const handleProfileUpdate = () => fetchStudentData();
+    window.addEventListener('student:profileUpdated', handleProfileUpdate);
+    return () => window.removeEventListener('student:profileUpdated', handleProfileUpdate);
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     await logout();

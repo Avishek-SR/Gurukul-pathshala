@@ -66,7 +66,7 @@ const LoginPage = () => {
       setCaptchaInput('');
     } catch (e) {
       console.error("Captcha load error:", e);
-      setError('Unable to load CAPTCHA');
+      setError('Could not connect to server. Make sure the backend is running on port 8080.');
     }
   };
 

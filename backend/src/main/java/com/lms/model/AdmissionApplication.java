@@ -21,7 +21,7 @@ public class AdmissionApplication {
 
     @Column(nullable = false)
     private LocalDate dob;
-    
+
     @Column(nullable = false)
     private String gender;
 
@@ -40,14 +40,27 @@ public class AdmissionApplication {
     @Column(columnDefinition = "TEXT")
     private String message;
 
-    // PENDING, APPROVED, REJECTED
+    // Status pipeline: PENDING → ACCEPTED → EXAM_SCHEDULED → ADMITTED | REJECTED
     @Column(nullable = false)
     private String status = "PENDING";
 
     @Column(name = "submission_date", nullable = false, updatable = false)
     private LocalDateTime submissionDate;
 
-    // The user ID generated after approval
+    @Column(name = "review_date")
+    private LocalDateTime reviewDate;
+
+    // Entrance Exam fields (populated when admin ACCEPTs the application)
+    @Column(name = "entrance_exam_date")
+    private String entranceExamDate;
+
+    @Column(name = "entrance_exam_venue")
+    private String entranceExamVenue;
+
+    @Column(name = "exam_notes", columnDefinition = "TEXT")
+    private String examNotes;
+
+    // The student account ID generated after final ADMITTED step
     @Column(name = "generated_student_id")
     private String generatedStudentId;
 
@@ -58,7 +71,7 @@ public class AdmissionApplication {
 
     public AdmissionApplication() {}
 
-    // Getters and Setters
+    // ── Getters and Setters ──────────────────────────────
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -94,6 +107,18 @@ public class AdmissionApplication {
 
     public LocalDateTime getSubmissionDate() { return submissionDate; }
     public void setSubmissionDate(LocalDateTime submissionDate) { this.submissionDate = submissionDate; }
+
+    public LocalDateTime getReviewDate() { return reviewDate; }
+    public void setReviewDate(LocalDateTime reviewDate) { this.reviewDate = reviewDate; }
+
+    public String getEntranceExamDate() { return entranceExamDate; }
+    public void setEntranceExamDate(String entranceExamDate) { this.entranceExamDate = entranceExamDate; }
+
+    public String getEntranceExamVenue() { return entranceExamVenue; }
+    public void setEntranceExamVenue(String entranceExamVenue) { this.entranceExamVenue = entranceExamVenue; }
+
+    public String getExamNotes() { return examNotes; }
+    public void setExamNotes(String examNotes) { this.examNotes = examNotes; }
 
     public String getGeneratedStudentId() { return generatedStudentId; }
     public void setGeneratedStudentId(String generatedStudentId) { this.generatedStudentId = generatedStudentId; }
