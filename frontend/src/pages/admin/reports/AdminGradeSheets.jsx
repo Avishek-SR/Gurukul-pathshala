@@ -9,6 +9,8 @@ import defaultLogo from '../../../assets/logo.svg';
 import toast from 'react-hot-toast';
 import './AdminGradeSheets.css';
 
+const CLASSES = ['Nursery', 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
+
 // Helper to resolve logo URL reliably for both preview & print windows
 const resolveLogoUrl = (siteLogo) => {
   try {
@@ -209,13 +211,13 @@ const GradeSheet = ({ s, schoolInfo }) => {
 
 // ─── Main Admin Grade Sheets Component ──────────────────────────────────────
 const AdminGradeSheets = () => {
-  const [students, setStudents]       = useState([]);
-  const [selectedStudent, setSelected] = useState(null);
-  const [searchQuery, setSearch]      = useState('');
-  const [activeClass, setActiveClass] = useState('All');
-  const [loading, setLoading]         = useState(true);
-  const [schoolInfo, setSchoolInfo]   = useState({});
-  const printRef                      = useRef(null);
+  const [students, setStudents]        = useState([]);
+  const [selectedStudent, setSelected]  = useState(null);
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [searchQuery, setSearch]       = useState('');
+  const [loading, setLoading]          = useState(true);
+  const [schoolInfo, setSchoolInfo]    = useState({});
+  const printRef                       = useRef(null);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -226,14 +228,8 @@ const AdminGradeSheets = () => {
       ]);
       setSchoolInfo(settings);
       const enriched = dbStudents.map(mergeStudentWithGrades);
-      enriched.sort((a, b) => {
-        const p = (a.program || '').localeCompare(b.program || '');
-        return p !== 0 ? p : a.name.localeCompare(b.name);
-      });
+      enriched.sort((a, b) => a.name.localeCompare(b.name));
       setStudents(enriched);
-      if (enriched.length > 0 && !selectedStudent) {
-        setSelected(enriched[0]);
-      }
     } catch (err) {
       console.error(err);
       toast.error('Failed to load student grade records.');
@@ -244,23 +240,25 @@ const AdminGradeSheets = () => {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  // Class filtering tabs
-  const classes = ['All', ...Array.from(new Set(students.map(s => s.program || 'General').filter(Boolean))).sort()];
-
-  const filtered = students.filter(s => {
-    const q = searchQuery.toLowerCase();
-    const matchClass = activeClass === 'All' || s.program === activeClass;
-    const matchQ = s.name.toLowerCase().includes(q) || s.userId.toLowerCase().includes(q) || (s.section || '').toLowerCase().includes(q);
-    return matchClass && matchQ;
+  // Dynamically get all unique classes preserving standard ordering
+  const dynamicClasses = Array.from(new Set([...CLASSES, ...students.map(s => s.program).filter(Boolean)])).sort((a, b) => {
+    const idxA = CLASSES.indexOf(a);
+    const idxB = CLASSES.indexOf(b);
+    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+    if (idxA !== -1) return -1;
+    if (idxB !== -1) return 1;
+    return a.localeCompare(b);
   });
 
-  // Group filtered students by class
-  const groupedByClass = filtered.reduce((acc, s) => {
-    const cls = s.program || 'General';
-    if (!acc[cls]) acc[cls] = [];
-    acc[cls].push(s);
-    return acc;
-  }, {});
+  const handleClassClick = (cls) => {
+    setSelectedClass(cls);
+    const classStudents = students.filter(s => s.program === cls);
+    if (classStudents.length > 0) {
+      setSelected(classStudents[0]);
+    } else {
+      setSelected(null);
+    }
+  };
 
   const handlePrint = () => {
     if (!selectedStudent || !printRef.current) return;
@@ -337,76 +335,96 @@ const AdminGradeSheets = () => {
     setTimeout(() => { win.print(); win.close(); }, 500);
   };
 
+  if (loading) {
+    return (
+      <div className="ags-loading-page">
+        <i className="fas fa-spinner fa-spin"></i>
+        <p>Loading student grade records...</p>
+      </div>
+    );
+  }
+
+  // 1. Render Class Selection Grid (Identical to Course Management Screenshot)
+  if (!selectedClass) {
+    return (
+      <div className="ags-page">
+        <div className="ags-header">
+          <h1>Grade Sheets Management</h1>
+          <p>Select a class to view and print student grade sheets.</p>
+        </div>
+        <div className="class-grid-container">
+          {dynamicClasses.map((cls) => {
+            const studentCount = students.filter(s => s.program === cls).length;
+            return (
+              <div key={cls} className="class-card-item" onClick={() => handleClassClick(cls)}>
+                <div className="class-card-icon">📚</div>
+                <h3>{cls}</h3>
+                <p>{studentCount} {studentCount === 1 ? 'Student' : 'Students'}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // 2. Render Grade Sheet View for Selected Class
+  const classStudents = students.filter(s => {
+    if (s.program !== selectedClass) return false;
+    const q = searchQuery.toLowerCase();
+    return s.name.toLowerCase().includes(q) || s.userId.toLowerCase().includes(q) || (s.section || '').toLowerCase().includes(q);
+  });
+
   return (
     <div className="admin-grades-container">
-      {/* ─── Left Sidebar ─── */}
+      {/* ─── Left Sidebar (Class Students) ─── */}
       <div className="ags-left">
         <div className="ags-panel-header">
-          <h2><i className="fas fa-graduation-cap"></i> Grade Sheets</h2>
-          <span className="ags-count">{students.length}</span>
+          <button className="ags-back-btn" onClick={() => { setSelectedClass(null); setSelected(null); }}>
+            ← Back to Classes
+          </button>
+        </div>
+        
+        <div className="ags-class-title-bar">
+          <h2>📚 {selectedClass}</h2>
+          <span className="ags-count">{classStudents.length} Students</span>
         </div>
 
         <div className="ags-search">
           <i className="fas fa-search"></i>
           <input 
             type="text" 
-            placeholder="Search name, roll no..." 
+            placeholder="Search student name, roll no..." 
             value={searchQuery} 
             onChange={e => setSearch(e.target.value)} 
           />
         </div>
 
-        {/* Class Filter Tabs */}
-        {classes.length > 1 && (
-          <div className="ags-class-tabs">
-            {classes.map(c => (
-              <button 
-                key={c} 
-                className={`ags-class-tab ${activeClass === c ? 'active' : ''}`} 
-                onClick={() => setActiveClass(c)}
-              >
-                {c === 'All' ? 'All Classes' : c}
-              </button>
-            ))}
-          </div>
-        )}
-
         <div className="ags-list-scroll">
-          {loading ? (
-            <div className="ags-loading"><i className="fas fa-spinner fa-spin"></i> Loading Records...</div>
-          ) : Object.keys(groupedByClass).length === 0 ? (
-            <div className="ags-empty"><i className="fas fa-folder-open"></i><p>No student records found</p></div>
-          ) : Object.entries(groupedByClass).map(([className, classStudents]) => (
-            <div key={className} className="ags-class-group">
-              <div className="ags-class-group-header">
-                <i className="fas fa-chalkboard"></i>
-                <span>Class / Program: <strong>{className}</strong></span>
-                <span className="ags-class-count">{classStudents.length}</span>
+          {classStudents.length === 0 ? (
+            <div className="ags-empty"><i className="fas fa-folder-open"></i><p>No students found in {selectedClass}</p></div>
+          ) : classStudents.map(s => (
+            <div
+              key={s.userId}
+              className={`ags-list-item ${selectedStudent?.userId === s.userId ? 'active' : ''}`}
+              onClick={() => setSelected(s)}
+            >
+              <div className="ags-item-avatar">
+                {s.profilePictureUrl
+                  ? <img src={s.profilePictureUrl} alt={s.name} />
+                  : <span>{s.name?.charAt(0)}</span>
+                }
               </div>
-              {classStudents.map(s => (
-                <div
-                  key={s.userId}
-                  className={`ags-list-item ${selectedStudent?.userId === s.userId ? 'active' : ''}`}
-                  onClick={() => setSelected(s)}
-                >
-                  <div className="ags-item-avatar">
-                    {s.profilePictureUrl
-                      ? <img src={s.profilePictureUrl} alt={s.name} />
-                      : <span>{s.name?.charAt(0)}</span>
-                    }
-                  </div>
-                  <div className="ags-item-info">
-                    <strong>{s.name}</strong>
-                    <small>{s.userId}{s.section ? ` · Sec ${s.section}` : ''}</small>
-                  </div>
-                  <div>
-                    {s.subjects?.length > 0
-                      ? <span className={`ags-pct ${s.percentage >= 75 ? 'good' : s.percentage >= 50 ? 'ok' : 'bad'}`}>{s.percentage}%</span>
-                      : <span className="ags-pct-na">Pending</span>
-                    }
-                  </div>
-                </div>
-              ))}
+              <div className="ags-item-info">
+                <strong>{s.name}</strong>
+                <small>{s.userId}{s.section ? ` · Sec ${s.section}` : ''}</small>
+              </div>
+              <div>
+                {s.subjects?.length > 0
+                  ? <span className={`ags-pct ${s.percentage >= 75 ? 'good' : s.percentage >= 50 ? 'ok' : 'bad'}`}>{s.percentage}%</span>
+                  : <span className="ags-pct-na">Pending</span>
+                }
+              </div>
             </div>
           ))}
         </div>
@@ -417,15 +435,15 @@ const AdminGradeSheets = () => {
         {!selectedStudent ? (
           <div className="ags-placeholder">
             <div className="ags-placeholder-icon"><i className="fas fa-file-invoice"></i></div>
-            <h3>Select a Student Record</h3>
-            <p>Choose any student from the class list on the left to view and print their formal academic grade sheet.</p>
+            <h3>Select a Student</h3>
+            <p>Choose a student from {selectedClass} on the left to preview and print their statement of marks.</p>
           </div>
         ) : (
           <>
             <div className="ags-preview-toolbar">
               <div className="ags-toolbar-info">
                 <h3><i className="fas fa-user-graduate"></i> {selectedStudent.name}</h3>
-                <small>Roll No: <strong>{selectedStudent.userId}</strong> &bull; Program: <strong>{selectedStudent.program}</strong> &bull; Section: <strong>{selectedStudent.section || 'A'}</strong></small>
+                <small>Roll No: <strong>{selectedStudent.userId}</strong> &bull; Class: <strong>{selectedStudent.program}</strong> &bull; Section: <strong>{selectedStudent.section || 'A'}</strong></small>
               </div>
               <button className="ags-print-btn" onClick={handlePrint}>
                 <i className="fas fa-print"></i> Print Formal Grade Sheet (A4)

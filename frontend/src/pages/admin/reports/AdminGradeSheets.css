@@ -1,7 +1,88 @@
 /* AdminGradeSheets.css */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* ─── Layout ──────────────────────────────────────────────────────────────── */
+/* ─── Page & Class Grid Layout (Matching Course Management) ───────────────── */
+.ags-page {
+  padding: 30px;
+  background: #f8f9fa;
+  min-height: calc(100vh - 70px);
+  overflow-y: auto;
+  font-family: 'Inter', sans-serif;
+}
+.ags-loading-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 70px);
+  font-family: 'Inter', sans-serif;
+  color: #64748b;
+  font-size: 1.1rem;
+  gap: 12px;
+}
+.ags-loading-page i { font-size: 2rem; color: #3498db; }
+
+.ags-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+.ags-header h1 {
+  color: #03045e;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+.ags-header p {
+  color: #7f8c8d;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.class-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 24px;
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 10px 0 40px;
+}
+.class-card-item {
+  background: white;
+  border-radius: 16px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1.5px solid #eef2f7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.class-card-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  border-color: #3498db;
+}
+.class-card-icon {
+  font-size: 2.8rem;
+  margin-bottom: 14px;
+}
+.class-card-item h3 {
+  color: #03045e;
+  margin: 0 0 8px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.class-card-item p {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* ─── Two-Panel Selected Class Layout ─────────────────────────────────────── */
 .admin-grades-container {
   display: flex;
   height: calc(100vh - 70px);
@@ -12,8 +93,8 @@
 
 /* ─── Left Sidebar ────────────────────────────────────────────────────────── */
 .ags-left {
-  width: 310px;
-  min-width: 270px;
+  width: 320px;
+  min-width: 280px;
   background: #fff;
   border-right: 1px solid #E2E8F0;
   display: flex;
@@ -22,24 +103,48 @@
   box-shadow: 2px 0 8px rgba(0,0,0,0.04);
 }
 .ags-panel-header {
+  padding: 14px 16px 8px;
+  border-bottom: 1px solid #F1F5F9;
+}
+.ags-back-btn {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 600;
+  color: #03045e;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+.ags-back-btn:hover {
+  background: #EEF2FF;
+  border-color: #6366F1;
+  color: #6366F1;
+}
+
+.ags-class-title-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 16px 12px;
+  padding: 12px 16px;
+  background: #FAFBFC;
   border-bottom: 1px solid #E2E8F0;
 }
-.ags-panel-header h2 {
-  font-size: 1rem;
+.ags-class-title-bar h2 {
+  font-size: 1.05rem;
   font-weight: 700;
   color: #1E293B;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  margin: 0;
 }
-.ags-panel-header h2 i { color: #6366F1; }
 .ags-count {
-  background: #6366F1;
-  color: #fff;
+  background: #EEF2FF;
+  color: #6366F1;
   border-radius: 20px;
   padding: 2px 10px;
   font-size: 0.75rem;
@@ -47,12 +152,12 @@
 }
 
 .ags-search {
-  padding: 10px 12px;
+  padding: 10px 14px;
   border-bottom: 1px solid #F1F5F9;
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #F8FAFC;
+  background: #fff;
 }
 .ags-search i { color: #94A3B8; font-size: 0.85rem; }
 .ags-search input {
@@ -64,57 +169,7 @@
   flex: 1;
 }
 
-/* Class tabs */
-.ags-class-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 8px 10px;
-  border-bottom: 1px solid #F1F5F9;
-  background: #FAFBFC;
-}
-.ags-class-tab {
-  border: 1px solid #E2E8F0;
-  background: #fff;
-  color: #64748B;
-  border-radius: 20px;
-  padding: 3px 10px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
-}
-.ags-class-tab:hover  { border-color: #6366F1; color: #6366F1; }
-.ags-class-tab.active { background: #6366F1; border-color: #6366F1; color: #fff; }
-
 .ags-list-scroll { flex: 1; overflow-y: auto; }
-
-/* Class group */
-.ags-class-group { border-bottom: 1px solid #F1F5F9; }
-.ags-class-group-header {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 14px;
-  background: #F8FAFC;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: #475569;
-  border-bottom: 1px solid #F1F5F9;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-.ags-class-group-header i { color: #6366F1; }
-.ags-class-count {
-  margin-left: auto;
-  background: #EEF2FF;
-  color: #6366F1;
-  border-radius: 20px;
-  padding: 1px 8px;
-  font-size: 0.72rem;
-}
 
 .ags-loading, .ags-empty {
   display: flex;
@@ -133,7 +188,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 14px;
+  padding: 10px 14px;
   cursor: pointer;
   border-bottom: 1px solid #F8FAFC;
   transition: background 0.12s;
@@ -142,8 +197,8 @@
 .ags-list-item.active { background: #EEF2FF; border-left: 3px solid #6366F1; }
 
 .ags-item-avatar {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: linear-gradient(135deg, #6366F1, #8B5CF6);
   display: flex;
@@ -153,12 +208,12 @@
   flex-shrink: 0;
 }
 .ags-item-avatar img  { width: 100%; height: 100%; object-fit: cover; }
-.ags-item-avatar span { color: #fff; font-size: 0.9rem; font-weight: 700; }
+.ags-item-avatar span { color: #fff; font-size: 0.95rem; font-weight: 700; }
 
 .ags-item-info { flex: 1; min-width: 0; }
 .ags-item-info strong {
   display: block;
-  font-size: 0.84rem;
+  font-size: 0.86rem;
   font-weight: 600;
   color: #1E293B;
   white-space: nowrap;
@@ -167,14 +222,14 @@
 }
 .ags-item-info small {
   display: block;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   color: #64748B;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 .ags-pct {
   font-size: 0.8rem;
   font-weight: 700;
-  padding: 2px 7px;
+  padding: 2px 8px;
   border-radius: 6px;
   white-space: nowrap;
 }
@@ -238,7 +293,7 @@
 .ags-toolbar-info small { font-size: 0.78rem; color: #64748B; margin-top: 2px; display: block; }
 
 .ags-print-btn {
-  background: linear-gradient(135deg, #1E293B, #334155);
+  background: linear-gradient(135deg, #03045e, #1E293B);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -249,12 +304,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 3px 10px rgba(30,41,59,0.3);
+  box-shadow: 0 3px 10px rgba(3,4,94,0.25);
   transition: all 0.15s;
   white-space: nowrap;
   flex-shrink: 0;
 }
-.ags-print-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(30,41,59,0.35); }
+.ags-print-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(3,4,94,0.35); }
 
 .ags-preview-area {
   flex: 1;
@@ -440,5 +495,5 @@
 }
 
 @media print {
-  .admin-grades-container, .ags-left, .ags-preview-toolbar { display: none !important; }
+  .admin-grades-container, .ags-left, .ags-preview-toolbar, .ags-page { display: none !important; }
 }
