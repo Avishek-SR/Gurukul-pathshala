@@ -1,50 +1,67 @@
-import React, { useState, useEffect } from 'react';
-import { gradeService, calculateGradeMetrics } from '../../../services/gradeService';
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  fetchStudentsFromDB,
+  mergeStudentWithGrades,
+  calculateGradeMetrics,
+  enrichStudentGradeData,
+  gradeService
+} from '../../../services/gradeService';
 import toast from 'react-hot-toast';
 import './UploadGrades.css';
 
 const UploadGrades = () => {
-  const [students, setStudents] = useState([]);
+  const [students, setStudents]           = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
-  const [activeProgram, setActiveProgram] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  // Local editable state for the selected student
+  const [searchQuery, setSearchQuery]     = useState('');
+  const [loading, setLoading]             = useState(true);
+  const [saving, setSaving]               = useState(false);
+
   const [editableSubjects, setEditableSubjects] = useState([]);
-  const [remarks, setRemarks] = useState('');
-  
-  // New subject inputs
-  const [newSubCode, setNewSubCode] = useState('');
-  const [newSubName, setNewSubName] = useState('');
-  const [newSubCredit, setNewSubCredit] = useState(3);
+  const [remarks, setRemarks]             = useState('');
+  const [academicYear, setAcademicYear]   = useState('2081-2082');
+  const [semester, setSemester]           = useState('');
 
-  const loadData = () => {
-    const data = gradeService.getStudents();
-    setStudents(data);
-    if (selectedStudent) {
-      const refreshed = data.find(s => s.id === selectedStudent.id);
-      if (refreshed) {
-        setSelectedStudent(refreshed);
-        setEditableSubjects(refreshed.subjects || []);
-        setRemarks(refreshed.remarks || '');
-      }
+  const [newSubCode, setNewSubCode]       = useState('');
+  const [newSubName, setNewSubName]       = useState('');
+  const [newSubCredit, setNewSubCredit]   = useState(3);
+  const [newSubMax, setNewSubMax]         = useState(100);
+
+  const loadStudents = useCallback(async () => {
+    setLoading(true);
+    try {
+      const dbStudents = await fetchStudentsFromDB();
+      const enriched   = dbStudents.map(mergeStudentWithGrades);
+      setStudents(enriched);
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to load students. Check your connection.');
+    } finally {
+      setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    loadData();
   }, []);
+
+  useEffect(() => { loadStudents(); }, [loadStudents]);
 
   const handleSelectStudent = (student) => {
     setSelectedStudent(student);
     setEditableSubjects(JSON.parse(JSON.stringify(student.subjects || [])));
     setRemarks(student.remarks || '');
+    setAcademicYear(student.academicYear || '2081-2082');
+    setSemester(student.semester || '');
   };
 
   const handleMarkChange = (index, val) => {
     const updated = [...editableSubjects];
-    const num = Math.min(100, Math.max(0, Number(val) || 0));
-    updated[index].score = num;
+    updated[index].score = Math.min(updated[index].maxScore || 100, Math.max(0, Number(val) || 0));
+    setEditableSubjects(updated);
+  };
+
+  const handleMaxScoreChange = (index, val) => {
+    const updated = [...editableSubjects];
+    updated[index].maxScore = Math.max(1, Number(val) || 100);
+    if (updated[index].score > updated[index].maxScore) {
+      updated[index].score = updated[index].maxScore;
+    }
     setEditableSubjects(updated);
   };
 
@@ -56,354 +73,295 @@ const UploadGrades = () => {
 
   const handleAddSubject = (e) => {
     e.preventDefault();
-    if (!newSubName || !newSubCode) {
-      toast.error('Please provide Subject Code and Name');
+    if (!newSubName.trim() || !newSubCode.trim()) {
+      toast.error('Subject code and name are required');
       return;
     }
-    const added = [...editableSubjects, {
-      code: newSubCode.toUpperCase(),
-      subject: newSubName,
+    setEditableSubjects(prev => [...prev, {
+      code: newSubCode.toUpperCase().trim(),
+      subject: newSubName.trim(),
       credit: Number(newSubCredit) || 3,
-      score: 80,
-      maxScore: 100
-    }];
-    setEditableSubjects(added);
-    setNewSubCode('');
-    setNewSubName('');
-    toast.success('Added new subject module');
+      score: 0,
+      maxScore: Number(newSubMax) || 100
+    }]);
+    setNewSubCode(''); setNewSubName(''); setNewSubCredit(3); setNewSubMax(100);
+    toast.success('Subject added');
   };
 
   const handleRemoveSubject = (index) => {
-    const updated = editableSubjects.filter((_, i) => i !== index);
-    setEditableSubjects(updated);
+    setEditableSubjects(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSaveGrades = () => {
+  const handleSaveGrades = async () => {
     if (!selectedStudent) return;
+    setSaving(true);
     try {
-      const updatedStudent = gradeService.saveStudentGrades(
-        selectedStudent.id,
+      gradeService.saveStudentGrades(
+        selectedStudent.userId,
         editableSubjects,
         'Evaluated',
-        remarks
+        remarks,
+        academicYear,
+        semester
       );
-      toast.success(`Grades saved and published for ${selectedStudent.name}!`);
-      loadData();
-      setSelectedStudent(updatedStudent);
+      toast.success(`Grades saved for ${selectedStudent.name}!`);
+      await loadStudents();
+      // Refresh selected student
+      const refreshed = (await fetchStudentsFromDB()).find(s => s.userId === selectedStudent.userId);
+      if (refreshed) setSelectedStudent(mergeStudentWithGrades(refreshed));
     } catch (err) {
-      toast.error('Failed to save student evaluation.');
+      toast.error('Failed to save grades.');
+    } finally {
+      setSaving(false);
     }
   };
 
-  const handleResetDemo = () => {
-    if (window.confirm('Reset all demo marks and student records to defaults?')) {
-      gradeService.resetToDefault();
-      toast.success('Demo data restored successfully');
-      setSelectedStudent(null);
-      loadData();
-    }
+  // Live preview GPA
+  const liveGPA = () => {
+    if (!editableSubjects.length) return '0.00';
+    let wSum = 0, cSum = 0;
+    editableSubjects.forEach(s => {
+      const { gpa4 } = calculateGradeMetrics(s.score, s.maxScore || 100);
+      wSum += gpa4 * (Number(s.credit) || 0);
+      cSum += Number(s.credit) || 0;
+    });
+    return cSum > 0 ? (wSum / cSum).toFixed(2) : '0.00';
   };
 
-  // Filter students based on program and search query
-  const programs = ['All', 'B.Tech Computer Science', 'B.Tech Electronics', 'MBA'];
-  
-  const filteredStudents = students.filter(s => {
-    const matchesProg = activeProgram === 'All' || s.program === activeProgram;
-    const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          s.rollNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          s.id.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesProg && matchesSearch;
+  const livePercentage = () => {
+    if (!editableSubjects.length) return 0;
+    const total = editableSubjects.reduce((a, s) => a + (Number(s.score) || 0), 0);
+    const max   = editableSubjects.reduce((a, s) => a + (Number(s.maxScore) || 100), 0);
+    return max > 0 ? Math.round((total / max) * 100) : 0;
+  };
+
+  const filtered = students.filter(s => {
+    const q = searchQuery.toLowerCase();
+    return s.name.toLowerCase().includes(q) ||
+           s.userId.toLowerCase().includes(q) ||
+           (s.program || '').toLowerCase().includes(q);
   });
 
-  // Calculate live preview GPA for the editor panel
-  const calculateLiveGPA = () => {
-    if (!editableSubjects || editableSubjects.length === 0) return '0.00';
-    let totCred = 0;
-    let totGpa4 = 0;
-    editableSubjects.forEach(sub => {
-      const metrics = calculateGradeMetrics(sub.score || 0, sub.maxScore || 100);
-      const c = Number(sub.credit) || 0;
-      totCred += c;
-      totGpa4 += metrics.gpa4 * c;
-    });
-    return totCred > 0 ? (totGpa4 / totCred).toFixed(2) : '0.00';
+  const statusBadge = (status) => {
+    const map = { Evaluated: '#10B981', Pending: '#F59E0B', Draft: '#6B7280' };
+    return { background: map[status] || '#6B7280', color: '#fff', padding: '2px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: 700 };
   };
 
-  // Global summary statistics
-  const totalStudents = students.length;
-  const evaluatedCount = students.filter(s => s.status === 'Evaluated').length;
-  const pendingCount = totalStudents - evaluatedCount;
-  const avgGpa = totalStudents > 0
-    ? (students.reduce((acc, curr) => acc + Number(curr.gpa || 0), 0) / totalStudents).toFixed(2)
-    : '0.00';
+  const pct = livePercentage();
+  const gpa = liveGPA();
 
   return (
-    <div className="faculty-grading-container">
-      {/* Header Banner */}
-      <div className="grading-header-banner">
-        <div className="grading-header-content">
-          <h1>Faculty Grade Management Portal</h1>
-          <p>Evaluate student academic assignments, input semester marks, verify GPA, and publish official university grade sheets.</p>
-        </div>
-      </div>
-
-      {/* Metrics Cards */}
-      <div className="grading-metrics-grid">
-        <div className="metric-card-glass">
-          <div className="metric-icon-wrapper" style={{ background: '#e0f2fe', color: '#0284c7' }}>
-            <i className="fas fa-users"></i>
-          </div>
-          <div className="metric-info">
-            <h4>Enrolled Students</h4>
-            <div className="metric-value">{totalStudents}</div>
-          </div>
+    <div className="upload-grades-container">
+      {/* ─── Left Panel: Student List ─── */}
+      <div className="grades-left-panel">
+        <div className="grades-panel-header">
+          <h2><i className="fas fa-clipboard-list"></i> Students</h2>
+          <span className="student-count-badge">{students.length}</span>
         </div>
 
-        <div className="metric-card-glass">
-          <div className="metric-icon-wrapper" style={{ background: '#d1fae5', color: '#059669' }}>
-            <i className="fas fa-check-circle"></i>
-          </div>
-          <div className="metric-info">
-            <h4>Evaluated</h4>
-            <div className="metric-value">{evaluatedCount}</div>
-          </div>
+        <div className="grades-search">
+          <i className="fas fa-search"></i>
+          <input
+            type="text"
+            placeholder="Search by name, ID or class..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+          />
         </div>
 
-        <div className="metric-card-glass">
-          <div className="metric-icon-wrapper" style={{ background: '#fef3c7', color: '#d97706' }}>
-            <i className="fas fa-clock"></i>
-          </div>
-          <div className="metric-info">
-            <h4>Pending Review</h4>
-            <div className="metric-value">{pendingCount}</div>
-          </div>
-        </div>
-
-        <div className="metric-card-glass">
-          <div className="metric-icon-wrapper" style={{ background: '#f3e8ff', color: '#9333ea' }}>
-            <i className="fas fa-award"></i>
-          </div>
-          <div className="metric-info">
-            <h4>Average Class GPA</h4>
-            <div className="metric-value">{avgGpa} <span style={{ fontSize: '0.9rem', color: '#64748b' }}>/ 4.0</span></div>
-          </div>
-        </div>
-      </div>
-
-      {/* Control & Filter Bar */}
-      <div className="grading-controls-bar">
-        <div className="program-pills">
-          {programs.map(prog => (
-            <button
-              key={prog}
-              className={`program-pill ${activeProgram === prog ? 'active' : ''}`}
-              onClick={() => setActiveProgram(prog)}
+        <div className="student-list-scroll">
+          {loading ? (
+            <div className="grades-loading">
+              <i className="fas fa-spinner fa-spin"></i>
+              <span>Loading students...</span>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="grades-empty">
+              <i className="fas fa-user-slash"></i>
+              <p>No students found</p>
+            </div>
+          ) : filtered.map(student => (
+            <div
+              key={student.userId}
+              className={`student-list-item ${selectedStudent?.userId === student.userId ? 'active' : ''}`}
+              onClick={() => handleSelectStudent(student)}
             >
-              {prog}
-            </button>
+              <div className="student-item-avatar">
+                {student.profilePictureUrl
+                  ? <img src={student.profilePictureUrl} alt={student.name} />
+                  : <span>{student.name?.charAt(0).toUpperCase()}</span>
+                }
+              </div>
+              <div className="student-item-info">
+                <strong>{student.name}</strong>
+                <small>{student.userId} • {student.program || 'N/A'}</small>
+                {student.section && <small>Section: {student.section}</small>}
+              </div>
+              <span style={statusBadge(student.status)}>{student.status}</span>
+            </div>
           ))}
         </div>
-
-        <div className="search-and-actions">
-          <div className="search-input-box">
-            <i className="fas fa-search"></i>
-            <input
-              type="text"
-              placeholder="Search by Name or Roll No..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-
-          <button className="reset-demo-btn" onClick={handleResetDemo} title="Reset Demo Data">
-            <i className="fas fa-sync-alt"></i> Reset Demo
-          </button>
-        </div>
       </div>
 
-      {/* Main Workspace Grid */}
-      <div className={`grading-workspace-grid ${selectedStudent ? 'with-panel' : ''}`}>
-        {/* Left: Students List */}
-        <div className="students-list-panel">
-          <div className="students-list-header">
-            <h3>Student Roster ({filteredStudents.length})</h3>
-            <span style={{ fontSize: '0.85rem', color: '#64748b' }}>Click a student to enter marks</span>
+      {/* ─── Right Panel: Grade Editor ─── */}
+      <div className="grades-right-panel">
+        {!selectedStudent ? (
+          <div className="grades-placeholder">
+            <i className="fas fa-hand-pointer" style={{ fontSize: '3rem', color: '#CBD5E1' }}></i>
+            <h3>Select a Student</h3>
+            <p>Click on any student from the list to enter or edit their marks.</p>
           </div>
-
-          {filteredStudents.length === 0 ? (
-            <div style={{ padding: '3rem', textAlign: 'center', color: '#64748b' }}>
-              <i className="fas fa-folder-open" style={{ fontSize: '2.5rem', marginBottom: '1rem', opacity: 0.5 }}></i>
-              <p>No students found matching the selected filter criteria.</p>
-            </div>
-          ) : (
-            filteredStudents.map(student => (
-              <div
-                key={student.id}
-                className={`student-card-item ${selectedStudent?.id === student.id ? 'selected' : ''}`}
-                onClick={() => handleSelectStudent(student)}
-              >
-                <div className="student-card-left">
-                  <img
-                    src={student.profilePictureUrl || 'https://via.placeholder.com/150'}
-                    alt={student.name}
-                    className="student-avatar"
-                  />
-                  <div className="student-card-info">
-                    <h4>{student.name}</h4>
-                    <p>{student.rollNo} • {student.program}</p>
-                  </div>
+        ) : (
+          <>
+            {/* Student Header */}
+            <div className="grade-editor-header">
+              <div className="grade-student-meta">
+                <div className="grade-student-avatar-lg">
+                  {selectedStudent.profilePictureUrl
+                    ? <img src={selectedStudent.profilePictureUrl} alt={selectedStudent.name} />
+                    : <span>{selectedStudent.name?.charAt(0).toUpperCase()}</span>
+                  }
                 </div>
-
-                <div className="student-card-right">
-                  <span className={`status-badge ${student.status === 'Evaluated' ? 'evaluated' : 'pending'}`}>
-                    {student.status}
+                <div>
+                  <h2>{selectedStudent.name}</h2>
+                  <p>
+                    <strong>ID:</strong> {selectedStudent.userId} &nbsp;|&nbsp;
+                    <strong>Class/Program:</strong> {selectedStudent.program || 'N/A'} &nbsp;|&nbsp;
+                    <strong>Section:</strong> {selectedStudent.section || '—'}
+                  </p>
+                </div>
+              </div>
+              <div className="grade-live-stats">
+                <div className="live-stat">
+                  <span className="live-stat-val" style={{ color: pct >= 75 ? '#10B981' : pct >= 50 ? '#F59E0B' : '#EF4444' }}>
+                    {pct}%
                   </span>
-                  <span className="student-gpa-tag">GPA: {student.gpa}</span>
+                  <span className="live-stat-label">Overall</span>
                 </div>
-              </div>
-            ))
-          )}
-        </div>
-
-        {/* Right: Evaluation Editor Panel */}
-        {selectedStudent && (
-          <div className="grading-editor-panel">
-            <div className="editor-header">
-              <div className="editor-student-profile">
-                <img
-                  src={selectedStudent.profilePictureUrl || 'https://via.placeholder.com/150'}
-                  alt={selectedStudent.name}
-                />
-                <div className="editor-student-info">
-                  <h3>{selectedStudent.name}</h3>
-                  <span>{selectedStudent.rollNo} • {selectedStudent.semester}</span>
+                <div className="live-stat">
+                  <span className="live-stat-val">{gpa}</span>
+                  <span className="live-stat-label">GPA (4.0)</span>
                 </div>
-              </div>
-
-              <div className="editor-gpa-badge">
-                <span className="label">Live GPA Preview</span>
-                <span className="value">{calculateLiveGPA()}</span>
               </div>
             </div>
 
-            <div className="editor-body">
-              <div className="subjects-table-wrapper">
-                <table className="subjects-editor-table">
-                  <thead>
+            {/* Term Info */}
+            <div className="grade-term-row">
+              <div className="grade-term-field">
+                <label>Academic Year</label>
+                <input type="text" value={academicYear} onChange={e => setAcademicYear(e.target.value)} placeholder="e.g. 2081-2082" />
+              </div>
+              <div className="grade-term-field">
+                <label>Semester / Term</label>
+                <input type="text" value={semester} onChange={e => setSemester(e.target.value)} placeholder="e.g. Term 1, Semester 2" />
+              </div>
+            </div>
+
+            {/* Subject Table */}
+            <div className="grade-subjects-table-wrap">
+              <table className="grade-subjects-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Code</th>
+                    <th>Subject / Module</th>
+                    <th>Credit</th>
+                    <th>Full Marks</th>
+                    <th>Obtained</th>
+                    <th>Grade</th>
+                    <th>GP</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {editableSubjects.length === 0 ? (
                     <tr>
-                      <th>Subject Module</th>
-                      <th>Credits</th>
-                      <th>Marks (Out of 100)</th>
-                      <th>Grade</th>
-                      <th>Action</th>
+                      <td colSpan={9} style={{ textAlign: 'center', padding: '2rem', color: '#94A3B8' }}>
+                        No subjects yet. Add subjects below.
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {editableSubjects.map((sub, idx) => {
-                      const metrics = calculateGradeMetrics(sub.score || 0, sub.maxScore || 100);
-                      return (
-                        <tr key={idx}>
-                          <td className="subject-name-cell">
-                            <h5>{sub.subject}</h5>
-                            <span>Code: {sub.code}</span>
-                          </td>
-                          <td>
-                            <input
-                              type="number"
-                              min="1"
-                              max="6"
-                              style={{ width: '50px', padding: '0.3rem', textAlign: 'center', borderRadius: '6px', border: '1px solid #cbd5e1' }}
-                              value={sub.credit}
-                              onChange={(e) => handleCreditChange(idx, e.target.value)}
-                            />
-                          </td>
-                          <td>
-                            <div className="mark-input-wrapper">
-                              <input
-                                type="number"
-                                min="0"
-                                max="100"
-                                value={sub.score}
-                                onChange={(e) => handleMarkChange(idx, e.target.value)}
-                              />
-                              <span style={{ fontSize: '0.8rem', color: '#64748b' }}>/ 100</span>
-                            </div>
-                          </td>
-                          <td>
-                            <span className="grade-pill-display" style={{ backgroundColor: metrics.color }}>
-                              {metrics.grade}
-                            </span>
-                          </td>
-                          <td>
-                            <button
-                              onClick={() => handleRemoveSubject(idx)}
-                              style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '1rem' }}
-                              title="Remove Subject"
-                            >
-                              <i className="fas fa-trash-alt"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Add Custom Subject */}
-              <div className="add-subject-box">
-                <h5 style={{ margin: '0 0 0.75rem 0', fontSize: '0.85rem', color: '#475569', textTransform: 'uppercase' }}>
-                  + Add Additional Subject / Lab
-                </h5>
-                <div className="add-subject-grid">
-                  <input
-                    type="text"
-                    placeholder="Code (e.g. CS409)"
-                    value={newSubCode}
-                    onChange={(e) => setNewSubCode(e.target.value)}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Subject Name (e.g. AI & ML Lab)"
-                    value={newSubName}
-                    onChange={(e) => setNewSubName(e.target.value)}
-                  />
-                  <input
-                    type="number"
-                    min="1"
-                    max="6"
-                    placeholder="Cr"
-                    value={newSubCredit}
-                    onChange={(e) => setNewSubCredit(e.target.value)}
-                    title="Credit Hours"
-                  />
-                  <button type="button" className="add-sub-btn" onClick={handleAddSubject}>
-                    Add
-                  </button>
-                </div>
-              </div>
-
-              {/* Faculty Remarks */}
-              <div className="remarks-section">
-                <label htmlFor="facultyRemarks"><i className="fas fa-comment-dots"></i> Faculty Feedback & Remarks</label>
-                <textarea
-                  id="facultyRemarks"
-                  placeholder="Enter overall assessment commentary or improvement notes for the student..."
-                  value={remarks}
-                  onChange={(e) => setRemarks(e.target.value)}
-                ></textarea>
-              </div>
+                  ) : editableSubjects.map((sub, i) => {
+                    const m = calculateGradeMetrics(sub.score, sub.maxScore || 100);
+                    return (
+                      <tr key={i}>
+                        <td>{i + 1}</td>
+                        <td><span className="sub-code-badge">{sub.code}</span></td>
+                        <td>{sub.subject}</td>
+                        <td>
+                          <input
+                            type="number" min={1} max={10}
+                            className="grade-num-input"
+                            value={sub.credit}
+                            onChange={e => handleCreditChange(i, e.target.value)}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="number" min={1} max={1000}
+                            className="grade-num-input"
+                            value={sub.maxScore || 100}
+                            onChange={e => handleMaxScoreChange(i, e.target.value)}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="number" min={0} max={sub.maxScore || 100}
+                            className={`grade-num-input mark-input ${m.grade === 'F' ? 'fail' : ''}`}
+                            value={sub.score}
+                            onChange={e => handleMarkChange(i, e.target.value)}
+                          />
+                        </td>
+                        <td>
+                          <span className="grade-badge" style={{ background: m.color }}>
+                            {m.grade}
+                          </span>
+                        </td>
+                        <td>{m.gradePoint.toFixed(1)}</td>
+                        <td>
+                          <button className="remove-sub-btn" onClick={() => handleRemoveSubject(i)} title="Remove">
+                            <i className="fas fa-trash-alt"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
 
-            <div className="editor-footer">
-              <button className="btn-cancel" onClick={() => setSelectedStudent(null)}>
-                Close Panel
-              </button>
-              <button className="btn-save-grades" onClick={handleSaveGrades}>
-                <i className="fas fa-save"></i> Save & Publish Grades
+            {/* Add Subject Row */}
+            <form className="add-subject-form" onSubmit={handleAddSubject}>
+              <h4><i className="fas fa-plus-circle"></i> Add Subject</h4>
+              <div className="add-sub-fields">
+                <input placeholder="Code (e.g. ENG101)" value={newSubCode} onChange={e => setNewSubCode(e.target.value)} />
+                <input placeholder="Subject Name" value={newSubName} onChange={e => setNewSubName(e.target.value)} style={{ flex: 2 }} />
+                <input type="number" min={1} max={10} placeholder="Credit" value={newSubCredit} onChange={e => setNewSubCredit(e.target.value)} style={{ width: '80px' }} />
+                <input type="number" min={1} placeholder="Full Marks" value={newSubMax} onChange={e => setNewSubMax(e.target.value)} style={{ width: '100px' }} />
+                <button type="submit" className="add-sub-btn">+ Add</button>
+              </div>
+            </form>
+
+            {/* Remarks */}
+            <div className="grade-remarks-section">
+              <label>Remarks / Comments</label>
+              <textarea
+                rows={2}
+                placeholder="Optional teacher remarks for this student..."
+                value={remarks}
+                onChange={e => setRemarks(e.target.value)}
+              />
+            </div>
+
+            {/* Save Button */}
+            <div className="grade-save-row">
+              <button className="grade-save-btn" onClick={handleSaveGrades} disabled={saving}>
+                {saving
+                  ? <><i className="fas fa-spinner fa-spin"></i> Saving...</>
+                  : <><i className="fas fa-save"></i> Save &amp; Publish Grades</>
+                }
               </button>
             </div>
-          </div>
+          </>
         )}
       </div>
     </div>

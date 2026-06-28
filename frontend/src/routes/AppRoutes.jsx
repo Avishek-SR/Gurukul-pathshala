@@ -24,6 +24,7 @@ import Admins from '../pages/admin/users/Admins';
 import TimetableManagement from '../pages/admin/timetable/TimetableManagement';
 import NoticeManagement from '../pages/admin/notices/NoticeManagement';
 import AdminSettings from '../pages/admin/settings/AdminSettings';
+import AdminGradeSheets from '../pages/admin/reports/AdminGradeSheets';
 
 // Faculty pages
 import FacultyDashboard from '../pages/faculty/dashboard/FacultyDashboard';
@@ -156,6 +157,7 @@ const AppRoutes = () => {
         <Route path="timetable" element={<TimetableManagement />} />
         <Route path="notices" element={<NoticeManagement />} />
         <Route path="settings" element={<AdminSettings />} />
+        <Route path="grade-sheets" element={<AdminGradeSheets />} />
       </Route>
 
       {/* Faculty Layout + Routes */}

@@ -33,3 +33,80 @@
 2026-06-28 09:53:13 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=8m46s128ms).
 2026-06-28 10:24:44 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=31m31s648ms).
 2026-06-28 10:33:54 - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=6m39s649ms).
+2026-06-28 10:49:30 - Securing GET /public/captcha
+2026-06-28 10:49:30 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:49:30 - Secured GET /public/captcha
+2026-06-28 10:49:30 - Securing POST /auth/login
+2026-06-28 10:49:30 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:49:30 - Secured POST /auth/login
+2026-06-28 10:49:30 - Securing GET /admin/settings
+2026-06-28 10:49:30 - Processing JWT for UserID: admin001
+2026-06-28 10:49:30 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-06-28 10:49:30 - Setting authentication for user: admin001
+2026-06-28 10:49:30 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-06-28 10:49:30 - Authenticated user: admin001, Authorities: [ROLE_ADMIN]
+2026-06-28 10:49:30 - Secured GET /admin/settings
+2026-06-28 10:49:49 - Securing GET /public/captcha
+2026-06-28 10:49:49 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:49:49 - Secured GET /public/captcha
+2026-06-28 10:49:49 - Securing POST /auth/login
+2026-06-28 10:49:49 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:49:49 - Secured POST /auth/login
+2026-06-28 10:49:49 - Securing GET /admin/settings
+2026-06-28 10:49:49 - Processing JWT for UserID: admin001
+2026-06-28 10:49:49 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-06-28 10:49:49 - Setting authentication for user: admin001
+2026-06-28 10:49:49 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-06-28 10:49:49 - Authenticated user: admin001, Authorities: [ROLE_ADMIN]
+2026-06-28 10:49:49 - Secured GET /admin/settings
+2026-06-28 10:50:21 - Securing GET /public/captcha
+2026-06-28 10:50:21 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:50:21 - Secured GET /public/captcha
+2026-06-28 10:50:21 - Securing POST /auth/login
+2026-06-28 10:50:21 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:50:21 - Secured POST /auth/login
+2026-06-28 10:50:21 - Securing GET /faculty/courses
+2026-06-28 10:50:21 - Processing JWT for UserID: faculty001
+2026-06-28 10:50:21 - Extracted Roles from JWT: [ROLE_FACULTY]
+2026-06-28 10:50:21 - Setting authentication for user: faculty001
+2026-06-28 10:50:21 - Final Authorities set in SecurityContext: [ROLE_FACULTY]
+2026-06-28 10:50:21 - Authenticated user: faculty001, Authorities: [ROLE_FACULTY]
+2026-06-28 10:50:21 - Secured GET /faculty/courses
+2026-06-28 10:50:45 - Securing GET /public/captcha
+2026-06-28 10:50:45 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:50:45 - Secured GET /public/captcha
+2026-06-28 10:50:45 - Securing POST /auth/login
+2026-06-28 10:50:45 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:50:45 - Secured POST /auth/login
+2026-06-28 10:50:45 - Securing GET /faculty/courses/2/students
+2026-06-28 10:50:45 - Processing JWT for UserID: faculty001
+2026-06-28 10:50:45 - Extracted Roles from JWT: [ROLE_FACULTY]
+2026-06-28 10:50:45 - Setting authentication for user: faculty001
+2026-06-28 10:50:45 - Final Authorities set in SecurityContext: [ROLE_FACULTY]
+2026-06-28 10:50:45 - Authenticated user: faculty001, Authorities: [ROLE_FACULTY]
+2026-06-28 10:50:45 - Secured GET /faculty/courses/2/students
+2026-06-28 10:51:02 - Securing GET /public/captcha
+2026-06-28 10:51:02 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:51:02 - Secured GET /public/captcha
+2026-06-28 10:51:03 - Securing POST /auth/login
+2026-06-28 10:51:03 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:51:03 - Secured POST /auth/login
+2026-06-28 10:51:03 - Securing GET /admin/users/role/STUDENT
+2026-06-28 10:51:03 - Processing JWT for UserID: admin001
+2026-06-28 10:51:03 - Extracted Roles from JWT: [ROLE_ADMIN]
+2026-06-28 10:51:03 - Setting authentication for user: admin001
+2026-06-28 10:51:03 - Final Authorities set in SecurityContext: [ROLE_ADMIN]
+2026-06-28 10:51:03 - Authenticated user: admin001, Authorities: [ROLE_ADMIN]
+2026-06-28 10:51:03 - Secured GET /admin/users/role/STUDENT
+2026-06-28 10:55:21 - Securing GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 10:55:21 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:55:21 - Secured GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 10:55:21 - Securing GET /error
+2026-06-28 10:55:21 - Secured GET /error
+2026-06-28 10:55:21 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:55:25 - Securing GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 10:55:25 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 10:55:25 - Secured GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 10:55:25 - Securing GET /error
+2026-06-28 10:55:25 - Secured GET /error
+2026-06-28 10:55:25 - Set SecurityContextHolder to anonymous SecurityContext
