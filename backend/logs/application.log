@@ -167,3 +167,21 @@
 2026-06-28 11:11:28 - Securing GET /error
 2026-06-28 11:11:28 - Secured GET /error
 2026-06-28 11:11:28 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 11:18:18 - Securing GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 11:18:18 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 11:18:18 - Secured GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 11:18:18 - Securing GET /error
+2026-06-28 11:18:18 - Secured GET /error
+2026-06-28 11:18:18 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 11:18:22 - Securing GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 11:18:22 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 11:18:22 - Secured GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 11:18:22 - Securing GET /error
+2026-06-28 11:18:22 - Secured GET /error
+2026-06-28 11:18:22 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 11:32:09 - Securing GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 11:32:09 - Set SecurityContextHolder to anonymous SecurityContext
+2026-06-28 11:32:09 - Secured GET /uploads/2b3b5d7c-df44-4a96-b420-4ab1cfcc797a.png
+2026-06-28 11:32:10 - Securing GET /error
+2026-06-28 11:32:10 - Secured GET /error
+2026-06-28 11:32:10 - Set SecurityContextHolder to anonymous SecurityContext

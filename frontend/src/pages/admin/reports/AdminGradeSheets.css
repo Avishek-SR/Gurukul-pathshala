@@ -96,13 +96,11 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 7px 14px;
+  padding: 8px 14px;
   background: #F8FAFC;
   font-size: 0.78rem;
   font-weight: 700;
   color: #475569;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
   border-bottom: 1px solid #F1F5F9;
   position: sticky;
   top: 0;
@@ -275,260 +273,172 @@
   border-radius: 2px;
 }
 
-/* ─── Grade Sheet Internal Styles (Preview mirrors print) ─────────────────── */
-.gs-page {
+/* ─── Grade Sheet Internal Styles (Traditional Academic Look) ─────────────── */
+.gs-print-wrap {
   padding: 10mm 12mm 8mm;
   font-family: 'Times New Roman', Georgia, serif;
-  font-size: 10.5pt;
-  color: #111;
+  font-size: 11pt;
+  color: #000;
   min-height: 277mm;
 }
 
 /* Header */
-.gs-header {
-  border-bottom: 3px double #333;
-  padding-bottom: 10px;
-  margin-bottom: 12px;
+.gs-school-header {
   text-align: center;
+  border-bottom: 3px double #000;
+  padding-bottom: 10px;
+  margin-bottom: 14px;
 }
-.gs-header-logo-block {
+.gs-header-top {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin-bottom: 8px;
+  gap: 18px;
+  margin-bottom: 6px;
 }
-.gs-logo {
-  height: 64px;
+.gs-header-logo {
+  height: 75px;
   width: auto;
   object-fit: contain;
-  flex-shrink: 0;
 }
-.gs-logo-right { opacity: 0.5; }
-.gs-header-text { flex: 1; }
+.gs-header-text { text-align: center; }
 .gs-school-name {
   font-size: 20pt;
   font-weight: bold;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  color: #1a1a1a;
+  color: #000;
   line-height: 1.15;
 }
-.gs-school-contact {
-  font-size: 9pt;
-  color: #555;
-  margin-top: 3px;
+.gs-school-sub {
+  font-size: 10pt;
+  color: #333;
+  margin-top: 2px;
 }
-.gs-doc-banner {
-  background: #1e293b;
-  color: #fff;
-  padding: 6px 0 5px;
+.gs-doc-title-bar {
   margin-top: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  padding: 5px 0;
+  background: #f8f9fa;
 }
 .gs-doc-title {
   font-size: 13pt;
   font-weight: bold;
-  letter-spacing: 5px;
-  font-family: 'Times New Roman', serif;
-}
-.gs-doc-sub {
-  font-size: 8pt;
-  letter-spacing: 2px;
-  opacity: 0.75;
-  font-family: 'Inter', sans-serif;
-}
-
-/* Info Grid */
-.gs-info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 20px;
-  border: 1px solid #ccc;
-  padding: 6px 10px;
-  margin-bottom: 10px;
-  background: #fafafa;
-}
-.gs-info-col { }
-.gs-info-row {
-  display: flex;
-  gap: 8px;
-  padding: 3px 0;
-  border-bottom: 1px dotted #e5e5e5;
-  font-size: 9.5pt;
-  align-items: baseline;
-}
-.gs-info-row:last-child { border-bottom: none; }
-.gs-lbl { font-weight: bold; color: #444; width: 48%; flex-shrink: 0; }
-.gs-val { flex: 1; }
-.gs-status-chip {
-  display: inline-block;
-  padding: 1px 10px;
-  border-radius: 20px;
-  font-size: 8.5pt;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-.gs-status-chip.pass { background: #dcfce7; color: #166534; }
-.gs-status-chip.fail { background: #fee2e2; color: #991b1b; }
-
-/* Section */
-.gs-section { margin-bottom: 10px; }
-.gs-section-label {
-  font-size: 8.5pt;
-  font-weight: bold;
-  letter-spacing: 1.5px;
+  letter-spacing: 3px;
   text-transform: uppercase;
-  background: #f0f0f0;
+  color: #000;
+}
+
+/* Section & Tables */
+.gs-info-section {
+  border: 1.5px solid #000;
+  padding: 8px 10px;
+  margin-bottom: 14px;
+  background: #fff;
+}
+.gs-section-title {
+  font-size: 9.5pt;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: #eaeaea;
   padding: 3px 8px;
-  border-left: 4px solid #1e293b;
-  margin-bottom: 5px;
-  display: block;
+  margin: -8px -10px 8px -10px;
+  border-bottom: 1.5px solid #000;
   font-family: 'Inter', sans-serif;
 }
 
-/* Marks Table */
-.gs-table {
+.gs-info-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 9.5pt;
+  font-size: 10.5pt;
 }
-.gs-table th {
-  background: #1e293b;
+.gs-info-table td {
+  padding: 4px 6px;
+  vertical-align: middle;
+}
+.gs-info-table .lbl {
+  width: 20%;
+  color: #333;
+  font-weight: 600;
+}
+.gs-info-table .val {
+  width: 30%;
+  border-bottom: 1px dotted #888;
+}
+
+.gs-marks-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10pt;
+  margin-top: 4px;
+}
+.gs-marks-table th {
+  background: #2c3e50;
   color: #fff;
-  padding: 6px 4px;
+  padding: 7px 5px;
+  border: 1px solid #000;
   text-align: center;
-  border: 1px solid #44556b;
-  font-size: 8.5pt;
+  font-size: 9.5pt;
   font-family: 'Inter', sans-serif;
-  line-height: 1.2;
 }
-.gs-table td {
-  padding: 4.5px 4px;
-  border: 1px solid #ddd;
+.gs-marks-table td {
+  padding: 6px 5px;
+  border: 1px solid #000;
   text-align: center;
 }
-.gs-table tbody tr:nth-child(even) td { background: #f8f8f8; }
-.gs-th-left { text-align: left !important; padding-left: 8px !important; }
-.gs-code { font-family: 'Courier New', monospace; font-size: 8.5pt; font-weight: bold; background: #EEF2FF; color: #4F46E5; }
-.gs-fail-row td { background: #fff0f0 !important; color: #991b1b; }
+.gs-marks-table tbody tr:nth-child(even) td { background-color: #f9f9f9; }
+.gs-marks-table .fail-row td { background-color: #ffe8e8 !important; }
 
 /* Summary */
-.gs-summary-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 5px;
+.gs-summary-row { margin-bottom: 14px; }
+.gs-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10.5pt;
+  margin-bottom: 10px;
+  border: 1.5px solid #000;
 }
-.gs-sum-box {
-  border: 1px solid #e2e8f0;
-  padding: 6px 5px;
-  text-align: center;
-  border-radius: 4px;
-  background: #fafafa;
-}
-.gs-sum-box.highlight { background: #1e293b; border-color: #1e293b; }
-.gs-sum-box.highlight .gs-sum-val,
-.gs-sum-box.highlight .gs-sum-lbl { color: #fff !important; }
-.gs-sum-val {
-  display: block;
-  font-size: 13pt;
-  font-weight: 800;
-  color: #1e293b;
-  line-height: 1.2;
-  font-family: 'Times New Roman', serif;
-}
-.gs-sum-lbl {
-  display: block;
-  font-size: 7.5pt;
-  color: #64748B;
-  margin-top: 2px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
+.gs-summary-table td { padding: 6px 8px; border: 1px solid #000; }
+.gs-summary-table .s-lbl { background: #eaeaea; font-weight: bold; width: 25%; }
+.gs-summary-table .s-val { width: 25%; }
 
-/* Result Banner */
-.gs-result-banner {
+.gs-result-box {
   text-align: center;
-  padding: 8px 12px;
-  border: 2.5px solid;
+  padding: 8px;
+  border: 2px solid #000;
   font-size: 13pt;
   font-weight: bold;
-  letter-spacing: 3px;
-  margin: 10px 0 10px;
-  border-radius: 3px;
-  font-family: 'Times New Roman', serif;
+  letter-spacing: 2px;
 }
-.gs-result-banner.pass { color: #166534; border-color: #166534; background: #f0fdf4; }
-.gs-result-banner.fail { color: #991b1b; border-color: #991b1b; background: #fef2f2; }
+.gs-result-pass { background-color: #eafaf1; color: #145a32; border-color: #145a32; }
+.gs-result-fail { background-color: #fadbd8; color: #78281f; border-color: #78281f; }
 
-/* No marks */
-.gs-no-marks {
-  text-align: center;
-  padding: 20px;
-  color: #888;
-  font-size: 9.5pt;
-  margin-bottom: 10px;
-  border: 1px dashed #ccc;
-  border-radius: 3px;
-  font-style: italic;
-}
-
-/* Remarks */
-.gs-remarks-text {
-  font-size: 9.5pt;
-  padding: 3px 0;
-  font-style: italic;
-  color: #334155;
-}
-
-/* Legend */
-.gs-legend-row {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-  align-items: center;
-  font-family: 'Inter', sans-serif;
-}
-.gs-legend-title { font-size: 8pt; font-weight: 700; color: #475569; margin-right: 2px; }
-.gs-legend-chip {
-  font-size: 7.5pt;
-  border: 1px solid #E2E8F0;
-  padding: 1px 6px;
-  border-radius: 4px;
-  background: #F8FAFC;
-  color: #475569;
-}
+.gs-no-marks { text-align: center; padding: 20px; color: #666; font-style: italic; }
+.gs-legend { font-size: 8.5pt; color: #444; margin-bottom: 25px; padding: 4px; border: 1px dotted #ccc; text-align: center; font-family: 'Inter', sans-serif; }
 
 /* Signatures */
-.gs-signature-row {
+.gs-sign-row {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 35px;
   padding-top: 10px;
 }
 .gs-sign-block { text-align: center; width: 28%; }
-.gs-sign-space { height: 32px; }
-.gs-sign-line  { border-top: 1.5px solid #333; margin-bottom: 5px; }
-.gs-sign-label { font-size: 8.5pt; font-weight: bold; font-family: 'Inter', sans-serif; }
+.gs-sign-line { border-top: 1.5px solid #000; margin-bottom: 5px; }
+.gs-sign-label { font-size: 9.5pt; font-weight: bold; font-family: 'Inter', sans-serif; }
 
-/* Watermark */
 .gs-watermark {
   text-align: center;
-  font-size: 7.5pt;
-  color: #aaa;
-  margin-top: 14px;
-  border-top: 1px dotted #ddd;
+  font-size: 8pt;
+  color: #777;
+  margin-top: 20px;
+  border-top: 1px dotted #aaa;
   padding-top: 6px;
   font-family: 'Inter', sans-serif;
 }
 
-/* Print media */
 @media print {
   .admin-grades-container, .ags-left, .ags-preview-toolbar { display: none !important; }
 }

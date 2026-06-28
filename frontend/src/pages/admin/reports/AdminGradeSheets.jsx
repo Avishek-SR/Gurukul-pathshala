@@ -5,87 +5,111 @@ import {
   mergeStudentWithGrades,
   calculateGradeMetrics,
 } from '../../../services/gradeService';
+import defaultLogo from '../../../assets/logo.svg';
 import toast from 'react-hot-toast';
 import './AdminGradeSheets.css';
 
+// Helper to resolve logo URL reliably for both preview & print windows
+const resolveLogoUrl = (siteLogo) => {
+  try {
+    if (!siteLogo) return new URL(defaultLogo, window.location.origin).href;
+    if (siteLogo.startsWith('http://') || siteLogo.startsWith('https://') || siteLogo.startsWith('data:')) {
+      return siteLogo;
+    }
+    const baseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/api$/, '');
+    const path = siteLogo.startsWith('/') ? siteLogo : `/${siteLogo}`;
+    return new URL(`${baseUrl}${path}`, window.location.origin).href;
+  } catch {
+    return defaultLogo;
+  }
+};
+
 // ─── Grade Sheet Component (used for both preview & print) ──────────────────
 const GradeSheet = ({ s, schoolInfo }) => {
-  const schoolName    = schoolInfo['site_name']    || 'Gurukul Pathshala';
-  const schoolAddress = schoolInfo['contact_address'] || '';
-  const schoolPhone   = schoolInfo['contact_phone']   || '';
-  const schoolEmail   = schoolInfo['contact_email']   || '';
-  const logoSrc       = schoolInfo['site_logo']
-    ? `${window.location.origin}${schoolInfo['site_logo'].startsWith('/') ? '' : '/'}${schoolInfo['site_logo']}`
-    : null;
-  const academicYearSetting = schoolInfo['academic_year'] || '';
-  const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  const isFail = s.resultStatus === 'NEEDS RE-EXAMINATION';
+  const schoolName    = schoolInfo['site_name']       || 'Gurukul Pathshala';
+  const schoolAddress = schoolInfo['contact_address'] || 'Kathmandu, Nepal';
+  const schoolPhone   = schoolInfo['contact_phone']   || '+977-1-4XXXXXX';
+  const schoolEmail   = schoolInfo['contact_email']   || 'info@gurukul.edu.np';
+  const logoUrl       = resolveLogoUrl(schoolInfo['site_logo']);
+  const academicYear  = s.academicYear || schoolInfo['academic_year'] || '2081-2082';
+  const today         = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const isFail        = s.resultStatus === 'NEEDS RE-EXAMINATION';
 
   return (
-    <div className="gs-page">
-
+    <div className="gs-print-wrap">
       {/* ══ SCHOOL HEADER ══════════════════════════════════════ */}
-      <div className="gs-header">
-        <div className="gs-header-logo-block">
-          {logoSrc && (
-            <img src={logoSrc} alt="School Logo" className="gs-logo" onError={e => e.target.style.display='none'} />
-          )}
+      <div className="gs-school-header">
+        <div className="gs-header-top">
+          <div className="gs-logo-container">
+            <img 
+              src={logoUrl} 
+              alt="School Logo" 
+              className="gs-header-logo" 
+              onError={(e) => { e.target.src = defaultLogo; }} 
+            />
+          </div>
           <div className="gs-header-text">
-            <div className="gs-school-name">{schoolName}</div>
-            {(schoolAddress || schoolPhone) && (
-              <div className="gs-school-contact">
-                {schoolAddress}{schoolAddress && schoolPhone ? ' | ' : ''}{schoolPhone}
-              </div>
-            )}
-            {schoolEmail && <div className="gs-school-contact">{schoolEmail}</div>}
+            <h1 className="gs-school-name">{schoolName}</h1>
+            <p className="gs-school-sub">
+              {schoolAddress} {schoolPhone ? `| Tel: ${schoolPhone}` : ''}
+            </p>
+            {schoolEmail && <p className="gs-school-sub">{schoolEmail}</p>}
           </div>
-          {logoSrc && (
-            <img src={logoSrc} alt="School Logo" className="gs-logo gs-logo-right" onError={e => e.target.style.display='none'} />
-          )}
         </div>
-        <div className="gs-doc-banner">
-          <span className="gs-doc-title">STATEMENT OF MARKS</span>
-          <span className="gs-doc-sub">Academic Grade Report</span>
+        <div className="gs-doc-title-bar">
+          <span className="gs-doc-title">STATEMENT OF MARKS / GRADE SHEET</span>
         </div>
       </div>
 
-      {/* ══ STUDENT INFO ═══════════════════════════════════════ */}
-      <div className="gs-info-grid">
-        <div className="gs-info-col">
-          <div className="gs-info-row"><span className="gs-lbl">Student Name</span><span className="gs-val"><strong>{s.name}</strong></span></div>
-          <div className="gs-info-row"><span className="gs-lbl">Enrollment / Roll No.</span><span className="gs-val">{s.userId}</span></div>
-          <div className="gs-info-row"><span className="gs-lbl">Class / Program</span><span className="gs-val">{s.program || '—'}</span></div>
-          <div className="gs-info-row"><span className="gs-lbl">Section</span><span className="gs-val">{s.section || '—'}</span></div>
-          {s.gender && <div className="gs-info-row"><span className="gs-lbl">Gender</span><span className="gs-val">{s.gender}</span></div>}
-        </div>
-        <div className="gs-info-col">
-          {s.dob && <div className="gs-info-row"><span className="gs-lbl">Date of Birth</span><span className="gs-val">{s.dob}</span></div>}
-          <div className="gs-info-row"><span className="gs-lbl">Academic Year</span><span className="gs-val">{s.academicYear || academicYearSetting || '—'}</span></div>
-          {s.semester && <div className="gs-info-row"><span className="gs-lbl">Term / Semester</span><span className="gs-val">{s.semester}</span></div>}
-          <div className="gs-info-row"><span className="gs-lbl">Issue Date</span><span className="gs-val">{today}</span></div>
-          <div className="gs-info-row"><span className="gs-lbl">Status</span>
-            <span className="gs-val"><span className={`gs-status-chip ${isFail ? 'fail' : 'pass'}`}>{s.resultStatus !== 'N/A' ? (isFail ? 'FAIL' : 'PASS') : 'PENDING'}</span></span>
-          </div>
-        </div>
+      {/* ══ STUDENT INFORMATION ════════════════════════════════ */}
+      <div className="gs-info-section">
+        <div className="gs-section-title">Student Information</div>
+        <table className="gs-info-table">
+          <tbody>
+            <tr>
+              <td className="lbl">Student Name:</td>
+              <td className="val"><strong>{s.name}</strong></td>
+              <td className="lbl">Academic Year:</td>
+              <td className="val">{academicYear}</td>
+            </tr>
+            <tr>
+              <td className="lbl">Enrollment / Roll No:</td>
+              <td className="val"><strong>{s.userId}</strong></td>
+              <td className="lbl">Term / Semester:</td>
+              <td className="val">{s.semester || 'Final Examination'}</td>
+            </tr>
+            <tr>
+              <td className="lbl">Class / Program:</td>
+              <td className="val"><strong>{s.program || 'General'}</strong></td>
+              <td className="lbl">Section:</td>
+              <td className="val">{s.section || 'A'}</td>
+            </tr>
+            <tr>
+              <td className="lbl">Date of Birth:</td>
+              <td className="val">{s.dob || '—'}</td>
+              <td className="lbl">Issue Date:</td>
+              <td className="val">{today}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      {/* ══ MARKS TABLE ════════════════════════════════════════ */}
-      {s.subjects?.length > 0 ? (
-        <div className="gs-section">
-          <div className="gs-section-label">Academic Performance</div>
-          <table className="gs-table">
+      {/* ══ ACADEMIC PERFORMANCE ═══════════════════════════════ */}
+      <div className="gs-info-section">
+        <div className="gs-section-title">Academic Performance</div>
+        {s.subjects?.length > 0 ? (
+          <table className="gs-marks-table">
             <thead>
               <tr>
-                <th>S.N.</th>
-                <th>Code</th>
-                <th className="gs-th-left">Subject / Module</th>
-                <th>Credit</th>
-                <th>Full<br/>Marks</th>
-                <th>Pass<br/>Marks</th>
-                <th>Obtained</th>
-                <th>%</th>
-                <th>Grade</th>
-                <th>GP (10)</th>
+                <th style={{ width: '45px' }}>S.N.</th>
+                <th style={{ width: '85px' }}>Code</th>
+                <th style={{ textAlign: 'left' }}>Subject / Module Title</th>
+                <th style={{ width: '60px' }}>Credit</th>
+                <th style={{ width: '75px' }}>Full Marks</th>
+                <th style={{ width: '75px' }}>Pass Marks</th>
+                <th style={{ width: '75px' }}>Obtained</th>
+                <th style={{ width: '60px' }}>Grade</th>
+                <th style={{ width: '75px' }}>Grade Point</th>
               </tr>
             </thead>
             <tbody>
@@ -93,103 +117,97 @@ const GradeSheet = ({ s, schoolInfo }) => {
                 const m = calculateGradeMetrics(sub.score, sub.maxScore || 100);
                 const passMarks = Math.ceil((sub.maxScore || 100) * 0.4);
                 return (
-                  <tr key={i} className={m.grade === 'F' ? 'gs-fail-row' : ''}>
+                  <tr key={i} className={m.grade === 'F' ? 'fail-row' : ''}>
                     <td>{i + 1}</td>
-                    <td className="gs-code">{sub.code}</td>
-                    <td className="gs-th-left">{sub.subject}</td>
+                    <td style={{ fontFamily: 'monospace', fontWeight: 'bold' }}>{sub.code}</td>
+                    <td style={{ textAlign: 'left', fontWeight: 600 }}>{sub.subject}</td>
                     <td>{sub.credit}</td>
                     <td>{sub.maxScore || 100}</td>
                     <td>{passMarks}</td>
-                    <td><strong>{sub.score}</strong></td>
-                    <td>{m.percentage}%</td>
-                    <td><strong style={{ color: m.color }}>{m.grade}</strong></td>
+                    <td style={{ fontWeight: 'bold' }}>{sub.score}</td>
+                    <td style={{ fontWeight: 'bold', color: m.grade === 'F' ? '#c0392b' : '#000' }}>{m.grade}</td>
                     <td>{m.gradePoint.toFixed(1)}</td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
-        </div>
-      ) : (
-        <div className="gs-no-marks">Marks not entered yet — faculty needs to enter grades first.</div>
-      )}
+        ) : (
+          <div className="gs-no-marks">No subject marks evaluated yet for this student.</div>
+        )}
+      </div>
 
-      {/* ══ SUMMARY ════════════════════════════════════════════ */}
+      {/* ══ SUMMARY & RESULT ═══════════════════════════════════ */}
       {s.subjects?.length > 0 && (
-        <>
-          <div className="gs-section">
-            <div className="gs-section-label">Summary</div>
-            <div className="gs-summary-grid">
-              <div className="gs-sum-box">
-                <span className="gs-sum-val">{s.totalScore} / {s.maxTotalScore}</span>
-                <span className="gs-sum-lbl">Total Marks</span>
-              </div>
-              <div className="gs-sum-box highlight">
-                <span className="gs-sum-val">{s.percentage}%</span>
-                <span className="gs-sum-lbl">Percentage</span>
-              </div>
-              <div className="gs-sum-box">
-                <span className="gs-sum-val">{s.gpa}</span>
-                <span className="gs-sum-lbl">GPA (4.0 Scale)</span>
-              </div>
-              <div className="gs-sum-box">
-                <span className="gs-sum-val">{s.gpa10}</span>
-                <span className="gs-sum-lbl">GPA (10.0 Scale)</span>
-              </div>
-              <div className="gs-sum-box">
-                <span className="gs-sum-val">{s.totalCredits}</span>
-                <span className="gs-sum-lbl">Total Credits</span>
-              </div>
-              <div className="gs-sum-box">
-                <span className="gs-sum-val">{s.subjects.length}</span>
-                <span className="gs-sum-lbl">Subjects</span>
-              </div>
-            </div>
-          </div>
+        <div className="gs-summary-row">
+          <table className="gs-summary-table">
+            <tbody>
+              <tr>
+                <td className="s-lbl">Total Credit Hours:</td>
+                <td className="s-val">{s.totalCredits}</td>
+                <td className="s-lbl">Total Marks Obtained:</td>
+                <td className="s-val"><strong>{s.totalScore} / {s.maxTotalScore}</strong></td>
+              </tr>
+              <tr>
+                <td className="s-lbl">Percentage:</td>
+                <td className="s-val"><strong>{s.percentage}%</strong></td>
+                <td className="s-lbl">Grade Point Average (GPA):</td>
+                <td className="s-val"><strong>{s.gpa}</strong> (4.0 Scale) / <strong>{s.gpa10}</strong> (10.0 Scale)</td>
+              </tr>
+            </tbody>
+          </table>
 
-          <div className={`gs-result-banner ${isFail ? 'fail' : 'pass'}`}>
-            {isFail ? '✗' : '✓'}&nbsp;&nbsp;{s.resultStatus}
+          <div className={`gs-result-box ${isFail ? 'gs-result-fail' : 'gs-result-pass'}`}>
+            FINAL RESULT: {s.resultStatus}
           </div>
-        </>
+        </div>
       )}
 
       {/* ══ REMARKS ════════════════════════════════════════════ */}
       {s.remarks && (
-        <div className="gs-section">
-          <div className="gs-section-label">Remarks</div>
-          <p className="gs-remarks-text">{s.remarks}</p>
+        <div className="gs-info-section" style={{ marginBottom: '14px' }}>
+          <div className="gs-section-title">Teacher's Remarks</div>
+          <p style={{ padding: '4px 6px', fontStyle: 'italic', fontSize: '10pt', color: '#222' }}>"{s.remarks}"</p>
         </div>
       )}
 
-      {/* ══ GRADE LEGEND ═══════════════════════════════════════ */}
-      <div className="gs-legend-row">
-        <span className="gs-legend-title">Grade Scale:</span>
-        {[['A+','≥90%','10.0'],['A','80–89%','9.0'],['B+','75–79%','8.0'],['B','70–74%','7.0'],
-          ['C','60–69%','6.0'],['D','50–59%','5.0'],['F','<50%','0.0']].map(([g,r,p]) => (
-          <span key={g} className="gs-legend-chip">{g}: {r} (GP {p})</span>
-        ))}
+      {/* ══ GRADING LEGEND ═════════════════════════════════════ */}
+      <div className="gs-legend">
+        <span style={{ fontWeight: 'bold' }}>Grading Scale:</span>
+        <span><strong>A+</strong> (≥90%, GP 10.0)</span> &bull;
+        <span><strong>A</strong> (80-89%, GP 9.0)</span> &bull;
+        <span><strong>B+</strong> (75-79%, GP 8.0)</span> &bull;
+        <span><strong>B</strong> (70-74%, GP 7.0)</span> &bull;
+        <span><strong>C</strong> (60-69%, GP 6.0)</span> &bull;
+        <span><strong>D</strong> (50-59%, GP 5.0)</span> &bull;
+        <span><strong>F</strong> (&lt;50%, GP 0.0 - Fail)</span>
       </div>
 
       {/* ══ SIGNATURES ═════════════════════════════════════════ */}
-      <div className="gs-signature-row">
-        {['Class Teacher', 'Examination Controller', 'Principal / Head'].map(role => (
-          <div key={role} className="gs-sign-block">
-            <div className="gs-sign-space"></div>
-            <div className="gs-sign-line"></div>
-            <div className="gs-sign-label">{role}</div>
-          </div>
-        ))}
+      <div className="gs-sign-row">
+        <div className="gs-sign-block">
+          <div className="gs-sign-line"></div>
+          <div className="gs-sign-label">Prepared By / Class Teacher</div>
+        </div>
+        <div className="gs-sign-block">
+          <div className="gs-sign-line"></div>
+          <div className="gs-sign-label">Controller of Examinations</div>
+        </div>
+        <div className="gs-sign-block">
+          <div className="gs-sign-line"></div>
+          <div className="gs-sign-label">Principal / Campus Chief</div>
+        </div>
       </div>
 
-      {/* ══ WATERMARK ══════════════════════════════════════════ */}
+      {/* ══ WATERMARK / FOOTER ═════════════════════════════════ */}
       <div className="gs-watermark">
-        This is a computer-generated document. Verify authenticity with the school office. &bull; {schoolName} &bull; {today}
+        Note: This statement of marks is issued for official academic purposes. Any alteration renders this document invalid. &bull; {schoolName} &bull; Date: {today}
       </div>
     </div>
   );
 };
 
-// ─── Main Component ────────────────────────────────────────────────────────
+// ─── Main Admin Grade Sheets Component ──────────────────────────────────────
 const AdminGradeSheets = () => {
   const [students, setStudents]       = useState([]);
   const [selectedStudent, setSelected] = useState(null);
@@ -199,7 +217,7 @@ const AdminGradeSheets = () => {
   const [schoolInfo, setSchoolInfo]   = useState({});
   const printRef                      = useRef(null);
 
-  const load = useCallback(async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       const [dbStudents, settings] = await Promise.all([
@@ -208,33 +226,35 @@ const AdminGradeSheets = () => {
       ]);
       setSchoolInfo(settings);
       const enriched = dbStudents.map(mergeStudentWithGrades);
-      // Sort by program then name
       enriched.sort((a, b) => {
         const p = (a.program || '').localeCompare(b.program || '');
         return p !== 0 ? p : a.name.localeCompare(b.name);
       });
       setStudents(enriched);
+      if (enriched.length > 0 && !selectedStudent) {
+        setSelected(enriched[0]);
+      }
     } catch (err) {
       console.error(err);
-      toast.error('Failed to load students.');
+      toast.error('Failed to load student grade records.');
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => { loadData(); }, [loadData]);
 
-  // ── Class grouping ──────────────────────────────────────────
+  // Class filtering tabs
   const classes = ['All', ...Array.from(new Set(students.map(s => s.program || 'General').filter(Boolean))).sort()];
 
   const filtered = students.filter(s => {
     const q = searchQuery.toLowerCase();
     const matchClass = activeClass === 'All' || s.program === activeClass;
-    const matchQ = s.name.toLowerCase().includes(q) || s.userId.toLowerCase().includes(q);
+    const matchQ = s.name.toLowerCase().includes(q) || s.userId.toLowerCase().includes(q) || (s.section || '').toLowerCase().includes(q);
     return matchClass && matchQ;
   });
 
-  // Group filtered by class for display
+  // Group filtered students by class
   const groupedByClass = filtered.reduce((acc, s) => {
     const cls = s.program || 'General';
     if (!acc[cls]) acc[cls] = [];
@@ -242,94 +262,76 @@ const AdminGradeSheets = () => {
     return acc;
   }, {});
 
-  // ── Print ───────────────────────────────────────────────────
   const handlePrint = () => {
     if (!selectedStudent || !printRef.current) return;
+    const printContent = printRef.current.innerHTML;
     const win = window.open('', '_blank');
-    const html = `<!DOCTYPE html>
-<html><head>
-<meta charset="UTF-8"/>
-<title>Grade Sheet – ${selectedStudent.name}</title>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Times New Roman', serif; font-size: 10.5pt; background: #fff; color: #111; }
+    
+    win.document.write(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <title>Grade Sheet - ${selectedStudent.name} (${selectedStudent.userId})</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Times New Roman', Georgia, serif; font-size: 11pt; color: #000; background: #fff; }
+    .gs-print-wrap { width: 190mm; margin: 0 auto; padding: 8mm 5mm; }
 
-/* ── Page ── */
-.gs-page { width: 190mm; margin: 0 auto; padding: 8mm 10mm 6mm; min-height: 277mm; }
+    /* Header */
+    .gs-school-header { text-align: center; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 14px; }
+    .gs-header-top { display: flex; align-items: center; justify-content: center; gap: 18px; margin-bottom: 6px; }
+    .gs-header-logo { height: 75px; width: auto; object-fit: contain; }
+    .gs-header-text { text-align: center; }
+    .gs-school-name { font-size: 20pt; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; color: #000; line-height: 1.15; }
+    .gs-school-sub { font-size: 10pt; color: #333; margin-top: 2px; }
+    .gs-doc-title-bar { margin-top: 8px; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 5px 0; background: #f8f9fa; }
+    .gs-doc-title { font-size: 13pt; font-weight: bold; letter-spacing: 3px; text-transform: uppercase; color: #000; }
 
-/* ── Header ── */
-.gs-header { border-bottom: 3px double #333; padding-bottom: 8px; margin-bottom: 10px; text-align: center; }
-.gs-header-logo-block { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 6px; }
-.gs-logo { height: 60px; width: auto; object-fit: contain; }
-.gs-header-text { flex: 1; }
-.gs-school-name { font-size: 18pt; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; line-height: 1.1; }
-.gs-school-contact { font-size: 9pt; color: #555; margin-top: 2px; }
-.gs-doc-banner { background: #1e293b; color: #fff; padding: 5px 0; margin-top: 6px; display: flex; flex-direction: column; align-items: center; gap: 1px; }
-.gs-doc-title { font-size: 13pt; font-weight: bold; letter-spacing: 4px; }
-.gs-doc-sub   { font-size: 8pt; letter-spacing: 2px; opacity: 0.8; }
+    /* Section & Tables */
+    .gs-info-section { border: 1.5px solid #000; padding: 8px 10px; margin-bottom: 14px; background: #fff; }
+    .gs-section-title { font-size: 9.5pt; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; background: #eaeaea; padding: 3px 8px; margin: -8px -10px 8px -10px; border-bottom: 1.5px solid #000; }
+    
+    .gs-info-table { width: 100%; border-collapse: collapse; font-size: 10.5pt; }
+    .gs-info-table td { padding: 4px 6px; vertical-align: middle; }
+    .gs-info-table .lbl { width: 20%; color: #333; font-weight: 600; }
+    .gs-info-table .val { width: 30%; border-bottom: 1px dotted #888; }
 
-/* ── Info Grid ── */
-.gs-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; border: 1px solid #ccc; padding: 6px 10px; margin-bottom: 8px; }
-.gs-info-row  { display: flex; gap: 6px; padding: 2.5px 0; border-bottom: 1px dotted #e0e0e0; font-size: 9.5pt; }
-.gs-lbl { font-weight: bold; color: #444; width: 48%; flex-shrink: 0; }
-.gs-val { flex: 1; }
-.gs-status-chip { display: inline-block; padding: 0 8px; border-radius: 20px; font-size: 8.5pt; font-weight: bold; }
-.gs-status-chip.pass { background: #dcfce7; color: #166534; }
-.gs-status-chip.fail { background: #fee2e2; color: #991b1b; }
+    .gs-marks-table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-top: 4px; }
+    .gs-marks-table th { background: #2c3e50 !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 7px 5px; border: 1px solid #000; text-align: center; font-size: 9.5pt; }
+    .gs-marks-table td { padding: 6px 5px; border: 1px solid #000; text-align: center; }
+    .gs-marks-table tr:nth-child(even) td { background-color: #f9f9f9 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .gs-marks-table .fail-row td { background-color: #ffe8e8 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
-/* ── Section ── */
-.gs-section { margin-bottom: 8px; }
-.gs-section-label { font-size: 8.5pt; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase;
-                     background: #f0f0f0; padding: 3px 8px; border-left: 3px solid #1e293b; margin-bottom: 4px; }
+    /* Summary */
+    .gs-summary-row { margin-bottom: 14px; }
+    .gs-summary-table { width: 100%; border-collapse: collapse; font-size: 10.5pt; margin-bottom: 10px; border: 1.5px solid #000; }
+    .gs-summary-table td { padding: 6px 8px; border: 1px solid #000; }
+    .gs-summary-table .s-lbl { background: #eaeaea !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-weight: bold; width: 25%; }
+    .gs-summary-table .s-val { width: 25%; }
 
-/* ── Table ── */
-.gs-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
-.gs-table th { background: #1e293b; color: #fff; padding: 5px 4px; text-align: center; border: 1px solid #555; font-size: 8.5pt; }
-.gs-table td { padding: 4px 4px; border: 1px solid #ccc; text-align: center; }
-.gs-table tr:nth-child(even) td { background: #f9f9f9; }
-.gs-th-left { text-align: left !important; padding-left: 7px !important; }
-.gs-code { font-family: monospace; font-size: 8.5pt; font-weight: bold; }
-.gs-fail-row td { background: #fff0f0 !important; color: #991b1b; }
+    .gs-result-box { text-align: center; padding: 8px; border: 2px solid #000; font-size: 13pt; font-weight: bold; letter-spacing: 2px; }
+    .gs-result-pass { background-color: #eafaf1 !important; color: #145a32 !important; border-color: #145a32 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .gs-result-fail { background-color: #fadbd8 !important; color: #78281f !important; border-color: #78281f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
-/* ── Summary ── */
-.gs-summary-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 4px; }
-.gs-sum-box { border: 1px solid #ddd; padding: 5px 4px; text-align: center; border-radius: 2px; }
-.gs-sum-box.highlight { background: #1e293b; border-color: #1e293b; }
-.gs-sum-box.highlight .gs-sum-val, .gs-sum-box.highlight .gs-sum-lbl { color: #fff; }
-.gs-sum-val { display: block; font-size: 12pt; font-weight: bold; color: #1e293b; line-height: 1.2; }
-.gs-sum-lbl { display: block; font-size: 7.5pt; color: #666; margin-top: 2px; }
+    .gs-no-marks { text-align: center; padding: 20px; color: #666; font-style: italic; }
+    .gs-legend { font-size: 8.5pt; color: #444; margin-bottom: 25px; padding: 4px; border: 1px dotted #ccc; text-align: center; }
 
-/* ── Result Banner ── */
-.gs-result-banner { text-align: center; padding: 7px; border: 2px solid; font-size: 13pt; font-weight: bold;
-                     letter-spacing: 3px; margin: 8px 0; border-radius: 2px; }
-.gs-result-banner.pass { color: #166534; border-color: #166534; background: #f0fdf4; }
-.gs-result-banner.fail { color: #991b1b; border-color: #991b1b; background: #fef2f2; }
+    /* Signatures */
+    .gs-sign-row { display: flex; justify-content: space-between; margin-top: 35px; padding-top: 10px; }
+    .gs-sign-block { text-align: center; width: 28%; }
+    .gs-sign-line { border-top: 1.5px solid #000; margin-bottom: 5px; }
+    .gs-sign-label { font-size: 9.5pt; font-weight: bold; }
 
-/* ── Remarks ── */
-.gs-no-marks   { text-align: center; padding: 16px; color: #888; font-size: 9.5pt; margin-bottom: 8px; border: 1px dashed #ccc; }
-.gs-remarks-text { font-size: 9.5pt; padding: 2px 0; }
+    .gs-watermark { text-align: center; font-size: 8pt; color: #777; margin-top: 20px; border-top: 1px dotted #aaa; padding-top: 6px; }
 
-/* ── Legend ── */
-.gs-legend-row { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; align-items: center; }
-.gs-legend-title { font-size: 8pt; font-weight: bold; margin-right: 2px; }
-.gs-legend-chip { font-size: 7.5pt; border: 1px solid #ccc; padding: 1px 5px; border-radius: 3px; background: #f9f9f9; }
-
-/* ── Signatures ── */
-.gs-signature-row { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 10px; }
-.gs-sign-block { text-align: center; width: 28%; }
-.gs-sign-space { height: 30px; }
-.gs-sign-line  { border-top: 1.5px solid #333; margin-bottom: 4px; }
-.gs-sign-label { font-size: 8.5pt; font-weight: bold; }
-
-/* ── Watermark ── */
-.gs-watermark { text-align: center; font-size: 7.5pt; color: #aaa; margin-top: 12px; border-top: 1px dotted #ddd; padding-top: 5px; }
-
-@page { size: A4 portrait; margin: 8mm 8mm; }
-</style>
-</head><body>
-<div>${printRef.current.innerHTML}</div>
-</body></html>`;
-    win.document.write(html);
+    @page { size: A4 portrait; margin: 10mm 10mm; }
+    @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+  </style>
+</head>
+<body>
+  ${printContent}
+</body>
+</html>`);
     win.document.close();
     win.focus();
     setTimeout(() => { win.print(); win.close(); }, 500);
@@ -337,7 +339,7 @@ body { font-family: 'Times New Roman', serif; font-size: 10.5pt; background: #ff
 
   return (
     <div className="admin-grades-container">
-      {/* ─── Left sidebar ─── */}
+      {/* ─── Left Sidebar ─── */}
       <div className="ags-left">
         <div className="ags-panel-header">
           <h2><i className="fas fa-graduation-cap"></i> Grade Sheets</h2>
@@ -346,14 +348,23 @@ body { font-family: 'Times New Roman', serif; font-size: 10.5pt; background: #ff
 
         <div className="ags-search">
           <i className="fas fa-search"></i>
-          <input type="text" placeholder="Search name or ID..." value={searchQuery} onChange={e => setSearch(e.target.value)} />
+          <input 
+            type="text" 
+            placeholder="Search name, roll no..." 
+            value={searchQuery} 
+            onChange={e => setSearch(e.target.value)} 
+          />
         </div>
 
-        {/* Class Tabs */}
+        {/* Class Filter Tabs */}
         {classes.length > 1 && (
           <div className="ags-class-tabs">
             {classes.map(c => (
-              <button key={c} className={`ags-class-tab ${activeClass === c ? 'active' : ''}`} onClick={() => setActiveClass(c)}>
+              <button 
+                key={c} 
+                className={`ags-class-tab ${activeClass === c ? 'active' : ''}`} 
+                onClick={() => setActiveClass(c)}
+              >
                 {c === 'All' ? 'All Classes' : c}
               </button>
             ))}
@@ -362,14 +373,14 @@ body { font-family: 'Times New Roman', serif; font-size: 10.5pt; background: #ff
 
         <div className="ags-list-scroll">
           {loading ? (
-            <div className="ags-loading"><i className="fas fa-spinner fa-spin"></i> Loading...</div>
+            <div className="ags-loading"><i className="fas fa-spinner fa-spin"></i> Loading Records...</div>
           ) : Object.keys(groupedByClass).length === 0 ? (
-            <div className="ags-empty"><i className="fas fa-folder-open"></i><p>No students found</p></div>
+            <div className="ags-empty"><i className="fas fa-folder-open"></i><p>No student records found</p></div>
           ) : Object.entries(groupedByClass).map(([className, classStudents]) => (
             <div key={className} className="ags-class-group">
               <div className="ags-class-group-header">
                 <i className="fas fa-chalkboard"></i>
-                {className}
+                <span>Class / Program: <strong>{className}</strong></span>
                 <span className="ags-class-count">{classStudents.length}</span>
               </div>
               {classStudents.map(s => (
@@ -391,7 +402,7 @@ body { font-family: 'Times New Roman', serif; font-size: 10.5pt; background: #ff
                   <div>
                     {s.subjects?.length > 0
                       ? <span className={`ags-pct ${s.percentage >= 75 ? 'good' : s.percentage >= 50 ? 'ok' : 'bad'}`}>{s.percentage}%</span>
-                      : <span className="ags-pct-na">N/A</span>
+                      : <span className="ags-pct-na">Pending</span>
                     }
                   </div>
                 </div>
@@ -401,23 +412,23 @@ body { font-family: 'Times New Roman', serif; font-size: 10.5pt; background: #ff
         </div>
       </div>
 
-      {/* ─── Right panel ─── */}
+      {/* ─── Right Panel (Preview) ─── */}
       <div className="ags-right">
         {!selectedStudent ? (
           <div className="ags-placeholder">
             <div className="ags-placeholder-icon"><i className="fas fa-file-invoice"></i></div>
-            <h3>Select a Student</h3>
-            <p>Choose a student from the list (organized by class) to preview their official grade sheet.</p>
+            <h3>Select a Student Record</h3>
+            <p>Choose any student from the class list on the left to view and print their formal academic grade sheet.</p>
           </div>
         ) : (
           <>
             <div className="ags-preview-toolbar">
               <div className="ags-toolbar-info">
-                <h3><i className="fas fa-id-card"></i> {selectedStudent.name}</h3>
-                <small>{selectedStudent.program} {selectedStudent.section ? `· Section ${selectedStudent.section}` : ''} · {selectedStudent.userId}</small>
+                <h3><i className="fas fa-user-graduate"></i> {selectedStudent.name}</h3>
+                <small>Roll No: <strong>{selectedStudent.userId}</strong> &bull; Program: <strong>{selectedStudent.program}</strong> &bull; Section: <strong>{selectedStudent.section || 'A'}</strong></small>
               </div>
               <button className="ags-print-btn" onClick={handlePrint}>
-                <i className="fas fa-print"></i> Print / Save PDF
+                <i className="fas fa-print"></i> Print Formal Grade Sheet (A4)
               </button>
             </div>
 
